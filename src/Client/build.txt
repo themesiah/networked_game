@@ -1,0 +1,11 @@
+lib\vcredist\Debug\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\;         Debug
+
+lib\vcredist\Release\*.*;      bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\;         Release
+
+SFML-2.4.2\bin\Debug\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\;         Debug
+
+SFML-2.4.2\bin\Release\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\;         Release
+
+Data\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\Data;         Debug
+
+Data\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\Data;         Release

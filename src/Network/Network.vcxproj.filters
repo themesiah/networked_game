@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Socket">
+      <UniqueIdentifier>{2852b733-948b-41af-aa61-7b5d5a47edf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Serializer">
+      <UniqueIdentifier>{027c2f1b-7aa8-4741-9dd7-f3343a50518b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\UDPSocket.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\SocketAddress.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\SocketAddressFactory.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\SocketUtil.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TCPSocket.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\OutputMemoryStream.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\InputMemoryStream.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Endianness.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\OutputMemoryBitStream.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\InputMemoryBitStream.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\MemoryStream.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\LinkingContext.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\CustomReflection.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\SerializeUtils.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\ReflectionData.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\SerializableObject.h">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\SocketAddress.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\SocketAddressFactory.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\SocketUtil.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TCPSocket.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\UDPSocket.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\OutputMemoryStream.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\InputMemoryStream.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Endianness.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\OutputMemoryBitStream.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\InputMemoryBitStream.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\LinkingContext.cpp">
+      <Filter>Archivos de código fuente\Serializer</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+*.opensdf
+*.sdf
+int/
+bin/
+lib/Debug/
+lib/Release/
+src/Networked Game.suo

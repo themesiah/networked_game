@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{c57f6805-15ec-4ac7-a627-8b04e7c163f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{12bf00da-ad9d-406b-b463-1fac18c65e68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Logger">
+      <UniqueIdentifier>{59589b78-f45e-4433-bdf5-9e9dec8f3edb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{bafeec5b-78db-4d4e-8320-92d41f83b710}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils\CheckedDelete.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Defines.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumToString.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StringUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Types.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TemplatedMap.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TemplatedMapVector.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Singleton.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\XML.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\tinyxml2\tinyxml2.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Name.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Logger\Logger.h">
+      <Filter>Utils\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Paths.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\BinFileReader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\CustomAssert.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\FileUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="XML\XML.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\tinyxml2\tinyxml2.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Logger\Logger.cpp">
+      <Filter>Utils\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Name.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\CustomAssert.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\FileUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de código fuente\MainEngine">
+      <UniqueIdentifier>{099f66ce-3644-47bd-b311-d990531c6246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Input">
+      <UniqueIdentifier>{b9cf59b4-c728-4a5c-a07f-085e814b6b42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Graphics">
+      <UniqueIdentifier>{1f46522b-828e-4829-b48a-520877dae690}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="clientmain.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Engine.cpp">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\ActionManager.cpp">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputManager.cpp">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Engine.h">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\ActionManager.h">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\ActionTrigger.h">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputDefinitions.h">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputManager.h">
+      <Filter>Archivos de código fuente\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourcesManager.h">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Tilemap.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

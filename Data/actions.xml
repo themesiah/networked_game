@@ -1,0 +1,13 @@
+<actions>
+	<action name="EXIT">
+		<trigger type="KEYBOARD" action_type="BECOMES_RELEASED" key_code="ESC" value="1"/>
+	</action>
+	<action name="HORIZONTAL">
+		<trigger type="KEYBOARD" action_type="IS_PRESSED" key_code="RIGHT" value="1" />
+		<trigger type="KEYBOARD" action_type="IS_PRESSED" key_code="LEFT" value="-1" />
+	</action>
+	<action name="VERTICAL">
+		<trigger type="KEYBOARD" action_type="IS_PRESSED" key_code="UP" value="-1" />
+		<trigger type="KEYBOARD" action_type="IS_PRESSED" key_code="DOWN" value="1" />
+	</action>
+</actions>
