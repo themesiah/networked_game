@@ -37,17 +37,22 @@ int main()
 #include "Input\ActionManager.h"
 #include "Engine\ResourcesManager.h"
 
+#include "imgui.h"
+#include "imgui-SFML.h"
+
 #define TARGET_FPS 60.0f
 
 int main() {
 	// GENERAL VARIABLES
 	float lSecondsToEndFrame = 1.0f / TARGET_FPS;
 	sf::Clock mMainClock;
+	sf::Clock mImguiClock;
 	bool fHandled = false;
 
 	// INIT WINDOW
 	sf::RenderWindow window(sf::VideoMode(1366, 768), "SFML works!");
 	window.setVerticalSyncEnabled(true);
+	ImGui::SFML::Init(window);
 
 	// INIT ENGINE
 	CEngine& lEngine = CEngine::GetInstance();
@@ -68,6 +73,7 @@ int main() {
 	// INIT NETWORK
 
 	// MAIN LOOP
+	mImguiClock.restart();
 	while (window.isOpen())
 	{
 		// Reestart the main FPS clock
@@ -79,6 +85,7 @@ int main() {
 		fHandled = false;
 		while (window.pollEvent(event))
 		{
+			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed) {
 				// Handle disconnection here
 				window.close();
@@ -95,7 +102,10 @@ int main() {
 
 		// Main Update
 		lEngine.ProcessInputs();
+		ImGui::SFML::Update(window, mImguiClock.restart());
 		lEngine.Update(lDeltaTime);
+		lEngine.ShowDebugHelpers();
+		
 
 		// Check game finish
 		if (lEngine.GetActionManager().Exist("EXIT") && lEngine.GetActionManager().Get("EXIT")->active) {
@@ -105,11 +115,13 @@ int main() {
 
 		// Render
 		window.clear();
-		lEngine.Render();
+		lEngine.Render(window);
+		ImGui::SFML::Render(window);
 		window.display();
 
 		// Wait for end of frame
 		while (mMainClock.getElapsedTime().asSeconds() < lSecondsToEndFrame);
 	}
+	ImGui::SFML::Shutdown();
 	return 0;
 }

@@ -20,7 +20,8 @@ public:
 	virtual ~CEngine();
 	void ProcessInputs();
 	void Update(float aDeltaTime);
-	void Render();
+	void Render(const sf::RenderWindow& window);
+	void ShowDebugHelpers();
 
 	BUILD_GET_SET_ENGINE_MANAGER(ActionManager);
 	BUILD_GET_SET_ENGINE_MANAGER(TextureManager);

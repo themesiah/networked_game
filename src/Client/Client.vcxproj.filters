@@ -18,6 +18,9 @@
     <Filter Include="Archivos de código fuente\Graphics">
       <UniqueIdentifier>{1f46522b-828e-4829-b48a-520877dae690}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\ImGui">
+      <UniqueIdentifier>{79c73564-5fb7-4b17-96ac-333d03161809}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clientmain.cpp">
@@ -31,6 +34,18 @@
     </ClCompile>
     <ClCompile Include="Input\InputManager.cpp">
       <Filter>Archivos de código fuente\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui-master\imgui-SFML.cpp">
+      <Filter>Archivos de código fuente\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui-master\imgui.cpp">
+      <Filter>Archivos de código fuente\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui-master\imgui_demo.cpp">
+      <Filter>Archivos de código fuente\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui-master\imgui_draw.cpp">
+      <Filter>Archivos de código fuente\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
