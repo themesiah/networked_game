@@ -56,21 +56,10 @@ int main() {
 
 	// INIT ENGINE
 	CEngine& lEngine = CEngine::GetInstance();
-
-	CActionManager* lActionManager = new CActionManager();
-	lActionManager->InitInputManager();
-	lActionManager->LoadActions("actions.xml");
-	lEngine.SetActionManager(lActionManager);
-
-	CTextureManager* lTextureManager = new CTextureManager();
-	lTextureManager->SetOnDestructor(DestroyOnDestructor);
-	lEngine.SetTextureManager(lTextureManager);
-
-	CSpriteManager* lSpriteManager = new CSpriteManager();
-	lSpriteManager->SetOnDestructor(DestroyOnDestructor);
-	lEngine.SetSpriteManager(lSpriteManager);
+	lEngine.Init();
 	
 	// INIT NETWORK
+	
 
 	// MAIN LOOP
 	mImguiClock.restart();
@@ -115,7 +104,7 @@ int main() {
 
 		// Render
 		window.clear();
-		lEngine.Render(window);
+		lEngine.Render(&window);
 		ImGui::SFML::Render(window);
 		window.display();
 

@@ -47,6 +47,9 @@
     <ClCompile Include="..\..\include\imgui-master\imgui_draw.cpp">
       <Filter>Archivos de código fuente\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\RenderManager.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -68,6 +71,9 @@
       <Filter>Archivos de código fuente\MainEngine</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Tilemap.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderManager.h">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -100,12 +100,14 @@
     <ClCompile Include="..\..\include\imgui-master\imgui_draw.cpp" />
     <ClCompile Include="clientmain.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
+    <ClInclude Include="Graphics\RenderManager.h" />
     <ClInclude Include="Graphics\Tilemap.h" />
     <ClInclude Include="Input\ActionManager.h" />
     <ClInclude Include="Input\ActionTrigger.h" />
