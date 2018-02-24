@@ -3,7 +3,7 @@
 #ifndef H_RESOURCES_MANAGER
 #define H_RESOURCES_MANAGER
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include "Utils\TemplatedMapVector.h"
 
@@ -95,7 +95,6 @@ private:
 	int m_OnDestructor;
 };
 
-typedef CResourcesManager<sf::Texture> CTextureManager;
 typedef CResourcesManager<sf::Sprite> CSpriteManager;
 
 #endif

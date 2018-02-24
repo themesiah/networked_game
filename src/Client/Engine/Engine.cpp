@@ -5,6 +5,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
+#include "TextureManager.h"
+
 CEngine::CEngine()
 {
 
@@ -33,6 +35,8 @@ void CEngine::Init()
 	CRenderManager* lRenderManager = new CRenderManager();
 	lRenderManager->Init();
 	SetRenderManager(lRenderManager);
+
+	m_PlayerController.Init();
 }
 
 void CEngine::ProcessInputs()
@@ -42,7 +46,7 @@ void CEngine::ProcessInputs()
 
 void CEngine::Update(float aDeltaTime)
 {
-	
+	m_PlayerController.Update(aDeltaTime);
 }
 
 void CEngine::Render(sf::RenderWindow* window)

@@ -5,6 +5,7 @@
 #include "Utils\Singleton.h"
 #include "ResourcesManager.h"
 #include "../Graphics/RenderManager.h"
+#include "../Controllers/PlayerController.h"
 
 #define BUILD_GET_SET_ENGINE_MANAGER( Manager ) \
 private: \
@@ -16,6 +17,7 @@ C##Manager& Get##Manager() { return *m_##Manager; } \
 bool Has##Manager() { return m_##Manager != nullptr; } \
 
 class CActionManager;
+class CTextureManager;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
@@ -32,4 +34,5 @@ public:
 protected:
 	CEngine();
 	friend class base::utils::CSingleton<CEngine>;
+	CPlayerController m_PlayerController;
 };

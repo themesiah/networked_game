@@ -21,6 +21,9 @@
     <Filter Include="Archivos de código fuente\ImGui">
       <UniqueIdentifier>{79c73564-5fb7-4b17-96ac-333d03161809}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Controllers">
+      <UniqueIdentifier>{a65c1d3e-9547-4673-92fa-982ed4a9a7d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clientmain.cpp">
@@ -50,6 +53,18 @@
     <ClCompile Include="Graphics\RenderManager.cpp">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Animation.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimatedSprite.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationSet.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\PlayerController.cpp">
+      <Filter>Archivos de código fuente\Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -75,6 +90,21 @@
     </ClInclude>
     <ClInclude Include="Graphics\RenderManager.h">
       <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimatedSprite.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationSet.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextureManager.h">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\PlayerController.h">
+      <Filter>Archivos de código fuente\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

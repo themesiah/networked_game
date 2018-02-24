@@ -41,7 +41,7 @@ namespace tinyxml2				\
     { \
         m_p##PARAMETER_NAME=PARAMETER_NAME; \
     } \
-    TYPE##* Get##PARAMETER_NAME() \
+    TYPE##* Get##PARAMETER_NAME() const \
     { \
         return m_p##PARAMETER_NAME; \
     }

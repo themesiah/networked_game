@@ -40,6 +40,11 @@ int main()
 #include "imgui.h"
 #include "imgui-SFML.h"
 
+#include "Graphics\AnimatedSprite.h"
+#include "Graphics\Animation.h"
+
+#include <SFML\Graphics.hpp>
+
 #define TARGET_FPS 60.0f
 
 int main() {
@@ -59,7 +64,7 @@ int main() {
 	lEngine.Init();
 	
 	// INIT NETWORK
-	
+
 
 	// MAIN LOOP
 	mImguiClock.restart();

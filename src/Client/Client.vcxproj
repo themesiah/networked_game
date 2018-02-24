@@ -99,14 +99,23 @@
     <ClCompile Include="..\..\include\imgui-master\imgui_demo.cpp" />
     <ClCompile Include="..\..\include\imgui-master\imgui_draw.cpp" />
     <ClCompile Include="clientmain.cpp" />
+    <ClCompile Include="Controllers\PlayerController.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Graphics\AnimatedSprite.cpp" />
+    <ClCompile Include="Graphics\Animation.cpp" />
+    <ClCompile Include="Graphics\AnimationSet.cpp" />
     <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controllers\PlayerController.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
+    <ClInclude Include="Engine\TextureManager.h" />
+    <ClInclude Include="Graphics\AnimatedSprite.h" />
+    <ClInclude Include="Graphics\Animation.h" />
+    <ClInclude Include="Graphics\AnimationSet.h" />
     <ClInclude Include="Graphics\RenderManager.h" />
     <ClInclude Include="Graphics\Tilemap.h" />
     <ClInclude Include="Input\ActionManager.h" />
