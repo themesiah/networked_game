@@ -2,8 +2,12 @@
 
 #include "Serializer\SerializableObject.h"
 
+#include "Common\SocketUtil.h"
+#include "Common\TCPSocket.h"
+
 class CAnimatedSprite;
 class CAnimationSet;
+
 class CPlayerController : SerializableObject<CPlayerController>
 {
 public:
@@ -17,10 +21,11 @@ public:
 	virtual ~CPlayerController();
 	void Init();
 	void Update(float aDeltaTime);
+	void SocketUpdate(float aDeltaTime);
 	static DataType* GetReflectionData() {
 		return new DataType({
-			MemberVariable("m_PosX", OffsetOf(CPlayerController, m_PosX), -1000.0f, 0.01f),
-			MemberVariable("m_PosY", OffsetOf(CPlayerController, m_PosY), -1000.0f, 0.01f)
+			MemberVariable("m_PosX", OffsetOf(CPlayerController, m_PosX), -1000.0f, 0.1f),
+			MemberVariable("m_PosY", OffsetOf(CPlayerController, m_PosY), -1000.0f, 0.1f)
 		}
 		);
 	}
@@ -31,4 +36,8 @@ private:
 	float m_PosY;
 	float m_Speed;
 	size_t m_CurrentAnimation;
+	TCPSocketPtr m_Socket;
+	std::vector<TCPSocketPtr> m_ReadBlockSockets;
+	/*InputMemoryBitStream* m_InputStream;
+	MemoryStream* m_OutputStream;*/
 };

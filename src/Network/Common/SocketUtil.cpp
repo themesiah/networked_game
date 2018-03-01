@@ -43,9 +43,9 @@ TCPSocketPtr SocketUtil::CreateTCPSocket(SocketAddressFamily inFamily)
 
 void SocketUtil::ReportError(const char* inString)
 {
-	int lastError = WSAGetLastError();
+	/*int lastError = WSAGetLastError();
 	std::cout << inString << std::endl;
-	std::cout << "With error: " << lastError << std::endl;
+	std::cout << "With error: " << lastError << std::endl;*/
 }
 
 int SocketUtil::GetLastError()

@@ -17,11 +17,110 @@ void ProcessNewClient(TCPSocketPtr newSocket, SocketAddress newClientAddress)
 	std::cout << "New connection" << std::endl;
 }
 
+class CPosition : public SerializableObject<CPosition> {
+public:
+	CPosition() {
+	}
+	float posx;
+	float posy;
+	static DataType* GetReflectionData() {
+		return new DataType({
+			MemberVariable("posx", OffsetOf(CPosition, posx), -1000.0f, 0.1f),
+			MemberVariable("posy", OffsetOf(CPosition, posy), -1000.0f, 0.1f)
+		}
+		);
+	}
+};
+
+void ProcessDataFromClientPos(const TCPSocketPtr& socket, char* segment, int dataReceived, CPosition* pos)
+{
+	socket->Send(segment, dataReceived);
+	/*InputMemoryBitStream* input = new InputMemoryBitStream(segment, dataReceived);
+	pos->Unserialize(input);
+	MemoryStream* output = pos->Serialize();
+	socket->Send(output->GetBufferPtr(), output->GetByteLength());*/
+	//delete input;
+	//delete segment;
+}
+
 void ProcessDataFromClient(const TCPSocketPtr& socket, char* segment, int dataReceived)
 {
-	std::string ssegment = std::string(segment);
-	ssegment.resize(dataReceived);
-	std::cout << dataReceived << " bytes received" << std::endl << ssegment << std::endl << std::endl;
+}
+
+int DoMoveTest() {
+	SET_REFLECTION_DATA(CPosition);
+	CPosition* pos = new CPosition();
+	pos->posx = 300.f;
+	pos->posy = 300.f;
+	SocketUtil::InitSockets();
+	TCPSocketPtr listenSocket = SocketUtil::CreateTCPSocket(INET);
+	SocketAddress receivingAddress(INADDR_ANY, 48000);
+	if (listenSocket->Bind(receivingAddress) != NO_ERROR)
+	{
+		return -1;
+	}
+
+	if (listenSocket->Listen() != NO_ERROR)
+	{
+		return -1;
+	}
+	std::vector<TCPSocketPtr> readBlockSockets;
+	readBlockSockets.push_back(listenSocket);
+	std::vector<TCPSocketPtr> readableSockets;
+
+	std::vector<TCPSocketPtr> errorBlockSockets;
+	//errorBlockSockets.push_back(listenSocket);
+	std::vector<TCPSocketPtr> errorableSockets;
+
+	bool gIsGameRunning = true;
+
+	while (gIsGameRunning)
+	{
+		if (SocketUtil::Select(&readBlockSockets, &readableSockets,
+			nullptr, nullptr,
+			//&errorBlockSockets, &errorableSockets))
+			nullptr, nullptr))
+		{
+			/*for (const TCPSocketPtr& socket : errorableSockets)
+			{
+			auto it = std::find(readableSockets.begin(), readableSockets.end(), socket);
+			readableSockets.erase(it);
+			it = std::find(errorableSockets.begin(), errorableSockets.end(), socket);
+			errorableSockets.erase(it);
+			}*/
+			//we got a packet—loop through the set ones...
+			for (const TCPSocketPtr& socket : readableSockets)
+			{
+				if (socket == listenSocket)
+				{
+					//it's the listen socket, accept a new connection
+					SocketAddress newClientAddress;
+					auto newSocket = listenSocket->Accept(newClientAddress);
+					readBlockSockets.push_back(newSocket);
+					//errorBlockSockets.push_back(newSocket);
+					ProcessNewClient(newSocket, newClientAddress);
+				}
+				else
+				{
+					//it's a regular socket—process the data...
+					char segment[GOOD_SEGMENT_SIZE];
+					FD_ZERO(segment);
+					int dataReceived = socket->Receive(segment, GOOD_SEGMENT_SIZE);
+					if (dataReceived > 0)
+					{
+						if (strcmp(segment, "END") == 0)
+						{
+							gIsGameRunning = false;
+						}
+						else {
+							ProcessDataFromClientPos(socket, segment, dataReceived, pos);
+						}
+					}
+				}
+			}
+		}
+	}
+	return 0;
 }
 
 int DoChatLoop() {
@@ -127,8 +226,8 @@ const float TestObject::defaultB = 5.0f;
 int main()
 {
 	//return DoChatLoop();
-
-	SET_REFLECTION_DATA(TestObject);
+	return DoMoveTest();
+	/*SET_REFLECTION_DATA(TestObject);
 	TestObject testObject1 = TestObject();
 	testObject1.a = 4;
 	testObject1.b = 52.35f;
@@ -150,5 +249,5 @@ int main()
 	delete input;
 
 	std::cout << "Finish" << std::endl;
-	return 0;
+	return 0;*/
 }
