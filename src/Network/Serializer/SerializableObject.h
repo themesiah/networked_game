@@ -7,18 +7,13 @@
 #include "InputMemoryBitStream.h"
 #include "SerializeUtils.h"
 
-template<class C> class SerializableObject {
+class SerializableObject {
 public:
-	MemoryStream* Serialize() {
-		MemoryStream *ms = new OutputMemoryBitStream();
-		SerializeUtils::Serialize<C>(ms, (uint8_t*)this);
-		return ms;
+	void Serialize(MemoryStream* ms) {
+		SerializeUtils::Serialize(ms, (uint8_t*)this, GetClassId());
 	}
 
-	void Unserialize(MemoryStream* ms) {
-		assert(ms->IsInput());
-		SerializeUtils::Serialize<C>(ms, (uint8_t*)this);
-	}
+	virtual uint32_t GetClassId() = 0;
 };
 
 #endif

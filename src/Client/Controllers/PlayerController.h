@@ -8,7 +8,7 @@
 class CAnimatedSprite;
 class CAnimationSet;
 
-class CPlayerController : SerializableObject<CPlayerController>
+class CPlayerController : SerializableObject
 {
 public:
 	enum PlayerAnimations {
@@ -29,6 +29,10 @@ public:
 		}
 		);
 	}
+	enum { kClassId = 'CPCT' };
+	virtual uint32_t GetClassId() override {
+		return kClassId;
+	}
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
 	CAnimationSet* m_pAnimationSet;
@@ -38,6 +42,6 @@ private:
 	size_t m_CurrentAnimation;
 	TCPSocketPtr m_Socket;
 	std::vector<TCPSocketPtr> m_ReadBlockSockets;
-	/*InputMemoryBitStream* m_InputStream;
-	MemoryStream* m_OutputStream;*/
+	OutputMemoryBitStream *m_OutputMs;
+	InputMemoryBitStream *m_InputMs;
 };

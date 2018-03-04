@@ -5,11 +5,18 @@
 OutputMemoryBitStream::OutputMemoryBitStream()
 {
 	ReallocBuffer(256);
+	mBitHead = 0;
 }
 
 OutputMemoryBitStream::~OutputMemoryBitStream()
 {
 	std::free(mBuffer);
+}
+
+void OutputMemoryBitStream::Reset() {
+	//std::free(mBuffer);
+	ReallocBuffer(256);
+	mBitHead = 0;
 }
 
 void OutputMemoryBitStream::WriteBits(uint8_t inData, size_t inBitCount)

@@ -18,5 +18,6 @@ public:
 	void Read(void* outData, size_t inBitCount);
 	virtual bool IsInput() const override { return true; }
 	virtual void Serialize(void* outData, size_t inBitCount) override;
+	void Reset(const char* inBuffer, uint32_t inBitCount);
 };
 #endif

@@ -10,6 +10,8 @@
 #include "Serializer\MemoryStream.h"
 #include "Serializer\SerializableObject.h"
 
+#include "Serializer\ReflectionData.h"
+
 #define GOOD_SEGMENT_SIZE 1024
 
 void ProcessNewClient(TCPSocketPtr newSocket, SocketAddress newClientAddress)
@@ -17,7 +19,7 @@ void ProcessNewClient(TCPSocketPtr newSocket, SocketAddress newClientAddress)
 	std::cout << "New connection" << std::endl;
 }
 
-class CPosition : public SerializableObject<CPosition> {
+class CPosition : public SerializableObject {
 public:
 	CPosition() {
 	}
@@ -30,21 +32,22 @@ public:
 		}
 		);
 	}
+	enum { kClassId = 'CPOS' };
+	uint32_t GetClassId() override {
+		return kClassId;
+	}
 };
+
 
 void ProcessDataFromClientPos(const TCPSocketPtr& socket, char* segment, int dataReceived, CPosition* pos)
 {
-	socket->Send(segment, dataReceived);
-	/*InputMemoryBitStream* input = new InputMemoryBitStream(segment, dataReceived);
-	pos->Unserialize(input);
-	MemoryStream* output = pos->Serialize();
-	socket->Send(output->GetBufferPtr(), output->GetByteLength());*/
-	//delete input;
-	//delete segment;
-}
-
-void ProcessDataFromClient(const TCPSocketPtr& socket, char* segment, int dataReceived)
-{
+	InputMemoryBitStream* input = new InputMemoryBitStream(segment, dataReceived);
+	pos->Serialize(input);
+	OutputMemoryBitStream* output = new OutputMemoryBitStream();
+	pos->Serialize(output);
+	socket->Send(output->GetBufferPtr(), output->GetByteLength());
+	delete input;
+	delete segment;
 }
 
 int DoMoveTest() {
@@ -64,12 +67,17 @@ int DoMoveTest() {
 	{
 		return -1;
 	}
+	listenSocket->SetNonBlockingMode(true);
 	std::vector<TCPSocketPtr> readBlockSockets;
 	readBlockSockets.push_back(listenSocket);
 	std::vector<TCPSocketPtr> readableSockets;
 
+	std::vector<TCPSocketPtr> writeBlockSockets;
+	writeBlockSockets.push_back(listenSocket);
+	std::vector<TCPSocketPtr> writableSockets;
+
 	std::vector<TCPSocketPtr> errorBlockSockets;
-	//errorBlockSockets.push_back(listenSocket);
+	errorBlockSockets.push_back(listenSocket);
 	std::vector<TCPSocketPtr> errorableSockets;
 
 	bool gIsGameRunning = true;
@@ -77,17 +85,20 @@ int DoMoveTest() {
 	while (gIsGameRunning)
 	{
 		if (SocketUtil::Select(&readBlockSockets, &readableSockets,
-			nullptr, nullptr,
-			//&errorBlockSockets, &errorableSockets))
-			nullptr, nullptr))
+			//nullptr, nullptr,
+			&writeBlockSockets, &writableSockets,
+			&errorBlockSockets, &errorableSockets))
+			//nullptr, nullptr))
 		{
-			/*for (const TCPSocketPtr& socket : errorableSockets)
+			for (const TCPSocketPtr& socket : errorableSockets)
 			{
-			auto it = std::find(readableSockets.begin(), readableSockets.end(), socket);
-			readableSockets.erase(it);
-			it = std::find(errorableSockets.begin(), errorableSockets.end(), socket);
-			errorableSockets.erase(it);
-			}*/
+				auto it = std::find(readBlockSockets.begin(), readBlockSockets.end(), socket);
+				readBlockSockets.erase(it);
+				it = std::find(writeBlockSockets.begin(), writeBlockSockets.end(), socket);
+				writeBlockSockets.erase(it);
+				it = std::find(errorBlockSockets.begin(), errorBlockSockets.end(), socket);
+				errorBlockSockets.erase(it);
+			}
 			//we got a packet—loop through the set ones...
 			for (const TCPSocketPtr& socket : readableSockets)
 			{
@@ -97,7 +108,8 @@ int DoMoveTest() {
 					SocketAddress newClientAddress;
 					auto newSocket = listenSocket->Accept(newClientAddress);
 					readBlockSockets.push_back(newSocket);
-					//errorBlockSockets.push_back(newSocket);
+					writeBlockSockets.push_back(newSocket);
+					errorBlockSockets.push_back(newSocket);
 					ProcessNewClient(newSocket, newClientAddress);
 				}
 				else
@@ -116,77 +128,18 @@ int DoMoveTest() {
 							ProcessDataFromClientPos(socket, segment, dataReceived, pos);
 						}
 					}
-				}
-			}
-		}
-	}
-	return 0;
-}
-
-int DoChatLoop() {
-	SocketUtil::InitSockets();
-	TCPSocketPtr listenSocket = SocketUtil::CreateTCPSocket(INET);
-	SocketAddress receivingAddress(INADDR_ANY, 48000);
-	if (listenSocket->Bind(receivingAddress) != NO_ERROR)
-	{
-		return -1;
-	}
-
-	if (listenSocket->Listen() != NO_ERROR)
-	{
-		return -1;
-	}
-	std::vector<TCPSocketPtr> readBlockSockets;
-	readBlockSockets.push_back(listenSocket);
-	std::vector<TCPSocketPtr> readableSockets;
-
-	std::vector<TCPSocketPtr> errorBlockSockets;
-	//errorBlockSockets.push_back(listenSocket);
-	std::vector<TCPSocketPtr> errorableSockets;
-
-	bool gIsGameRunning = true;
-	while (gIsGameRunning)
-	{
-		if (SocketUtil::Select(&readBlockSockets, &readableSockets,
-			nullptr, nullptr,
-			//&errorBlockSockets, &errorableSockets))
-			nullptr, nullptr))
-		{
-			/*for (const TCPSocketPtr& socket : errorableSockets)
-			{
-				auto it = std::find(readableSockets.begin(), readableSockets.end(), socket);
-				readableSockets.erase(it);
-				it = std::find(errorableSockets.begin(), errorableSockets.end(), socket);
-				errorableSockets.erase(it);
-			}*/
-			//we got a packet—loop through the set ones...
-			for (const TCPSocketPtr& socket : readableSockets)
-			{
-				if (socket == listenSocket)
-				{
-					//it's the listen socket, accept a new connection
-					SocketAddress newClientAddress;
-					auto newSocket = listenSocket->Accept(newClientAddress);
-					readBlockSockets.push_back(newSocket);
-					//errorBlockSockets.push_back(newSocket);
-					ProcessNewClient(newSocket, newClientAddress);
-				}
-				else
-				{
-					//it's a regular socket—process the data...
-					char segment[GOOD_SEGMENT_SIZE];
-					FD_ZERO(segment);
-					int dataReceived = socket->Receive(segment, GOOD_SEGMENT_SIZE);
-					if (dataReceived > 0)
-					{
-						if (strcmp(segment, "END") == 0)
-						{
-							gIsGameRunning = false;
-						}
-						else {
-							ProcessDataFromClient(socket, segment, dataReceived);
-						}
+					if (dataReceived == 0) {
+						std::cout << "Receive 0" << std::endl;
 					}
+					/*if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
+						std::cout << "Disconnect bruh" << std::endl;
+						auto it = std::find(readBlockSockets.begin(), readBlockSockets.end(), socket);
+						readBlockSockets.erase(it);
+						it = std::find(writeBlockSockets.begin(), writeBlockSockets.end(), socket);
+						writeBlockSockets.erase(it);
+						it = std::find(errorBlockSockets.begin(), errorBlockSockets.end(), socket);
+						errorBlockSockets.erase(it);
+					}*/
 				}
 			}
 		}
@@ -194,7 +147,7 @@ int DoChatLoop() {
 	return 0;
 }
 
-class TestObject : public SerializableObject<TestObject> {
+class TestObject : public SerializableObject {
 public:
 	TestObject() {
 	}
@@ -219,16 +172,44 @@ public:
 		}
 		);
 	}
+	enum { kClassId = 'TEST' };
+	virtual uint32_t GetClassId() override {
+		return kClassId;
+	}
 };
 
 const float TestObject::defaultB = 5.0f;
 
+class TestObject2 : public TestObject {
+public:
+	TestObject2() : TestObject() {
+
+	}
+	int f;
+	static DataType* GetReflectionData() {
+		return new DataType({
+			MemberVariable("a", EPT_Int, OffsetOf(TestObject2, a), true, &defaultA),
+			MemberVariable("b", OffsetOf(TestObject2, b), 0.0f, 0.1f, true, &defaultB),
+			MemberVariable("c", EPT_Bool, OffsetOf(TestObject2, c)),
+			MemberVariable("c2", EPT_Bool, OffsetOf(TestObject2, c2)),
+			MemberVariable("c3", EPT_Bool, OffsetOf(TestObject2, c3)),
+			MemberVariable("d", EPT_String, OffsetOf(TestObject2, d)),
+			MemberVariable("e", EPT_MapIntInt, OffsetOf(TestObject2, e)),
+			MemberVariable("f", EPT_Int, OffsetOf(TestObject2, f))
+		}
+		);
+	}
+	enum { kClassId = 'TES2' };
+	virtual uint32_t GetClassId() override {
+		return kClassId;
+	}
+};
+
 int main()
 {
-	//return DoChatLoop();
 	return DoMoveTest();
-	/*SET_REFLECTION_DATA(TestObject);
-	TestObject testObject1 = TestObject();
+	/*SET_REFLECTION_DATA(TestObject2);
+	TestObject2 testObject1 = TestObject2();
 	testObject1.a = 4;
 	testObject1.b = 52.35f;
 	testObject1.c = true;
@@ -237,15 +218,17 @@ int main()
 	testObject1.d = std::string("Hello serializer!");
 	testObject1.e = std::map<int, int>();
 	testObject1.e[0] = 0; testObject1.e[1] = 10; testObject1.e[5] = 50; testObject1.e[70] = 700;
-	MemoryStream *output = testObject1.Serialize();
+	testObject1.f = 56;
+	OutputMemoryBitStream *output = new OutputMemoryBitStream();
+	testObject1.Serialize(output);
 	char* buffer = NULL;
 	size_t size = (output->GetByteLength());
 	buffer = static_cast<char*>(std::realloc(buffer, size));
 	memcpy(buffer, output->GetBufferPtr(), size);
 	delete output;
-	MemoryStream *input = new InputMemoryBitStream(buffer, size);
-	TestObject testObject2 = TestObject();
-	testObject2.Unserialize(input);
+	InputMemoryBitStream *input = new InputMemoryBitStream(buffer, size);
+	TestObject2 testObject2 = TestObject2();
+	testObject2.Serialize(input);
 	delete input;
 
 	std::cout << "Finish" << std::endl;

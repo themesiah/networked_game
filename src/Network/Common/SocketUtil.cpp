@@ -90,9 +90,9 @@ int SocketUtil::Select(const std::vector<TCPSocketPtr>* inReadSet, std::vector<T
 	//build up some sets from our vectors
 	fd_set read, write, except;
 	fd_set *readPtr = FillSetFromVector(read, inReadSet);
-	fd_set *writePtr = FillSetFromVector(read, inWriteSet);
-	fd_set *exceptPtr = FillSetFromVector(read, inExceptSet);
-	int toRet = select(0, readPtr, writePtr, exceptPtr, nullptr);
+	fd_set *writePtr = FillSetFromVector(write, inWriteSet);
+	fd_set *exceptPtr = FillSetFromVector(except, inExceptSet);
+	int toRet = select(0, readPtr, writePtr, exceptPtr, NULL);
 	if (toRet > 0)
 	{
 		FillVectorFromSet(outReadSet, inReadSet, read);

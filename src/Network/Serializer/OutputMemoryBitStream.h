@@ -17,6 +17,7 @@ public:
 	void WriteBytes(const void* inData, size_t inByteCount);
 	virtual bool IsInput() const override { return false; }
 	virtual void Serialize(void* inData, size_t inBitCount) override;
+	void Reset();
 private:
 	void ReallocBuffer(uint32_t inNewBitCapacity);
 };

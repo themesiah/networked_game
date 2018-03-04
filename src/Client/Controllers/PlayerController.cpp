@@ -27,12 +27,16 @@ m_PosX(300.f)
 , m_CurrentAnimation(0)
 , m_Socket(NULL)
 {
+	m_InputMs = new InputMemoryBitStream("a", 8);
+	m_OutputMs = new OutputMemoryBitStream();
 }
 
 CPlayerController::~CPlayerController()
 {
 	delete m_pAnimatedSprite;
 	delete m_pAnimationSet;
+	delete m_InputMs;
+	delete m_OutputMs;
 }
 
 void CPlayerController::Init() {
@@ -137,8 +141,9 @@ void CPlayerController::Update(float aDeltaTime)
 void CPlayerController::SocketUpdate(float aDeltaTime)
 {
 	
-	MemoryStream *output = Serialize();
-	int sent = m_Socket->Send(output->GetBufferPtr(), output->GetByteLength());
+	m_OutputMs->Reset();
+	Serialize(m_OutputMs);
+	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 	
 	std::vector<TCPSocketPtr> readableSockets;
 	if (SocketUtil::Select(&m_ReadBlockSockets, &readableSockets, nullptr, nullptr, nullptr, nullptr)) {
@@ -148,8 +153,8 @@ void CPlayerController::SocketUpdate(float aDeltaTime)
 			FD_ZERO(segment);
 			int dataReceived = socket->Receive(segment, 1024);
 			if (dataReceived > 0) {
-				InputMemoryBitStream *input = new InputMemoryBitStream(segment, dataReceived);
-				Unserialize(input);
+				m_InputMs->Reset(segment, dataReceived);
+				Serialize(m_InputMs);
 				m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
 			}
 		}

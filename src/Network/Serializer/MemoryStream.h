@@ -25,6 +25,7 @@ public:
 	{
 		return (mBitHead + 7) >> 3;
 	}
+
 	float ConvertFromFixed(uint16_t inNumber, const float& outMin, const float& precision)
 	{
 		return static_cast<float>(inNumber)* precision + outMin;
