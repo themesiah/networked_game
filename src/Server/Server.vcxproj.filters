@@ -13,10 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de código fuente\ServerEngine">
+      <UniqueIdentifier>{bce90594-7351-4eb1-b3d2-dc8f2470a5b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="ServerEngine\ServerEngine.cpp">
+      <Filter>Archivos de código fuente\ServerEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServerEngine\ServerEngine.h">
+      <Filter>Archivos de código fuente\ServerEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
