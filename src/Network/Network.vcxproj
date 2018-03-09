@@ -16,16 +16,18 @@
     <ClInclude Include="Common\SocketUtil.h" />
     <ClInclude Include="Common\TCPSocket.h" />
     <ClInclude Include="Common\UDPSocket.h" />
+    <ClInclude Include="Replication\GameObject.h" />
+    <ClInclude Include="Replication\LinkingContext.h" />
+    <ClInclude Include="Replication\ObjectCreationRegistry.h" />
+    <ClInclude Include="Replication\Packet.h" />
     <ClInclude Include="Serializer\CustomReflection.h" />
     <ClInclude Include="Serializer\Endianness.h" />
     <ClInclude Include="Serializer\InputMemoryBitStream.h" />
     <ClInclude Include="Serializer\InputMemoryStream.h" />
-    <ClInclude Include="Serializer\LinkingContext.h" />
     <ClInclude Include="Serializer\MemoryStream.h" />
     <ClInclude Include="Serializer\OutputMemoryBitStream.h" />
     <ClInclude Include="Serializer\OutputMemoryStream.h" />
     <ClInclude Include="Serializer\ReflectionData.h" />
-    <ClInclude Include="Serializer\SerializableObject.h" />
     <ClInclude Include="Serializer\SerializeUtils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -34,10 +36,10 @@
     <ClCompile Include="Common\SocketUtil.cpp" />
     <ClCompile Include="Common\TCPSocket.cpp" />
     <ClCompile Include="Common\UDPSocket.cpp" />
+    <ClCompile Include="Replication\LinkingContext.cpp" />
     <ClCompile Include="Serializer\Endianness.cpp" />
     <ClCompile Include="Serializer\InputMemoryBitStream.cpp" />
     <ClCompile Include="Serializer\InputMemoryStream.cpp" />
-    <ClCompile Include="Serializer\LinkingContext.cpp" />
     <ClCompile Include="Serializer\OutputMemoryBitStream.cpp" />
     <ClCompile Include="Serializer\OutputMemoryStream.cpp" />
   </ItemGroup>

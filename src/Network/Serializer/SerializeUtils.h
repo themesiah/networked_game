@@ -3,7 +3,8 @@
 #ifndef H_SERIALIZE_UTILS
 #define H_SERIALIZE_UTILS
 
-#include "MemoryStream.h"
+#include "OutputMemoryBitStream.h"
+#include "InputMemoryBitStream.h"
 #include "CustomReflection.h"
 #include "ReflectionData.h"
 #include <map>

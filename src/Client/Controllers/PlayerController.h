@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Serializer\SerializableObject.h"
+#include "Replication\GameObject.h"
 
 #include "Common\SocketUtil.h"
 #include "Common\TCPSocket.h"
@@ -8,7 +8,9 @@
 class CAnimatedSprite;
 class CAnimationSet;
 
-class CPlayerController : SerializableObject
+class OutputMemoryBitStream;
+class InputMemoryBitStream;
+class CPlayerController : GameObject
 {
 public:
 	enum PlayerAnimations {
@@ -29,10 +31,7 @@ public:
 		}
 		);
 	}
-	enum { kClassId = 'CPCT' };
-	virtual uint32_t GetClassId() override {
-		return kClassId;
-	}
+	CLASS_IDENTIFICATION('CPCT', CPlayerController);
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
 	CAnimationSet* m_pAnimationSet;

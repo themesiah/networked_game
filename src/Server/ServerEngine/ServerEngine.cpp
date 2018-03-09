@@ -4,6 +4,8 @@
 #include <assert.h>
 
 #include "Common\SocketAddressFactory.h"
+#include "Serializer\OutputMemoryBitStream.h"
+#include "Serializer\InputMemoryBitStream.h"
 
 CServerEngine::CServerEngine() :
 m_ListenSocket(NULL)

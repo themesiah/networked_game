@@ -8,9 +8,13 @@
 
 #include "Utils\Singleton.h"
 #include "Common\SocketUtil.h"
-#include "Serializer\SerializableObject.h"
+#include "Replication\GameObject.h"
 
-#define TARGET_FPS 10
+#include "Serializer\OutputMemoryBitStream.h"
+#include "Serializer\InputMemoryBitStream.h"
+
+#define TARGET_FPS 60
+#define SENDS_PER_SECOND 10 // How many times the server will send data to the players per second
 #define SEGMENT_SIZE 1024
 
 #define BUILD_GET_SET_ENGINE_MANAGER( Manager ) \
@@ -22,7 +26,9 @@ const C##Manager& Get##Manager() const { return *m_##Manager; } \
 C##Manager& Get##Manager() { return *m_##Manager; } \
 bool Has##Manager() { return m_##Manager != nullptr; } \
 
-class CPosition : public SerializableObject {
+/*class OutputMemoryBitStream;
+class InputMemoryBitStream;*/
+class CPosition : public GameObject {
 public:
 	CPosition() {
 	}
@@ -35,10 +41,7 @@ public:
 		}
 		);
 	}
-	enum { kClassId = 'CPOS' };
-	uint32_t GetClassId() override {
-		return kClassId;
-	}
+	CLASS_IDENTIFICATION('CPOS', CPosition);
 };
 
 class CServerEngine : public base::utils::CSingleton<CServerEngine>

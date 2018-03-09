@@ -15,6 +15,9 @@
     <Filter Include="Archivos de código fuente\Serializer">
       <UniqueIdentifier>{027c2f1b-7aa8-4741-9dd7-f3343a50518b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Replication">
+      <UniqueIdentifier>{4d2ee308-06fd-4a2f-98cc-ee1c197b4bce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\UDPSocket.h">
@@ -50,9 +53,6 @@
     <ClInclude Include="Serializer\MemoryStream.h">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Serializer\LinkingContext.h">
-      <Filter>Archivos de código fuente\Serializer</Filter>
-    </ClInclude>
     <ClInclude Include="Serializer\CustomReflection.h">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClInclude>
@@ -62,8 +62,17 @@
     <ClInclude Include="Serializer\ReflectionData.h">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Serializer\SerializableObject.h">
-      <Filter>Archivos de código fuente\Serializer</Filter>
+    <ClInclude Include="Replication\LinkingContext.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\Packet.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ObjectCreationRegistry.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\GameObject.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,8 +106,8 @@
     <ClCompile Include="Serializer\InputMemoryBitStream.cpp">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClCompile>
-    <ClCompile Include="Serializer\LinkingContext.cpp">
-      <Filter>Archivos de código fuente\Serializer</Filter>
+    <ClCompile Include="Replication\LinkingContext.cpp">
+      <Filter>Archivos de código fuente\Replication</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

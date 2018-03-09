@@ -1,6 +1,6 @@
 #include "ServerEngine\ServerEngine.h"
 
-class TestObject : public SerializableObject {
+class TestObject : public GameObject {
 public:
 	TestObject() {
 	}
@@ -25,10 +25,7 @@ public:
 		}
 		);
 	}
-	enum { kClassId = 'TEST' };
-	virtual uint32_t GetClassId() override {
-		return kClassId;
-	}
+	CLASS_IDENTIFICATION('TEST', TestObject);
 };
 
 const float TestObject::defaultB = 5.0f;
@@ -52,10 +49,7 @@ public:
 		}
 		);
 	}
-	enum { kClassId = 'TES2' };
-	virtual uint32_t GetClassId() override {
-		return kClassId;
-	}
+	CLASS_IDENTIFICATION('TES2', TestObject2);
 };
 
 int main()
