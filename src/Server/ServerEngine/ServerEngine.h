@@ -41,15 +41,19 @@ public:
 		}
 		);
 	}
-	CLASS_IDENTIFICATION('CPOS', CPosition);
+	CLASS_IDENTIFICATION('CPCT', CPosition);
 };
 
+class CReplicationManager;
+class CMovement;
 class CServerEngine : public base::utils::CSingleton<CServerEngine>
 {
 public:
 	virtual ~CServerEngine();
 	void Init();
 	void Update();
+
+	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 protected:
 	CServerEngine();
 	friend class base::utils::CSingleton<CServerEngine>;
@@ -73,11 +77,12 @@ private:
 	void InitSockets();
 	void InitReflection();
 	void InitDataPos(const TCPSocketPtr& socket);
-	void ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos);
+	void ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos, float dt);
 	void SendDataToClient(const TCPSocketPtr& socket, CPosition* pos);
 	void UpdateSendingSockets(float aDeltaTime);
 	float m_SendTimer;
-	std::vector<CPosition*> m_Positions;
+	std::map<TCPSocketPtr, CPosition*> m_Positions;
+	CMovement* m_Movement;
 };
 
 #endif

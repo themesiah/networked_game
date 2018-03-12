@@ -14,7 +14,8 @@ enum EPrimitiveType
 	EPT_String,
 	EPT_Float,
 	EPT_Bool,
-	EPT_MapIntInt
+	EPT_MapIntInt,
+	EPT_GameObject
 };
 class MemberVariable
 {

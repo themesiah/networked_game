@@ -11,8 +11,10 @@
 
 typedef GameObject* (*GameObjectCreationFunc)();
 
-class ObjectCreationRegistry : base::utils::CSingleton<ObjectCreationRegistry>
+class ObjectCreationRegistry : public base::utils::CSingleton<ObjectCreationRegistry>
 {
+public:
+	~ObjectCreationRegistry(){}
 	template <class T>
 	void RegisterCreationFunction()
 	{
@@ -29,7 +31,7 @@ class ObjectCreationRegistry : base::utils::CSingleton<ObjectCreationRegistry>
 	}
 
 protected:
-	ObjectCreationRegistry();
+	ObjectCreationRegistry(){}
 	friend class base::utils::CSingleton<ObjectCreationRegistry>;
 
 private:

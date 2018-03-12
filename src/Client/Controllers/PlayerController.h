@@ -2,15 +2,12 @@
 
 #include "Replication\GameObject.h"
 
-#include "Common\SocketUtil.h"
-#include "Common\TCPSocket.h"
-
 class CAnimatedSprite;
 class CAnimationSet;
 
 class OutputMemoryBitStream;
 class InputMemoryBitStream;
-class CPlayerController : GameObject
+class CPlayerController : public GameObject
 {
 public:
 	enum PlayerAnimations {
@@ -22,8 +19,7 @@ public:
 	CPlayerController();
 	virtual ~CPlayerController();
 	void Init();
-	void Update(float aDeltaTime);
-	void SocketUpdate(float aDeltaTime);
+	void Update(float aDeltaTime) override;
 	static DataType* GetReflectionData() {
 		return new DataType({
 			MemberVariable("m_PosX", OffsetOf(CPlayerController, m_PosX), -1000.0f, 0.1f),
@@ -39,8 +35,4 @@ private:
 	float m_PosY;
 	float m_Speed;
 	size_t m_CurrentAnimation;
-	TCPSocketPtr m_Socket;
-	std::vector<TCPSocketPtr> m_ReadBlockSockets;
-	OutputMemoryBitStream *m_OutputMs;
-	InputMemoryBitStream *m_InputMs;
 };

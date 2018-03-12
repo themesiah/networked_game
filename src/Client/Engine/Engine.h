@@ -1,11 +1,16 @@
 #pragma once
 
 #include <SFML\System.hpp>
+#include <unordered_set>
 
 #include "Utils\Singleton.h"
 #include "ResourcesManager.h"
 #include "../Graphics/RenderManager.h"
 #include "../Controllers/PlayerController.h"
+
+#include "Common\SocketUtil.h"
+#include "Common\TCPSocket.h"
+
 
 #define BUILD_GET_SET_ENGINE_MANAGER( Manager ) \
 private: \
@@ -16,8 +21,11 @@ const C##Manager& Get##Manager() const { return *m_##Manager; } \
 C##Manager& Get##Manager() { return *m_##Manager; } \
 bool Has##Manager() { return m_##Manager != nullptr; } \
 
+
 class CActionManager;
 class CTextureManager;
+class CReplicationManager;
+class CMovement;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
@@ -31,8 +39,19 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(TextureManager);
 	BUILD_GET_SET_ENGINE_MANAGER(SpriteManager);
 	BUILD_GET_SET_ENGINE_MANAGER(RenderManager);
+	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 protected:
 	CEngine();
+	void InitReflection();
+	void InitNetwork();
+	void UpdateNetwork(float aDeltaTime);
 	friend class base::utils::CSingleton<CEngine>;
-	CPlayerController m_PlayerController;
+	CPlayerController* m_PlayerController;
+	//std::unordered_set<GameObject*> m_GameObjects;
+
+	TCPSocketPtr m_Socket;
+	std::vector<TCPSocketPtr> m_ReadBlockSockets;
+	OutputMemoryBitStream *m_OutputMs;
+	InputMemoryBitStream *m_InputMs;
+	CMovement* m_Movement;
 };

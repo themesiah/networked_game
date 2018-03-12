@@ -74,6 +74,15 @@
     <ClInclude Include="Replication\GameObject.h">
       <Filter>Archivos de código fuente\Replication</Filter>
     </ClInclude>
+    <ClInclude Include="Replication\ReplicationManager.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ReplicationHeader.h">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Movement.h">
+      <Filter>Archivos de código fuente</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\SocketAddress.cpp">
@@ -107,6 +116,9 @@
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Replication\LinkingContext.cpp">
+      <Filter>Archivos de código fuente\Replication</Filter>
+    </ClCompile>
+    <ClCompile Include="Replication\ReplicationManager.cpp">
       <Filter>Archivos de código fuente\Replication</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,7 +8,8 @@
 #include <map>
 #include <assert.h>
 
-#define SET_REFLECTION_DATA(C) ReflectionData::GetInstance().SetData<C>()
+#define SET_REFLECTION_DATA(C) ReflectionData::GetInstance().SetData<C>(); \
+	ObjectCreationRegistry::GetInstance().RegisterCreationFunction<C>();
 #define GET_REFLECTION_DATA(id) ReflectionData::GetInstance().GetData(id)
 #define GET_REFLECTION_NAME(C) C::kClassId;
 

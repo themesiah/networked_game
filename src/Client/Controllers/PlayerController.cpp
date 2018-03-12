@@ -9,12 +9,6 @@
 #include "../Graphics/RenderManager.h"
 
 
-#include "Common\SocketAddress.h"
-#include "Common\SocketAddressFactory.h"
-
-#include "Serializer\OutputMemoryBitStream.h"
-#include "Serializer\InputMemoryBitStream.h"
-
 #include "imgui.h"
 #include "imgui-SFML.h"
 
@@ -25,22 +19,18 @@ m_PosX(300.f)
 , m_pAnimationSet(new CAnimationSet())
 , m_Speed(150.f)
 , m_CurrentAnimation(0)
-, m_Socket(NULL)
+
 {
-	m_InputMs = new InputMemoryBitStream("a", 8);
-	m_OutputMs = new OutputMemoryBitStream();
+	
 }
 
 CPlayerController::~CPlayerController()
 {
 	delete m_pAnimatedSprite;
 	delete m_pAnimationSet;
-	m_InputMs->Reset("", 0);
-	m_OutputMs->Reset();
 }
 
 void CPlayerController::Init() {
-	SET_REFLECTION_DATA(CPlayerController);
 	sf::Texture* lTexture = CEngine::GetInstance().GetTextureManager().LoadTexture("Data/player.png");
 	const unsigned int width = 32;
 	const unsigned int height = 41;
@@ -78,18 +68,7 @@ void CPlayerController::Init() {
 
 	m_pAnimatedSprite->SetAnimation(lAnimationDown);
 
-	SocketUtil::InitSockets();
-	m_Socket = SocketUtil::CreateTCPSocket(INET);
-	SocketAddressPtr sendingAddress = SocketAddressFactory::CreateIPv4FromString("localhost:48000");
-	SocketAddress receivingAddress(INADDR_ANY, 0);
-	if (m_Socket->Bind(receivingAddress) == NO_ERROR)
-	{
-		if (m_Socket->Connect(*sendingAddress.get()) == NO_ERROR)
-		{
-			m_Socket->SetNonBlockingMode(false);
-		}
-	}
-	m_ReadBlockSockets.push_back(m_Socket);
+	
 }
 
 void CPlayerController::Update(float aDeltaTime)
@@ -128,40 +107,10 @@ void CPlayerController::Update(float aDeltaTime)
 	}
 
 
-	m_PosX += x * aDeltaTime * m_Speed;
-	m_PosY += y * aDeltaTime * m_Speed;
+	/*m_PosX += x * aDeltaTime * m_Speed;
+	m_PosY += y * aDeltaTime * m_Speed;*/
 
-	SocketUpdate(aDeltaTime);
-
-	//m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
+	m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
 	m_pAnimatedSprite->Update(aDeltaTime);
 	CEngine::GetInstance().GetRenderManager().Draw(m_pAnimatedSprite, 5);
-}
-
-void CPlayerController::SocketUpdate(float aDeltaTime)
-{
-	
-	m_OutputMs->Reset();
-	Serialize(m_OutputMs);
-	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
-	
-	std::vector<TCPSocketPtr> readableSockets;
-	if (SocketUtil::Select(&m_ReadBlockSockets, &readableSockets, nullptr, nullptr, nullptr, nullptr)) {
-		for (const TCPSocketPtr& socket : readableSockets)
-		{
-			char segment[1024];
-			FD_ZERO(segment);
-			int dataReceived = socket->Receive(segment, 1024);
-			if (dataReceived > 0) {
-				m_InputMs->Reset(segment, dataReceived);
-				Serialize(m_InputMs);
-				m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
-			}
-		}
-	}
-
-	ImGui::Begin("TEST");
-	ImGui::SliderFloat("Pos X", &m_PosX, -1000.0f, 1000.0f);
-	ImGui::SliderFloat("Pos Y", &m_PosY, -1000.0f, 1000.0f);
-	ImGui::End();
 }

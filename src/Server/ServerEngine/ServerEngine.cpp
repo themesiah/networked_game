@@ -6,6 +6,10 @@
 #include "Common\SocketAddressFactory.h"
 #include "Serializer\OutputMemoryBitStream.h"
 #include "Serializer\InputMemoryBitStream.h"
+#include "Replication\ObjectCreationRegistry.h"
+
+#include "Replication\ReplicationManager.h"
+#include "Movement.h"
 
 CServerEngine::CServerEngine() :
 m_ListenSocket(NULL)
@@ -13,6 +17,7 @@ m_ListenSocket(NULL)
 {
 	m_InputMs = new InputMemoryBitStream("a", 8);
 	m_OutputMs = new OutputMemoryBitStream();
+	m_Movement = new CMovement();
 }
 
 CServerEngine::~CServerEngine()
@@ -23,6 +28,9 @@ CServerEngine::~CServerEngine()
 
 void CServerEngine::Init()
 {
+	CReplicationManager* lReplicationManager = new CReplicationManager();
+	SetReplicationManager(lReplicationManager);
+
 	InitSockets();
 	InitReflection();
 	m_PrevTime = m_Clock.now();
@@ -51,19 +59,24 @@ void CServerEngine::InitSockets()
 void CServerEngine::InitReflection()
 {
 	SET_REFLECTION_DATA(CPosition);
+	SET_REFLECTION_DATA(CMovement);
 }
 
 void CServerEngine::InitDataPos(const TCPSocketPtr& socket) {
 	CPosition* l_Position = new CPosition();
 	l_Position->posx = 100.f;
 	l_Position->posy = 100.f;
-	m_Positions.push_back(l_Position);
+	m_Positions[socket] = l_Position;
 }
 
-void CServerEngine::ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos)
+void CServerEngine::ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos, float dt)
 {
+	const float PLAYER_SPEED = 1500.f;
 	m_InputMs->Reset(segment, dataReceived);
-	pos->Serialize(m_InputMs);
+	m_Movement->Serialize(m_InputMs);
+	pos->posx += m_Movement->inputX * PLAYER_SPEED * dt;
+	pos->posy += m_Movement->inputY * PLAYER_SPEED * dt;
+	m_Movement->Reset();
 }
 
 void CServerEngine::SendDataToClient(const TCPSocketPtr& socket, CPosition* pos)
@@ -112,8 +125,7 @@ void CServerEngine::Update()
 				int dataReceived = socket->Receive(segment, SEGMENT_SIZE);
 				if (dataReceived > 0)
 				{
-					auto it = std::find(m_ReadBlockSockets.begin(), m_ReadBlockSockets.end(), socket) - m_ReadBlockSockets.begin() - 1;
-					ProcessDataFromClientPos(segment, dataReceived, m_Positions[it]);
+					ProcessDataFromClientPos(segment, dataReceived, m_Positions[socket], dt);
 				}
 				if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
 					std::cout << "Disconnected socket" << std::endl;
@@ -123,6 +135,7 @@ void CServerEngine::Update()
 					m_WriteBlockSockets.erase(it);
 					it = std::find(m_ErrorBlockSockets.begin(), m_ErrorBlockSockets.end(), socket);
 					m_ErrorBlockSockets.erase(it);
+					m_Positions.erase(socket);
 				}
 			}
 		}
@@ -141,8 +154,7 @@ void CServerEngine::UpdateSendingSockets(float aDeltaTime)
 		{
 			for (const TCPSocketPtr& socket : m_WritableSockets)
 			{
-				auto it = std::find(m_WriteBlockSockets.begin(), m_WriteBlockSockets.end(), socket) - m_WriteBlockSockets.begin() - 1;
-				SendDataToClient(socket, m_Positions[it]);
+				SendDataToClient(socket, m_Positions[socket]);
 			}
 		}
 		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);

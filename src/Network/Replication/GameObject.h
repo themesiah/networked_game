@@ -19,6 +19,14 @@ public:
 	void Serialize(MemoryStream* ms) {
 		SerializeUtils::Serialize(ms, (uint8_t*)this, GetClassId());
 	}
+
+	virtual void Destroy() {
+
+	}
+
+	virtual void Update(float aDeltaTime) {
+
+	}
 };
 
 #endif
