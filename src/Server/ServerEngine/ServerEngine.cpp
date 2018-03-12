@@ -9,6 +9,7 @@
 
 CServerEngine::CServerEngine() :
 m_ListenSocket(NULL)
+, m_SendTimer(0.f)
 {
 	m_InputMs = new InputMemoryBitStream("a", 8);
 	m_OutputMs = new OutputMemoryBitStream();
@@ -59,10 +60,14 @@ void CServerEngine::InitDataPos(const TCPSocketPtr& socket) {
 	m_Positions.push_back(l_Position);
 }
 
-void CServerEngine::ProcessDataFromClientPos(const TCPSocketPtr& socket, char* segment, int dataReceived, CPosition* pos)
+void CServerEngine::ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos)
 {
 	m_InputMs->Reset(segment, dataReceived);
 	pos->Serialize(m_InputMs);
+}
+
+void CServerEngine::SendDataToClient(const TCPSocketPtr& socket, CPosition* pos)
+{
 	m_OutputMs->Reset();
 	pos->Serialize(m_OutputMs);
 	socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
@@ -78,9 +83,10 @@ void CServerEngine::Update()
 		lChronoDeltaTime = lCurrentTime - m_PrevTime;
 	}
 	m_PrevTime = lCurrentTime;
-	float dt = lChronoDeltaTime.count() > 0.5f ? 0.5f : lChronoDeltaTime.count(); // DELTA TIME MAX 0.5f
+	float dt = lChronoDeltaTime.count();// > 0.5f ? 0.5f : lChronoDeltaTime.count(); // DELTA TIME MAX 0.5f
 	// DELTA TIME CALCULATION END
 
+	UpdateSendingSockets(dt);
 	
 	if (SocketUtil::Select(&m_ReadBlockSockets, &m_ReadableSockets,
 		&m_WriteBlockSockets, &m_WritableSockets,
@@ -107,7 +113,7 @@ void CServerEngine::Update()
 				if (dataReceived > 0)
 				{
 					auto it = std::find(m_ReadBlockSockets.begin(), m_ReadBlockSockets.end(), socket) - m_ReadBlockSockets.begin() - 1;
-					ProcessDataFromClientPos(socket, segment, dataReceived, m_Positions[it]);
+					ProcessDataFromClientPos(segment, dataReceived, m_Positions[it]);
 				}
 				if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
 					std::cout << "Disconnected socket" << std::endl;
@@ -120,5 +126,25 @@ void CServerEngine::Update()
 				}
 			}
 		}
+	}
+}
+
+void CServerEngine::UpdateSendingSockets(float aDeltaTime)
+{
+	// Update the sending at different intervals
+	m_SendTimer += aDeltaTime;
+	if (m_SendTimer >= SEND_INTERVAL)
+	{
+		if (SocketUtil::Select(nullptr, nullptr,
+			&m_WriteBlockSockets, &m_WritableSockets,
+			nullptr, nullptr))
+		{
+			for (const TCPSocketPtr& socket : m_WritableSockets)
+			{
+				auto it = std::find(m_WriteBlockSockets.begin(), m_WriteBlockSockets.end(), socket) - m_WriteBlockSockets.begin() - 1;
+				SendDataToClient(socket, m_Positions[it]);
+			}
+		}
+		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
 	}
 }

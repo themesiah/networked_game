@@ -14,7 +14,7 @@
 #include "Serializer\InputMemoryBitStream.h"
 
 #define TARGET_FPS 60
-#define SENDS_PER_SECOND 10 // How many times the server will send data to the players per second
+#define SEND_INTERVAL 0.1f // How many times the server will send data to the players per second
 #define SEGMENT_SIZE 1024
 
 #define BUILD_GET_SET_ENGINE_MANAGER( Manager ) \
@@ -73,7 +73,10 @@ private:
 	void InitSockets();
 	void InitReflection();
 	void InitDataPos(const TCPSocketPtr& socket);
-	void ProcessDataFromClientPos(const TCPSocketPtr& socket, char* segment, int dataReceived, CPosition* pos);
+	void ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos);
+	void SendDataToClient(const TCPSocketPtr& socket, CPosition* pos);
+	void UpdateSendingSockets(float aDeltaTime);
+	float m_SendTimer;
 	std::vector<CPosition*> m_Positions;
 };
 
