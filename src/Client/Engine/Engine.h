@@ -11,6 +11,10 @@
 #include "Common\SocketUtil.h"
 #include "Common\TCPSocket.h"
 
+#include "Serializer\PacketStream.h"
+
+#define SEGMENT_SIZE 1500
+
 
 #define BUILD_GET_SET_ENGINE_MANAGER( Manager ) \
 private: \
@@ -46,12 +50,12 @@ protected:
 	void InitNetwork();
 	void UpdateNetwork(float aDeltaTime);
 	friend class base::utils::CSingleton<CEngine>;
-	CPlayerController* m_PlayerController;
-	//std::unordered_set<GameObject*> m_GameObjects;
+	std::unordered_set<GameObject*> m_GameObjects;
 
 	TCPSocketPtr m_Socket;
 	std::vector<TCPSocketPtr> m_ReadBlockSockets;
 	OutputMemoryBitStream *m_OutputMs;
 	InputMemoryBitStream *m_InputMs;
 	CMovement* m_Movement;
+	PacketStream m_PacketStream;
 };

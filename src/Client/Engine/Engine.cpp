@@ -16,13 +16,13 @@
 
 #include "Replication\ReplicationManager.h"
 #include "Movement.h"
+#include "Replication\Packet.h"
 
 CEngine::CEngine() :
 m_Socket(NULL)
 , m_InputMs(NULL)
 , m_OutputMs(NULL)
 {
-	m_PlayerController = new CPlayerController();
 	m_Movement = new CMovement();
 }
 
@@ -56,8 +56,6 @@ void CEngine::Init()
 
 	InitReflection();
 	InitNetwork();
-
-	m_PlayerController->Init();
 }
 
 void CEngine::InitReflection()
@@ -92,12 +90,10 @@ void CEngine::ProcessInputs()
 
 void CEngine::Update(float aDeltaTime)
 {
-	m_PlayerController->Update(aDeltaTime);
-
-	/*for (GameObject* go : m_GameObjects)
+	for (GameObject* go : m_GameObjects)
 	{
 		go->Update(aDeltaTime);
-	}*/
+	}
 
 	// MANAGE INPUT
 	if (CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->active) {
@@ -115,6 +111,7 @@ void CEngine::UpdateNetwork(float aDeltaTime)
 {
 	m_OutputMs->Reset();
 	m_Movement->Serialize(m_OutputMs);
+	m_OutputMs->WriteSize();
 	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 	m_Movement->Reset();
 
@@ -122,14 +119,26 @@ void CEngine::UpdateNetwork(float aDeltaTime)
 	if (SocketUtil::Select(&m_ReadBlockSockets, &readableSockets, nullptr, nullptr, nullptr, nullptr)) {
 		for (const TCPSocketPtr& socket : readableSockets)
 		{
-			char segment[1024];
+			char segment[SEGMENT_SIZE];
 			FD_ZERO(segment);
-			int dataReceived = socket->Receive(segment, 1024);
+			int dataReceived = socket->Receive(segment, SEGMENT_SIZE);
 			if (dataReceived > 0) {
-				m_InputMs->Reset(segment, dataReceived);
-				m_PlayerController->Serialize(m_InputMs);
+				m_PacketStream.WriteBytes(segment, dataReceived);
 			}
 		}
+	}
+
+	PacketStream::Packet p;
+	p = m_PacketStream.ReadPacket();
+	while (p.size > 0)
+	{
+		m_InputMs->Reset(p.buffer, p.size);
+		uint8_t packetType;
+		((MemoryStream*)m_InputMs)->Serialize(packetType, 2);
+		if (packetType == PacketType::PT_ReplicationData) {
+			m_GameObjects = m_ReplicationManager->ReceiveReplicatedObjects(m_InputMs);
+		}
+		p = m_PacketStream.ReadPacket();
 	}
 }
 

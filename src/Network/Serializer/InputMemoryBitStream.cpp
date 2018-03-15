@@ -16,7 +16,7 @@ InputMemoryBitStream::~InputMemoryBitStream()
 
 void InputMemoryBitStream::Reset(const char* inBuffer, uint32_t inBitCount) {
 	//std::free(mBuffer);
-	mBitCapacity = inBitCount;
+	mBitCapacity = inBitCount*8;
 	mBitHead = 0;
 	mBuffer = const_cast<char*>(inBuffer);
 }

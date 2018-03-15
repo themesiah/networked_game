@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "PacketStream.h"
+
 OutputMemoryBitStream::OutputMemoryBitStream()
 {
 	ReallocBuffer(256);
@@ -13,10 +15,29 @@ OutputMemoryBitStream::~OutputMemoryBitStream()
 	std::free(mBuffer);
 }
 
-void OutputMemoryBitStream::Reset() {
+void OutputMemoryBitStream::Reset()
+{
 	//std::free(mBuffer);
 	ReallocBuffer(256);
 	mBitHead = 0;
+}
+
+void OutputMemoryBitStream::WriteSize()
+{
+	PacketSize size = mBitHead >> 3;
+	uint32_t bitOffset = mBitHead & 0x7;
+	if (bitOffset > 0)
+	{
+		size++;
+	}
+	uint32_t nextBitHead = mBitHead + sizeof(PacketSize)*8;
+	if (nextBitHead > mBitCapacity)
+	{
+		ReallocBuffer(std::max(mBitCapacity * 2, nextBitHead));
+	}
+	memcpy(mBuffer + sizeof(PacketSize), mBuffer, size);
+	memcpy(mBuffer, &size, sizeof(PacketSize));
+	mBitHead = nextBitHead;
 }
 
 void OutputMemoryBitStream::WriteBits(uint8_t inData, size_t inBitCount)

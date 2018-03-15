@@ -21,7 +21,7 @@ m_PosX(300.f)
 , m_CurrentAnimation(0)
 
 {
-	
+	Init();
 }
 
 CPlayerController::~CPlayerController()

@@ -30,6 +30,7 @@
     <ClInclude Include="Serializer\MemoryStream.h" />
     <ClInclude Include="Serializer\OutputMemoryBitStream.h" />
     <ClInclude Include="Serializer\OutputMemoryStream.h" />
+    <ClInclude Include="Serializer\PacketStream.h" />
     <ClInclude Include="Serializer\ReflectionData.h" />
     <ClInclude Include="Serializer\SerializeUtils.h" />
   </ItemGroup>

@@ -67,6 +67,7 @@ void CServerEngine::InitDataPos(const TCPSocketPtr& socket) {
 	l_Position->posx = 100.f;
 	l_Position->posy = 100.f;
 	m_Positions[socket] = l_Position;
+	m_GameObjects.push_back(l_Position);
 }
 
 void CServerEngine::ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos, float dt)
@@ -77,13 +78,6 @@ void CServerEngine::ProcessDataFromClientPos(char* segment, int dataReceived, CP
 	pos->posx += m_Movement->inputX * PLAYER_SPEED * dt;
 	pos->posy += m_Movement->inputY * PLAYER_SPEED * dt;
 	m_Movement->Reset();
-}
-
-void CServerEngine::SendDataToClient(const TCPSocketPtr& socket, CPosition* pos)
-{
-	m_OutputMs->Reset();
-	pos->Serialize(m_OutputMs);
-	socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 }
 
 void CServerEngine::Update()
@@ -101,6 +95,38 @@ void CServerEngine::Update()
 
 	UpdateSendingSockets(dt);
 	
+	UpdateReceivingSockets(dt);
+
+	UpdatePackets(dt);
+	
+}
+
+// TODO: Correction of memory leak
+void CServerEngine::UpdateSendingSockets(float aDeltaTime)
+{
+	// Update the sending at different intervals
+	m_SendTimer += aDeltaTime;
+
+	if (m_SendTimer >= SEND_INTERVAL)
+	{
+		if (SocketUtil::Select(nullptr, nullptr,
+			&m_WriteBlockSockets, &m_WritableSockets,
+			nullptr, nullptr))
+		{
+			m_OutputMs->Reset();
+			m_ReplicationManager->ReplicateWorldState(m_OutputMs, m_GameObjects);
+			m_OutputMs->WriteSize();
+			for (const TCPSocketPtr& socket : m_WritableSockets)
+			{
+				socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+			}
+		}
+		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
+	}
+}
+
+void CServerEngine::UpdateReceivingSockets(float aDeltaTime)
+{
 	if (SocketUtil::Select(&m_ReadBlockSockets, &m_ReadableSockets,
 		&m_WriteBlockSockets, &m_WritableSockets,
 		&m_ErrorBlockSockets, &m_ErrorableSockets))
@@ -115,6 +141,7 @@ void CServerEngine::Update()
 				m_ReadBlockSockets.push_back(newSocket);
 				m_WriteBlockSockets.push_back(newSocket);
 				m_ErrorBlockSockets.push_back(newSocket);
+				m_PacketStreams[newSocket] = new PacketStream();
 				std::cout << "New connection" << std::endl;
 				InitDataPos(newSocket);
 			}
@@ -125,7 +152,7 @@ void CServerEngine::Update()
 				int dataReceived = socket->Receive(segment, SEGMENT_SIZE);
 				if (dataReceived > 0)
 				{
-					ProcessDataFromClientPos(segment, dataReceived, m_Positions[socket], dt);
+					m_PacketStreams[socket]->WriteBytes(segment, dataReceived);
 				}
 				if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
 					std::cout << "Disconnected socket" << std::endl;
@@ -135,28 +162,32 @@ void CServerEngine::Update()
 					m_WriteBlockSockets.erase(it);
 					it = std::find(m_ErrorBlockSockets.begin(), m_ErrorBlockSockets.end(), socket);
 					m_ErrorBlockSockets.erase(it);
+					auto goit = std::find(m_GameObjects.begin(), m_GameObjects.end(), m_Positions[socket]);
+					m_GameObjects.erase(goit);
+					delete m_Positions[socket];
 					m_Positions.erase(socket);
+					delete m_PacketStreams[socket];
+					m_PacketStreams.erase(socket);
 				}
 			}
 		}
 	}
 }
 
-void CServerEngine::UpdateSendingSockets(float aDeltaTime)
+void CServerEngine::UpdatePackets(float aDeltaTime)
 {
-	// Update the sending at different intervals
-	m_SendTimer += aDeltaTime;
-	if (m_SendTimer >= SEND_INTERVAL)
+	for (int i = 0; i < m_ReadBlockSockets.size(); ++i)
 	{
-		if (SocketUtil::Select(nullptr, nullptr,
-			&m_WriteBlockSockets, &m_WritableSockets,
-			nullptr, nullptr))
+		TCPSocketPtr socket = m_ReadBlockSockets[i];
+		if (socket != m_ListenSocket)
 		{
-			for (const TCPSocketPtr& socket : m_WritableSockets)
-			{
-				SendDataToClient(socket, m_Positions[socket]);
+			PacketStream::Packet p;
+			p = m_PacketStreams[socket]->ReadPacket();
+			while (p.size > 0) {
+				// Process packet
+				ProcessDataFromClientPos(p.buffer, p.size, m_Positions[m_ReadBlockSockets[i]], aDeltaTime);
+				p = m_PacketStreams[socket]->ReadPacket();
 			}
 		}
-		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
 	}
 }
