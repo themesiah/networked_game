@@ -80,10 +80,11 @@ std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedObjects(Me
 	//destroy it
 	for (GameObject* go : mObjectsReplicatedToMe)
 	{
-		if (receivedObjects.find(go) != receivedObjects.end())
+		if (receivedObjects.find(go) == receivedObjects.end())
 		{
 			mLinkingContext->RemoveGameObject(go);
 			go->Destroy();
+			delete go;
 		}
 	}
 	mObjectsReplicatedToMe = receivedObjects;

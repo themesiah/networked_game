@@ -24,6 +24,18 @@ CServerEngine::~CServerEngine()
 {
 	delete m_InputMs;
 	delete m_OutputMs;
+	delete m_ReplicationManager;
+	delete m_Movement;
+
+	for (std::map<TCPSocketPtr, PacketStream*>::iterator it = m_PacketStreams.begin(); it != m_PacketStreams.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	for (std::vector<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
+	{
+		delete *it;
+	}
 }
 
 void CServerEngine::Init()
@@ -101,7 +113,6 @@ void CServerEngine::Update()
 	
 }
 
-// TODO: Correction of memory leak
 void CServerEngine::UpdateSendingSockets(float aDeltaTime)
 {
 	// Update the sending at different intervals
@@ -186,6 +197,7 @@ void CServerEngine::UpdatePackets(float aDeltaTime)
 			while (p.size > 0) {
 				// Process packet
 				ProcessDataFromClientPos(p.buffer, p.size, m_Positions[m_ReadBlockSockets[i]], aDeltaTime);
+				std::free(p.buffer);
 				p = m_PacketStreams[socket]->ReadPacket();
 			}
 		}

@@ -65,6 +65,14 @@ public:
 		}
 	}
 
+	void Remove(std::string aResourceName)
+	{
+		if (m_Resources.Exist(aResourceName))
+		{
+			m_Resources.Remove(aResourceName);
+		}
+	}
+
 	void Clear()
 	{
 		m_Resources.Clear();

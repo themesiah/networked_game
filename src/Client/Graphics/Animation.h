@@ -9,7 +9,7 @@
 class CAnimation {
 public:
 	CAnimation();
-	~CAnimation();
+	virtual ~CAnimation();
 	void AddFrame(const sf::IntRect& aRect);
 	const sf::IntRect& GetFrame(size_t i);
 	size_t GetSize() const;

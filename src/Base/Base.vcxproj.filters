@@ -13,6 +13,9 @@
     <Filter Include="XML">
       <UniqueIdentifier>{bafeec5b-78db-4d4e-8320-92d41f83b710}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\Memleaks">
+      <UniqueIdentifier>{83ae5475-9579-4013-90d5-6fcf5d9f0cb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\CheckedDelete.h">
@@ -63,6 +66,12 @@
     <ClInclude Include="Utils\FileUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\MemLeaks\MemLeaks.h">
+      <Filter>Utils\Memleaks</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\MemLeaks\Releaser.h">
+      <Filter>Utils\Memleaks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XML\XML.cpp">
@@ -82,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="Utils\FileUtils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\MemLeaks\MemLeaks.cpp">
+      <Filter>Utils\Memleaks</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

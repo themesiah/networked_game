@@ -19,6 +19,8 @@
     <ClInclude Include="Utils\EnumToString.h" />
     <ClInclude Include="Utils\FileUtils.h" />
     <ClInclude Include="Utils\Logger\Logger.h" />
+    <ClInclude Include="Utils\MemLeaks\MemLeaks.h" />
+    <ClInclude Include="Utils\MemLeaks\Releaser.h" />
     <ClInclude Include="Utils\Name.h" />
     <ClInclude Include="Utils\Singleton.h" />
     <ClInclude Include="Utils\StringUtils.h" />
@@ -32,6 +34,7 @@
     <ClCompile Include="Debug\CustomAssert.cpp" />
     <ClCompile Include="Utils\FileUtils.cpp" />
     <ClCompile Include="Utils\Logger\Logger.cpp" />
+    <ClCompile Include="Utils\MemLeaks\MemLeaks.cpp" />
     <ClCompile Include="Utils\Name.cpp" />
     <ClCompile Include="XML\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="XML\XML.cpp" />

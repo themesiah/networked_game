@@ -80,7 +80,7 @@ class SerializeUtils
 public:
 	static void Serialize(MemoryStream *ms, uint8_t* begin, uint32_t classIdentifier) {
 		DataType * dataType = GET_REFLECTION_DATA(classIdentifier);
-		for (auto mv : dataType->GetMemberVariables())
+		for (MemberVariable mv : dataType->GetMemberVariables())
 		{
 			void* mvData = begin + mv.GetOffset();
 			bool entropyCompression = mv.mEntropyCompression;

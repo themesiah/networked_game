@@ -22,6 +22,11 @@ public:
 		mBuffer = static_cast<char*>(std::realloc(mBuffer, mCapacity));
 	}
 
+	virtual ~PacketStream()
+	{
+		std::free(mBuffer);
+	}
+
 	void WriteBytes(const void* inData, size_t inByteCount)
 	{
 		uint32_t nextByteHead = mHead + inByteCount;

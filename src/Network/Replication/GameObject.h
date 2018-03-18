@@ -14,6 +14,10 @@ static GameObject* CreateInstance() {return new inClass();}
 
 class GameObject {
 public:
+	virtual ~GameObject()
+	{
+
+	}
 	CLASS_IDENTIFICATION('GOBJ', GameObject);
 
 	void Serialize(MemoryStream* ms) {

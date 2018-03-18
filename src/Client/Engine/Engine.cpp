@@ -30,6 +30,20 @@ CEngine::~CEngine()
 {
 	m_InputMs->Reset("", 0);
 	m_OutputMs->Reset();
+	delete m_ActionManager;
+	delete m_RenderManager;
+	delete m_TextureManager;
+	delete m_SpriteManager;
+	delete m_ReplicationManager;
+	delete m_Movement;
+	delete m_InputMs;
+	delete m_OutputMs;
+
+	for (std::unordered_set<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
+	{
+		delete *it;
+	}
+	m_GameObjects.clear();
 }
 
 void CEngine::Init()
@@ -138,6 +152,7 @@ void CEngine::UpdateNetwork(float aDeltaTime)
 		if (packetType == PacketType::PT_ReplicationData) {
 			m_GameObjects = m_ReplicationManager->ReceiveReplicatedObjects(m_InputMs);
 		}
+		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();
 	}
 }

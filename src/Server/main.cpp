@@ -1,5 +1,9 @@
 #include "ServerEngine\ServerEngine.h"
 
+#ifdef _DEBUG
+#include "Utils\MemLeaks\MemLeaks.h"
+#endif
+
 class TestObject : public GameObject {
 public:
 	TestObject() {
@@ -52,15 +56,29 @@ public:
 	CLASS_IDENTIFICATION('TES2', TestObject2);
 };
 
-int main()
-{
+int MainServer() {
 	CServerEngine& lServer = CServerEngine::GetInstance();
 	lServer.Init();
+	bool lFinish = false;
 
-	while (1)
+	while (!lFinish)
 	{
 		lServer.Update();
 	}
+	return 0;
+}
+
+int main()
+{
+#ifdef _DEBUG
+	MemLeaks::MemoryBegin();
+	//_CrtSetBreakAlloc(173);
+#endif
+	MainServer();
+#ifdef _DEBUG
+	MemLeaks::MemoryEnd();
+#endif
+	return 0;
 	//return DoMoveTest();
 	/*SET_REFLECTION_DATA(TestObject2);
 	TestObject2 testObject1 = TestObject2();

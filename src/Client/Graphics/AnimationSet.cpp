@@ -1,5 +1,7 @@
 #include "AnimationSet.h"
 
+#include "Animation.h"
+
 CAnimationSet::CAnimationSet()
 {
 

@@ -45,9 +45,13 @@ int main()
 
 #include <SFML\Graphics.hpp>
 
+#ifdef _DEBUG
+#include "Utils\MemLeaks\MemLeaks.h"
+#endif
+
 #define TARGET_FPS 60.0f
 
-int main() {
+int MainGame() {
 	// GENERAL VARIABLES
 	float lSecondsToEndFrame = 1.0f / TARGET_FPS;
 	sf::Clock mMainClock;
@@ -62,7 +66,7 @@ int main() {
 	// INIT ENGINE
 	CEngine& lEngine = CEngine::GetInstance();
 	lEngine.Init();
-	
+
 	// INIT NETWORK
 
 
@@ -99,7 +103,7 @@ int main() {
 		ImGui::SFML::Update(window, mImguiClock.restart());
 		lEngine.Update(lDeltaTime);
 		lEngine.ShowDebugHelpers();
-		
+
 
 		// Check game finish
 		if (lEngine.GetActionManager().Exist("EXIT") && lEngine.GetActionManager().Get("EXIT")->active) {
@@ -117,5 +121,17 @@ int main() {
 		while (mMainClock.getElapsedTime().asSeconds() < lSecondsToEndFrame);
 	}
 	ImGui::SFML::Shutdown();
+	return 0;
+}
+
+int main() {
+#ifdef _DEBUG
+	MemLeaks::MemoryBegin();
+	//_CrtSetBreakAlloc(3769);
+#endif
+	MainGame();
+#ifdef _DEBUG
+	MemLeaks::MemoryEnd();
+#endif
 	return 0;
 }

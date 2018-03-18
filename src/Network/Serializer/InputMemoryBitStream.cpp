@@ -11,7 +11,7 @@ InputMemoryBitStream::InputMemoryBitStream(const char* inBuffer, uint32_t inBitC
 
 InputMemoryBitStream::~InputMemoryBitStream()
 {
-	std::free(mBuffer);
+	//std::free(mBuffer);
 }
 
 void InputMemoryBitStream::Reset(const char* inBuffer, uint32_t inBitCount) {
