@@ -106,5 +106,8 @@
     <ClInclude Include="Controllers\PlayerController.h">
       <Filter>Archivos de código fuente\Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="Other\ImGUILog.h">
+      <Filter>Archivos de código fuente\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

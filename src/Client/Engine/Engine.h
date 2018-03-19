@@ -38,6 +38,7 @@ public:
 	void Update(float aDeltaTime);
 	void Render(sf::RenderWindow* window);
 	void ShowDebugHelpers();
+	void Disconnect();
 
 	BUILD_GET_SET_ENGINE_MANAGER(ActionManager);
 	BUILD_GET_SET_ENGINE_MANAGER(TextureManager);
@@ -53,7 +54,6 @@ protected:
 	std::unordered_set<GameObject*> m_GameObjects;
 
 	TCPSocketPtr m_Socket;
-	std::vector<TCPSocketPtr> m_ReadBlockSockets;
 	OutputMemoryBitStream *m_OutputMs;
 	InputMemoryBitStream *m_InputMs;
 	CMovement* m_Movement;

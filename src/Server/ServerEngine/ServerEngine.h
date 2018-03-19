@@ -62,26 +62,21 @@ private:
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
 	TCPSocketPtr m_ListenSocket;
-
-	std::vector<TCPSocketPtr> m_ReadBlockSockets;
-	std::vector<TCPSocketPtr> m_ReadableSockets;
-
-	std::vector<TCPSocketPtr> m_WriteBlockSockets;
-	std::vector<TCPSocketPtr> m_WritableSockets;
-
-	std::vector<TCPSocketPtr> m_ErrorBlockSockets;
-	std::vector<TCPSocketPtr> m_ErrorableSockets;
-
 	InputMemoryBitStream* m_InputMs;
 	OutputMemoryBitStream* m_OutputMs;
+	std::vector<TCPSocketPtr> m_Sockets;
+	std::vector<TCPSocketPtr> m_ReadSockets;
+	std::vector<TCPSocketPtr> m_WriteSockets;
+	std::vector<TCPSocketPtr> m_ErrorSockets;
 
 	void InitSockets();
 	void InitReflection();
 	void InitDataPos(const TCPSocketPtr& socket);
-	void ProcessDataFromClientPos(char* segment, int dataReceived, CPosition* pos, float dt);
+	void ProcessDataFromClientPos(CPosition* pos, float dt);
 	void UpdateSendingSockets(float aDeltaTime);
 	void UpdateReceivingSockets(float aDeltaTime);
 	void UpdatePackets(float aDeltaTime);
+	void ManageDisconnection(TCPSocketPtr socket);
 	float m_SendTimer;
 	std::map<TCPSocketPtr, CPosition*> m_Positions;
 	std::vector<GameObject*> m_GameObjects;

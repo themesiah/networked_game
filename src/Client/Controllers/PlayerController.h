@@ -33,6 +33,8 @@ private:
 	CAnimationSet* m_pAnimationSet;
 	float m_PosX;
 	float m_PosY;
+	float m_LastX;
+	float m_LastY;
 	float m_Speed;
 	size_t m_CurrentAnimation;
 };

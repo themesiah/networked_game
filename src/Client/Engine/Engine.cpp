@@ -1,5 +1,8 @@
 #include "Engine.h"
 
+#include <iostream>
+#include <fstream>
+
 #include "../Input/ActionManager.h"
 
 #include "imgui.h"
@@ -17,6 +20,8 @@
 #include "Replication\ReplicationManager.h"
 #include "Movement.h"
 #include "Replication\Packet.h"
+
+#include "../Other/ImGUILog.h"
 
 CEngine::CEngine() :
 m_Socket(NULL)
@@ -80,12 +85,20 @@ void CEngine::InitReflection()
 
 void CEngine::InitNetwork()
 {
+	IMLOG_INFO("Init network begin");
 	m_InputMs = new InputMemoryBitStream("a", 8);
 	m_OutputMs = new OutputMemoryBitStream();
 
 	SocketUtil::InitSockets();
 	m_Socket = SocketUtil::CreateTCPSocket(INET);
-	SocketAddressPtr sendingAddress = SocketAddressFactory::CreateIPv4FromString("localhost:48000");
+	std::string lAddressString = "localhost:48001";
+	std::ifstream file("Data/server.txt");
+	if (file.is_open())
+	{
+		std::getline(file, lAddressString);
+		file.close();
+	}
+	SocketAddressPtr sendingAddress = SocketAddressFactory::CreateIPv4FromString(lAddressString);
 	SocketAddress receivingAddress(INADDR_ANY, 0);
 	if (m_Socket->Bind(receivingAddress) == NO_ERROR)
 	{
@@ -93,8 +106,16 @@ void CEngine::InitNetwork()
 		{
 			m_Socket->SetNonBlockingMode(true);
 		}
+		else {
+			LOG_ERROR_APPLICATION("Socket can't connect with error %d", WSAGetLastError());
+			std::cout << "Socket can't connect: " << WSAGetLastError() << std::endl;
+		}
 	}
-	m_ReadBlockSockets.push_back(m_Socket);
+	else {
+		LOG_ERROR_APPLICATION("Socket can't bind with error %d", WSAGetLastError());
+		std::cout << "Socket can't bind: " << WSAGetLastError() << std::endl;
+	}
+	IMLOG_INFO("Init network end");
 }
 
 void CEngine::ProcessInputs()
@@ -104,11 +125,6 @@ void CEngine::ProcessInputs()
 
 void CEngine::Update(float aDeltaTime)
 {
-	for (GameObject* go : m_GameObjects)
-	{
-		go->Update(aDeltaTime);
-	}
-
 	// MANAGE INPUT
 	if (CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->active) {
 		m_Movement->inputX = CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->value;
@@ -119,36 +135,40 @@ void CEngine::Update(float aDeltaTime)
 	// END MANAGE INPUT
 
 	UpdateNetwork(aDeltaTime);
+
+	for (GameObject* go : m_GameObjects)
+	{
+		go->Update(aDeltaTime);
+	}
 }
 
 void CEngine::UpdateNetwork(float aDeltaTime)
 {
+	// SEND
 	m_OutputMs->Reset();
+	uint8_t packetType = PacketType::PT_ReplicationData;
+	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
 	m_Movement->Serialize(m_OutputMs);
 	m_OutputMs->WriteSize();
 	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 	m_Movement->Reset();
 
-	std::vector<TCPSocketPtr> readableSockets;
-	if (SocketUtil::Select(&m_ReadBlockSockets, &readableSockets, nullptr, nullptr, nullptr, nullptr)) {
-		for (const TCPSocketPtr& socket : readableSockets)
-		{
-			char segment[SEGMENT_SIZE];
-			FD_ZERO(segment);
-			int dataReceived = socket->Receive(segment, SEGMENT_SIZE);
-			if (dataReceived > 0) {
-				m_PacketStream.WriteBytes(segment, dataReceived);
-			}
-		}
+	// RECEIVE
+	char segment[SEGMENT_SIZE];
+	FD_ZERO(segment);
+	int dataReceived = m_Socket->Receive(segment, SEGMENT_SIZE);
+	if (dataReceived > 0) {
+		m_PacketStream.WriteBytes(segment, dataReceived);
 	}
 
+	// PROCESS
 	PacketStream::Packet p;
 	p = m_PacketStream.ReadPacket();
 	while (p.size > 0)
 	{
 		m_InputMs->Reset(p.buffer, p.size);
 		uint8_t packetType;
-		((MemoryStream*)m_InputMs)->Serialize(packetType, 2);
+		((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
 		if (packetType == PacketType::PT_ReplicationData) {
 			m_GameObjects = m_ReplicationManager->ReceiveReplicatedObjects(m_InputMs);
 		}
@@ -164,9 +184,19 @@ void CEngine::Render(sf::RenderWindow* window)
 
 void CEngine::ShowDebugHelpers()
 {
+	IMLOG_DRAW;
 	ImGui::Begin("Sample window"); // begin window
+	ImGui::Text("FPS: %d", (int)ImGui::GetIO().Framerate);
 	if (ImGui::Button("Hello, im a button")) {
-
 	}
 	ImGui::End();
+}
+
+void CEngine::Disconnect()
+{
+	m_OutputMs->Reset();
+	uint8_t packetType = PacketType::PT_Disconnect;
+	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+	m_OutputMs->WriteSize();
+	m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 }

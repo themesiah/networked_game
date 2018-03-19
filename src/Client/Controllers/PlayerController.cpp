@@ -19,6 +19,8 @@ m_PosX(300.f)
 , m_pAnimationSet(new CAnimationSet())
 , m_Speed(150.f)
 , m_CurrentAnimation(0)
+, m_LastX(0.f)
+, m_LastY(0.f)
 
 {
 	Init();
@@ -75,24 +77,20 @@ void CPlayerController::Update(float aDeltaTime)
 {
 	float x = 0.f;
 	float y = 0.f;
+	x = m_PosX - m_LastX;
+	y = m_PosY - m_LastY;
 	size_t lNewAnimation = m_CurrentAnimation;
-	if (CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->active) {
-		x = CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->value;
-		if (x > 0) {
-			lNewAnimation = PlayerAnimations::MOVE_RIGHT;
-		}
-		else if (x < 0) {
-			lNewAnimation = PlayerAnimations::MOVE_LEFT;
-		}
+	if (x > 0) {
+		lNewAnimation = PlayerAnimations::MOVE_RIGHT;
 	}
-	else if (CEngine::GetInstance().GetActionManager().Get("VERTICAL")->active) {
-		y = CEngine::GetInstance().GetActionManager().Get("VERTICAL")->value;
-		if (y > 0) {
-			lNewAnimation = PlayerAnimations::MOVE_DOWN;
-		}
-		else if (y < 0) {
-			lNewAnimation = PlayerAnimations::MOVE_UP;
-		}
+	else if (x < 0) {
+		lNewAnimation = PlayerAnimations::MOVE_LEFT;
+	}
+	else if (y > 0) {
+		lNewAnimation = PlayerAnimations::MOVE_DOWN;
+	}
+	else if (y < 0) {
+		lNewAnimation = PlayerAnimations::MOVE_UP;
 	}
 
 	if (lNewAnimation != m_CurrentAnimation)
@@ -106,11 +104,9 @@ void CPlayerController::Update(float aDeltaTime)
 		m_pAnimatedSprite->Stop();
 	}
 
-
-	/*m_PosX += x * aDeltaTime * m_Speed;
-	m_PosY += y * aDeltaTime * m_Speed;*/
-
 	m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
+	m_LastX = m_PosX;
+	m_LastY = m_PosY;
 	m_pAnimatedSprite->Update(aDeltaTime);
 	CEngine::GetInstance().GetRenderManager().Draw(m_pAnimatedSprite, 5);
 }

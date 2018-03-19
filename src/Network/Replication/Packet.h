@@ -3,6 +3,8 @@
 #ifndef H_PACKET
 #define H_PACKET
 
+#define PACKET_BIT_SIZE 4
+
 enum PacketType {
 	PT_Hello,
 	PT_ReplicationData,

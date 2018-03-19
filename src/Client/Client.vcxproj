@@ -122,6 +122,7 @@
     <ClInclude Include="Input\ActionTrigger.h" />
     <ClInclude Include="Input\InputDefinitions.h" />
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Other\ImGUILog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

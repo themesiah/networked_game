@@ -86,6 +86,7 @@ int MainGame() {
 			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed) {
 				// Handle disconnection here
+				lEngine.Disconnect();
 				window.close();
 			}
 

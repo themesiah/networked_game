@@ -35,7 +35,7 @@ void CReplicationManager::ReplicateWorldState(MemoryStream* inStream, const std:
 {
 	//tag as replication data
 	uint8_t packetType = PT_ReplicationData;
-	inStream->Serialize(packetType, 2);
+	inStream->Serialize(packetType, PACKET_BIT_SIZE);
 	//write each object
 	for (GameObject* go : inAllObjects)
 	{
