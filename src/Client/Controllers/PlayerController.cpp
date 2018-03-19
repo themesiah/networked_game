@@ -21,7 +21,9 @@ m_PosX(300.f)
 , m_CurrentAnimation(0)
 , m_LastX(0.f)
 , m_LastY(0.f)
-
+, m_Timer(0.f)
+, m_FirstUpdate(true)
+, m_PacketTime(0.f)
 {
 	Init();
 }
@@ -75,21 +77,28 @@ void CPlayerController::Init() {
 
 void CPlayerController::Update(float aDeltaTime)
 {
-	float x = 0.f;
-	float y = 0.f;
-	x = m_PosX - m_LastX;
-	y = m_PosY - m_LastY;
+	float t = std::min(m_Timer / m_PacketTime, 1.f);
+	if (m_FirstUpdate)
+	{
+		m_LastX = m_PosX;
+		m_LastY = m_PosY;
+	}
+	m_FirstUpdate = false;
+
+	float m_MovX = m_PosX - m_LastX;
+	float m_MovY = m_PosY - m_LastY;
+
 	size_t lNewAnimation = m_CurrentAnimation;
-	if (x > 0) {
+	if (m_MovX > 0) {
 		lNewAnimation = PlayerAnimations::MOVE_RIGHT;
 	}
-	else if (x < 0) {
+	else if (m_MovX < 0) {
 		lNewAnimation = PlayerAnimations::MOVE_LEFT;
 	}
-	else if (y > 0) {
+	else if (m_MovY > 0) {
 		lNewAnimation = PlayerAnimations::MOVE_DOWN;
 	}
-	else if (y < 0) {
+	else if (m_MovY < 0) {
 		lNewAnimation = PlayerAnimations::MOVE_UP;
 	}
 
@@ -99,14 +108,40 @@ void CPlayerController::Update(float aDeltaTime)
 		m_pAnimatedSprite->Play(m_pAnimationSet->GetAnimation(m_CurrentAnimation));
 	}
 
-	if (x == 0.f && y == 0.f)
+	if (m_MovX == 0.f && m_MovY == 0.f && t >= 1)
 	{
 		m_pAnimatedSprite->Stop();
 	}
 
-	m_pAnimatedSprite->setPosition(m_PosX, m_PosY);
-	m_LastX = m_PosX;
-	m_LastY = m_PosY;
+	m_Timer += aDeltaTime;
+	m_pAnimatedSprite->setPosition(m_LastX + m_MovX*t, m_LastY + m_MovY*t);
+	/*if (t >= 1.f)
+	{
+		m_LastX = m_PosX;
+		m_LastY = m_PosY;
+		m_Timer = 0.f;
+	}*/
+
 	m_pAnimatedSprite->Update(aDeltaTime);
 	CEngine::GetInstance().GetRenderManager().Draw(m_pAnimatedSprite, 5);
+}
+
+void CPlayerController::OnBeforeSerialize()
+{
+	m_PacketTime = m_Clock.restart().asSeconds();
+	m_Timer = 0.f;
+	m_LastX = m_PosX;
+	m_LastY = m_PosY;
+}
+
+void CPlayerController::RenderImGui()
+{
+	float x = 0.f;
+	float y = 0.f;
+	x = m_PosX - m_LastX;
+	y = m_PosY - m_LastY;
+	ImGui::Begin("Character");
+	ImGui::Text("PositionX: %f, PositionY: %f", m_PosX, m_PosY);
+	ImGui::Text("LastX: %f, LastY: %f", m_LastX, m_LastY);
+	ImGui::End();
 }

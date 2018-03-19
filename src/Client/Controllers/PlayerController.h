@@ -2,6 +2,8 @@
 
 #include "Replication\GameObject.h"
 
+#include "SFML\System\Clock.hpp"
+
 class CAnimatedSprite;
 class CAnimationSet;
 
@@ -20,6 +22,8 @@ public:
 	virtual ~CPlayerController();
 	void Init();
 	void Update(float aDeltaTime) override;
+	void RenderImGui();
+	
 	static DataType* GetReflectionData() {
 		return new DataType({
 			MemberVariable("m_PosX", OffsetOf(CPlayerController, m_PosX), -1000.0f, 0.1f),
@@ -28,6 +32,8 @@ public:
 		);
 	}
 	CLASS_IDENTIFICATION('CPCT', CPlayerController);
+protected:
+	virtual void OnBeforeSerialize() override;
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
 	CAnimationSet* m_pAnimationSet;
@@ -36,5 +42,9 @@ private:
 	float m_LastX;
 	float m_LastY;
 	float m_Speed;
+	float m_Timer;
 	size_t m_CurrentAnimation;
+	bool m_FirstUpdate;
+	sf::Clock m_Clock;
+	float m_PacketTime;
 };

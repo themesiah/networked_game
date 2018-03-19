@@ -21,16 +21,17 @@ public:
 	CLASS_IDENTIFICATION('GOBJ', GameObject);
 
 	void Serialize(MemoryStream* ms) {
+		OnBeforeSerialize();
 		SerializeUtils::Serialize(ms, (uint8_t*)this, GetClassId());
+		OnAfterSerialize();
 	}
 
-	virtual void Destroy() {
-
-	}
-
-	virtual void Update(float aDeltaTime) {
-
-	}
+	virtual void Destroy() {}
+	virtual void Update(float aDeltaTime) {}
+	virtual void RenderImGui() {}
+protected:
+	virtual void OnBeforeSerialize() {}
+	virtual void OnAfterSerialize() {}
 };
 
 #endif
