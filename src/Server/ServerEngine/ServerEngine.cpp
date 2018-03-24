@@ -12,8 +12,6 @@
 #include "Replication\ReplicationManager.h"
 #include "Movement.h"
 
-#include "Utils\Logger\Logger.h"
-
 CServerEngine::CServerEngine() :
 m_ListenSocket(NULL)
 , m_SendTimer(0.f)
@@ -43,12 +41,14 @@ CServerEngine::~CServerEngine()
 
 void CServerEngine::Init()
 {
+	LOGGER.Info("Initializing server");
 	CReplicationManager* lReplicationManager = new CReplicationManager();
 	SetReplicationManager(lReplicationManager);
 
 	InitSockets();
 	InitReflection();
 	m_PrevTime = m_Clock.now();
+	LOGGER.Success("Server successfully initialized");
 }
 
 void CServerEngine::InitSockets()
@@ -58,21 +58,23 @@ void CServerEngine::InitSockets()
 	SocketAddress lReceivingAddress(INADDR_ANY, 6900);
 	if (m_ListenSocket->Bind(lReceivingAddress) != NO_ERROR)
 	{
-		LOG_ERROR_APPLICATION("Socket can't bind with error %d", WSAGetLastError());
+		LOGGER.Error("Socket can't bind with error %d", WSAGetLastError());
 		assert(false);
 	}
 
 	if (m_ListenSocket->Listen() != NO_ERROR)
 	{
-		LOG_ERROR_APPLICATION("Socket can't listen with error %d", WSAGetLastError());
+		LOGGER.Error("Socket can't listen with error %d", WSAGetLastError());
 		assert(false);
 	}
 	m_ListenSocket->SetNonBlockingMode(false);
 	m_Sockets.push_back(m_ListenSocket);
+	LOGGER.Info("Server listening on port %d", 6900);
 }
 
 void CServerEngine::InitReflection()
 {
+	LOGGER.Log("Setting reflection data of networked classes");
 	SET_REFLECTION_DATA(CPosition);
 	SET_REFLECTION_DATA(CMovement);
 }
@@ -149,7 +151,7 @@ void CServerEngine::UpdateReceivingSockets(float aDeltaTime)
 				if (newSocket > 0) {
 					m_Sockets.push_back(newSocket);
 					m_PacketStreams[newSocket] = new PacketStream();
-					std::cout << "New connection" << std::endl;
+					LOGGER.Info("New connection received");
 					InitDataPos(newSocket);
 				}
 			}
@@ -163,6 +165,7 @@ void CServerEngine::UpdateReceivingSockets(float aDeltaTime)
 					m_PacketStreams[socket]->WriteBytes(segment, dataReceived);
 				}
 				if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
+					LOGGER.Warning("Socket disconnected forcefully");
 					ManageDisconnection(socket);
 				}
 			}
@@ -201,7 +204,7 @@ void CServerEngine::UpdatePackets(float aDeltaTime)
 
 void CServerEngine::ManageDisconnection(TCPSocketPtr socket)
 {
-	std::cout << "Disconnected socket" << std::endl;
+	LOGGER.Info("Socket disconnected");
 	auto it = std::find(m_Sockets.begin(), m_Sockets.end(), socket);
 	m_Sockets.erase(it);
 	auto goit = std::find(m_GameObjects.begin(), m_GameObjects.end(), m_Positions[socket]);

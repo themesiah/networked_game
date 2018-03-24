@@ -29,5 +29,8 @@
     <ClInclude Include="ServerEngine\ServerEngine.h">
       <Filter>Archivos de código fuente\ServerEngine</Filter>
     </ClInclude>
+    <ClInclude Include="ServerLogger.h">
+      <Filter>Archivos de código fuente\ServerEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

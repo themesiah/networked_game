@@ -13,6 +13,7 @@
 #include "Serializer\OutputMemoryBitStream.h"
 #include "Serializer\InputMemoryBitStream.h"
 #include "Serializer\PacketStream.h"
+#include "../ServerLogger.h"
 
 #define TARGET_FPS 60
 #define SEND_INTERVAL 0.1f // How many times the server will send data to the players per second
