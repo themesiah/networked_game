@@ -4,45 +4,40 @@
 #include <fstream>
 
 #include "../Input/ActionManager.h"
+#include "Replication\ReplicationManager.h"
+#include "TextureManager.h"
+#include "../Network/NetworkManagerClient.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-#include "TextureManager.h"
 #include "Replication\ObjectCreationRegistry.h"
 
-#include "Common\SocketAddress.h"
-#include "Common\SocketAddressFactory.h"
+#include "Socket\SocketAddress.h"
+#include "Socket\SocketAddressFactory.h"
 
 #include "Serializer\OutputMemoryBitStream.h"
 #include "Serializer\InputMemoryBitStream.h"
 
-#include "Replication\ReplicationManager.h"
 #include "Movement.h"
 #include "Replication\Packet.h"
 
 #include "../Other/ImGUILog.h"
 
-CEngine::CEngine() :
-m_Socket(NULL)
-, m_InputMs(NULL)
-, m_OutputMs(NULL)
+CEngine::CEngine()
 {
 	m_Movement = new CMovement();
 }
 
 CEngine::~CEngine()
 {
-	m_InputMs->Reset("", 0);
-	m_OutputMs->Reset();
 	delete m_ActionManager;
 	delete m_RenderManager;
 	delete m_TextureManager;
 	delete m_SpriteManager;
 	delete m_ReplicationManager;
+	delete m_NetworkManagerClient;
 	delete m_Movement;
-	delete m_InputMs;
-	delete m_OutputMs;
 
 	for (std::unordered_set<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
 	{
@@ -53,6 +48,7 @@ CEngine::~CEngine()
 
 void CEngine::Init()
 {
+	bool success = true;
 	CActionManager* lActionManager = new CActionManager();
 	lActionManager->InitInputManager();
 	lActionManager->LoadActions("actions.xml");
@@ -73,11 +69,13 @@ void CEngine::Init()
 	CReplicationManager* lReplicationManager = new CReplicationManager();
 	SetReplicationManager(lReplicationManager);
 
-	InitReflection();
-	InitNetwork();
+	CNetworkManagerClient* lNetworkManagerClient = new CNetworkManagerClient();
+	success = lNetworkManagerClient->Init(0);
+	success = lNetworkManagerClient->Connect();
+	SetNetworkManagerClient(lNetworkManagerClient);
 }
 
-void CEngine::InitReflection()
+/*void CEngine::InitReflection()
 {
 	SET_REFLECTION_DATA(CPlayerController);
 	SET_REFLECTION_DATA(CMovement);
@@ -116,7 +114,7 @@ void CEngine::InitNetwork()
 		std::cout << "Socket can't bind: " << WSAGetLastError() << std::endl;
 	}
 	IMLOG_INFO("Init network end");
-}
+}*/
 
 void CEngine::ProcessInputs()
 {
@@ -134,7 +132,9 @@ void CEngine::Update(float aDeltaTime)
 	}
 	// END MANAGE INPUT
 
-	UpdateNetwork(aDeltaTime);
+	m_NetworkManagerClient->UpdateSendingSockets(aDeltaTime);
+	m_NetworkManagerClient->UpdateReceivingSockets(aDeltaTime);
+	m_NetworkManagerClient->UpdatePackets(aDeltaTime);
 
 	for (GameObject* go : m_GameObjects)
 	{
@@ -142,7 +142,7 @@ void CEngine::Update(float aDeltaTime)
 	}
 }
 
-void CEngine::UpdateNetwork(float aDeltaTime)
+/*void CEngine::UpdateNetwork(float aDeltaTime)
 {
 	// SEND
 	m_OutputMs->Reset();
@@ -175,7 +175,7 @@ void CEngine::UpdateNetwork(float aDeltaTime)
 		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();
 	}
-}
+}*/
 
 void CEngine::Render(sf::RenderWindow* window)
 {
@@ -194,9 +194,5 @@ void CEngine::ShowDebugHelpers()
 
 void CEngine::Disconnect()
 {
-	m_OutputMs->Reset();
-	uint8_t packetType = PacketType::PT_Disconnect;
-	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-	m_OutputMs->WriteSize();
-	m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+	m_NetworkManagerClient->ManageDisconnection();
 }

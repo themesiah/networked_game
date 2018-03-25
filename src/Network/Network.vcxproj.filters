@@ -18,23 +18,11 @@
     <Filter Include="Archivos de código fuente\Replication">
       <UniqueIdentifier>{4d2ee308-06fd-4a2f-98cc-ee1c197b4bce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Common">
+      <UniqueIdentifier>{62713ea8-7805-4605-ae93-5381cb00b8d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\UDPSocket.h">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\SocketAddress.h">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\SocketAddressFactory.h">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\SocketUtil.h">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\TCPSocket.h">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClInclude>
     <ClInclude Include="Serializer\OutputMemoryStream.h">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClInclude>
@@ -86,23 +74,26 @@
     <ClInclude Include="Serializer\PacketStream.h">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClInclude>
+    <ClInclude Include="Socket\SocketAddress.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\SocketAddressFactory.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\SocketUtil.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\TCPSocket.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\UDPSocket.h">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\NetworkManager.h">
+      <Filter>Archivos de código fuente\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\SocketAddress.cpp">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\SocketAddressFactory.cpp">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\SocketUtil.cpp">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\TCPSocket.cpp">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\UDPSocket.cpp">
-      <Filter>Archivos de código fuente\Socket</Filter>
-    </ClCompile>
     <ClCompile Include="Serializer\OutputMemoryStream.cpp">
       <Filter>Archivos de código fuente\Serializer</Filter>
     </ClCompile>
@@ -123,6 +114,24 @@
     </ClCompile>
     <ClCompile Include="Replication\ReplicationManager.cpp">
       <Filter>Archivos de código fuente\Replication</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\SocketAddress.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\SocketAddressFactory.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\SocketUtil.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\TCPSocket.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\UDPSocket.cpp">
+      <Filter>Archivos de código fuente\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\NetworkManager.cpp">
+      <Filter>Archivos de código fuente\Common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

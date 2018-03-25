@@ -11,11 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\SocketAddress.h" />
-    <ClInclude Include="Common\SocketAddressFactory.h" />
-    <ClInclude Include="Common\SocketUtil.h" />
-    <ClInclude Include="Common\TCPSocket.h" />
-    <ClInclude Include="Common\UDPSocket.h" />
+    <ClInclude Include="Common\NetworkManager.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Replication\GameObject.h" />
     <ClInclude Include="Replication\LinkingContext.h" />
@@ -33,13 +29,14 @@
     <ClInclude Include="Serializer\PacketStream.h" />
     <ClInclude Include="Serializer\ReflectionData.h" />
     <ClInclude Include="Serializer\SerializeUtils.h" />
+    <ClInclude Include="Socket\SocketAddress.h" />
+    <ClInclude Include="Socket\SocketAddressFactory.h" />
+    <ClInclude Include="Socket\SocketUtil.h" />
+    <ClInclude Include="Socket\TCPSocket.h" />
+    <ClInclude Include="Socket\UDPSocket.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\SocketAddress.cpp" />
-    <ClCompile Include="Common\SocketAddressFactory.cpp" />
-    <ClCompile Include="Common\SocketUtil.cpp" />
-    <ClCompile Include="Common\TCPSocket.cpp" />
-    <ClCompile Include="Common\UDPSocket.cpp" />
+    <ClCompile Include="Common\NetworkManager.cpp" />
     <ClCompile Include="Replication\LinkingContext.cpp" />
     <ClCompile Include="Replication\ReplicationManager.cpp" />
     <ClCompile Include="Serializer\Endianness.cpp" />
@@ -47,6 +44,11 @@
     <ClCompile Include="Serializer\InputMemoryStream.cpp" />
     <ClCompile Include="Serializer\OutputMemoryBitStream.cpp" />
     <ClCompile Include="Serializer\OutputMemoryStream.cpp" />
+    <ClCompile Include="Socket\SocketAddress.cpp" />
+    <ClCompile Include="Socket\SocketAddressFactory.cpp" />
+    <ClCompile Include="Socket\SocketUtil.cpp" />
+    <ClCompile Include="Socket\TCPSocket.cpp" />
+    <ClCompile Include="Socket\UDPSocket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{46D87206-70BA-4F27-8A4B-2A110AC7D091}</ProjectGuid>

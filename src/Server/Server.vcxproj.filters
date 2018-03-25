@@ -16,6 +16,9 @@
     <Filter Include="Archivos de código fuente\ServerEngine">
       <UniqueIdentifier>{bce90594-7351-4eb1-b3d2-dc8f2470a5b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Network">
+      <UniqueIdentifier>{5bd411f1-5744-4281-89df-d31d6df4d9bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +27,9 @@
     <ClCompile Include="ServerEngine\ServerEngine.cpp">
       <Filter>Archivos de código fuente\ServerEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Network\NetworkManagerServer.cpp">
+      <Filter>Archivos de código fuente\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEngine\ServerEngine.h">
@@ -31,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="ServerLogger.h">
       <Filter>Archivos de código fuente\ServerEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetworkManagerServer.h">
+      <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

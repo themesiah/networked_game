@@ -1,5 +1,5 @@
-#ifndef _BASE_SINGLETON_LUIS_RUIZ_1409161556_H
-#define _BASE_SINGLETON_LUIS_RUIZ_1409161556_H
+#ifndef H_SINGLETON
+#define H_SINGLETON
 
 #include "Defines.h"
 

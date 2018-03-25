@@ -107,6 +107,7 @@
     <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Network\NetworkManagerClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\PlayerController.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Input\ActionTrigger.h" />
     <ClInclude Include="Input\InputDefinitions.h" />
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Network\NetworkManagerClient.h" />
     <ClInclude Include="Other\ImGUILog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

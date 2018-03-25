@@ -24,6 +24,9 @@
     <Filter Include="Archivos de código fuente\Controllers">
       <UniqueIdentifier>{a65c1d3e-9547-4673-92fa-982ed4a9a7d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Network">
+      <UniqueIdentifier>{62ffa406-add5-4560-9c09-aaff139dc3a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clientmain.cpp">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="Controllers\PlayerController.cpp">
       <Filter>Archivos de código fuente\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\NetworkManagerClient.cpp">
+      <Filter>Archivos de código fuente\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="Other\ImGUILog.h">
       <Filter>Archivos de código fuente\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetworkManagerClient.h">
+      <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

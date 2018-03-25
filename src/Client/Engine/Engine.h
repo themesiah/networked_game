@@ -8,8 +8,8 @@
 #include "../Graphics/RenderManager.h"
 #include "../Controllers/PlayerController.h"
 
-#include "Common\SocketUtil.h"
-#include "Common\TCPSocket.h"
+#include "Socket\SocketUtil.h"
+#include "Socket\TCPSocket.h"
 
 #include "Serializer\PacketStream.h"
 
@@ -30,6 +30,7 @@ class CActionManager;
 class CTextureManager;
 class CReplicationManager;
 class CMovement;
+class CNetworkManagerClient;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
@@ -39,23 +40,24 @@ public:
 	void Render(sf::RenderWindow* window);
 	void ShowDebugHelpers();
 	void Disconnect();
-
+	std::unordered_set<GameObject*>* GetGameObjects()
+	{
+		return &m_GameObjects;
+	}
+	CMovement* GetMovement()
+	{
+		return m_Movement;
+	}
 	BUILD_GET_SET_ENGINE_MANAGER(ActionManager);
 	BUILD_GET_SET_ENGINE_MANAGER(TextureManager);
 	BUILD_GET_SET_ENGINE_MANAGER(SpriteManager);
 	BUILD_GET_SET_ENGINE_MANAGER(RenderManager);
 	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
+	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerClient);
 protected:
 	CEngine();
-	void InitReflection();
-	void InitNetwork();
-	void UpdateNetwork(float aDeltaTime);
 	friend class base::utils::CSingleton<CEngine>;
+private:
 	std::unordered_set<GameObject*> m_GameObjects;
-
-	TCPSocketPtr m_Socket;
-	OutputMemoryBitStream *m_OutputMs;
-	InputMemoryBitStream *m_InputMs;
 	CMovement* m_Movement;
-	PacketStream m_PacketStream;
 };
