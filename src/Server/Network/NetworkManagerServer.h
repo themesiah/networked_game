@@ -8,9 +8,9 @@
 #define SEGMENT_SIZE 1500
 #define SEND_INTERVAL 0.1f // How many times the server will send data to the players per second
 
-class PacketStream;
-class CPosition;
 class CMovement;
+class CClientProxy;
+class CPosition;
 class CNetworkManagerServer : public NetworkManager
 {
 public:
@@ -24,17 +24,16 @@ public:
 private:
 	bool InitServerListener();
 	virtual bool InitReflection();
-	void InitDataPos(const TCPSocketPtr& socket);
 	void ProcessDataFromClientPos(CPosition* pos, float dt);
 	void ManageDisconnection(TCPSocketPtr socket);
+	void ManageNewConnection();
 	std::vector<TCPSocketPtr> m_Sockets;
 	std::vector<TCPSocketPtr> m_ReadSockets;
 	std::vector<TCPSocketPtr> m_WriteSockets;
 	std::vector<TCPSocketPtr> m_ErrorSockets;
 	float m_SendTimer;
-	std::map<TCPSocketPtr, CPosition*> m_Positions; // TEMP: In client proxy
-	CMovement* m_Movement; // TEMP: In client proxy?
-	std::map<TCPSocketPtr, PacketStream*> m_PacketStreams; // TEMP: PacketStreams in client proxy, this map should be <TCPSocketPtr, ClientProxy>
+	CMovement* m_Movement;
+	std::map<TCPSocketPtr, CClientProxy*> m_Clients;
 };
 
 #endif

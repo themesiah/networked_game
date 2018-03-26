@@ -75,47 +75,6 @@ void CEngine::Init()
 	SetNetworkManagerClient(lNetworkManagerClient);
 }
 
-/*void CEngine::InitReflection()
-{
-	SET_REFLECTION_DATA(CPlayerController);
-	SET_REFLECTION_DATA(CMovement);
-}
-
-void CEngine::InitNetwork()
-{
-	IMLOG_INFO("Init network begin");
-	m_InputMs = new InputMemoryBitStream("a", 8);
-	m_OutputMs = new OutputMemoryBitStream();
-
-	SocketUtil::InitSockets();
-	m_Socket = SocketUtil::CreateTCPSocket(INET);
-	std::string lAddressString = "localhost:48001";
-	std::ifstream file("Data/server.txt");
-	if (file.is_open())
-	{
-		std::getline(file, lAddressString);
-		file.close();
-	}
-	SocketAddressPtr sendingAddress = SocketAddressFactory::CreateIPv4FromString(lAddressString);
-	SocketAddress receivingAddress(INADDR_ANY, 0);
-	if (m_Socket->Bind(receivingAddress) == NO_ERROR)
-	{
-		if (m_Socket->Connect(*sendingAddress.get()) == NO_ERROR)
-		{
-			m_Socket->SetNonBlockingMode(true);
-		}
-		else {
-			LOG_ERROR_APPLICATION("Socket can't connect with error %d", WSAGetLastError());
-			std::cout << "Socket can't connect: " << WSAGetLastError() << std::endl;
-		}
-	}
-	else {
-		LOG_ERROR_APPLICATION("Socket can't bind with error %d", WSAGetLastError());
-		std::cout << "Socket can't bind: " << WSAGetLastError() << std::endl;
-	}
-	IMLOG_INFO("Init network end");
-}*/
-
 void CEngine::ProcessInputs()
 {
 	m_ActionManager->Update();
@@ -142,41 +101,6 @@ void CEngine::Update(float aDeltaTime)
 	}
 }
 
-/*void CEngine::UpdateNetwork(float aDeltaTime)
-{
-	// SEND
-	m_OutputMs->Reset();
-	uint8_t packetType = PacketType::PT_ReplicationData;
-	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-	m_Movement->Serialize(m_OutputMs);
-	m_OutputMs->WriteSize();
-	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
-	m_Movement->Reset();
-
-	// RECEIVE
-	char segment[SEGMENT_SIZE];
-	FD_ZERO(segment);
-	int dataReceived = m_Socket->Receive(segment, SEGMENT_SIZE);
-	if (dataReceived > 0) {
-		m_PacketStream.WriteBytes(segment, dataReceived);
-	}
-
-	// PROCESS
-	PacketStream::Packet p;
-	p = m_PacketStream.ReadPacket();
-	while (p.size > 0)
-	{
-		m_InputMs->Reset(p.buffer, p.size);
-		uint8_t packetType;
-		((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-		if (packetType == PacketType::PT_ReplicationData) {
-			m_GameObjects = m_ReplicationManager->ReceiveReplicatedObjects(m_InputMs);
-		}
-		std::free(p.buffer);
-		p = m_PacketStream.ReadPacket();
-	}
-}*/
-
 void CEngine::Render(sf::RenderWindow* window)
 {
 	m_RenderManager->Render(window);
@@ -187,7 +111,12 @@ void CEngine::ShowDebugHelpers()
 	IMLOG_DRAW;
 	ImGui::Begin("Sample window"); // begin window
 	ImGui::Text("FPS: %d", (int)ImGui::GetIO().Framerate);
-	if (ImGui::Button("Hello, im a button")) {
+	if (ImGui::CollapsingHeader("Network Manager")) {
+		ImGui::Indent();
+		ImGui::PushID("NETWORKMANAGER");
+		m_NetworkManagerClient->RenderImGui();
+		ImGui::PopID();
+		ImGui::Unindent();
 	}
 	ImGui::End();
 }

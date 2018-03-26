@@ -24,21 +24,7 @@ bool Has##Manager() { return m_##Manager != nullptr; } \
 
 /*class OutputMemoryBitStream;
 class InputMemoryBitStream;*/
-class CPosition : public GameObject {
-public:
-	CPosition() {
-	}
-	float posx;
-	float posy;
-	static DataType* GetReflectionData() {
-		return new DataType({
-			MemberVariable("posx", OffsetOf(CPosition, posx), -1000.0f, 0.1f),
-			MemberVariable("posy", OffsetOf(CPosition, posy), -1000.0f, 0.1f)
-		}
-		);
-	}
-	CLASS_IDENTIFICATION('CPCT', CPosition);
-};
+
 
 class CReplicationManager;
 class CNetworkManagerServer;
@@ -61,7 +47,6 @@ protected:
 private:
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
-
 	
 	std::vector<GameObject*> m_GameObjects; // TEMP: Make container with add, erase and a double buffer
 };

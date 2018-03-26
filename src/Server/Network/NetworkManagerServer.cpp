@@ -10,6 +10,7 @@
 
 #include "Movement.h"
 #include "../Server/ServerEngine/ServerEngine.h"
+#include "ClientProxy.h"
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
@@ -20,10 +21,6 @@ CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 CNetworkManagerServer::~CNetworkManagerServer()
 {
 	delete m_Movement;
-	for (std::map<TCPSocketPtr, PacketStream*>::iterator it = m_PacketStreams.begin(); it != m_PacketStreams.end(); ++it)
-	{
-		delete it->second;
-	}
 }
 
 bool CNetworkManagerServer::Init(uint16_t aPort)
@@ -84,14 +81,7 @@ void CNetworkManagerServer::UpdateReceivingSockets(float aDeltaTime)
 		{
 			if (socket == m_Socket)
 			{
-				SocketAddress newClientAddress;
-				auto newSocket = m_Socket->Accept(newClientAddress);
-				if (newSocket > 0) {
-					m_Sockets.push_back(newSocket);
-					m_PacketStreams[newSocket] = new PacketStream();
-					LOGGER.Info("New connection received");
-					InitDataPos(newSocket);
-				}
+				ManageNewConnection();
 			}
 			else
 			{
@@ -100,7 +90,7 @@ void CNetworkManagerServer::UpdateReceivingSockets(float aDeltaTime)
 				int dataReceived = socket->Receive(segment, SEGMENT_SIZE);
 				if (dataReceived > 0)
 				{
-					m_PacketStreams[socket]->WriteBytes(segment, dataReceived);
+					m_Clients[socket]->GetPacketStream()->WriteBytes(segment, dataReceived);
 				}
 				if (dataReceived < 0 && WSAGetLastError() == WSAECONNRESET) {
 					LOGGER.Warning("Socket disconnected forcefully");
@@ -119,14 +109,14 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 		if (socket != m_Socket)
 		{
 			PacketStream::Packet p;
-			p = m_PacketStreams[socket]->ReadPacket();
+			p = m_Clients[socket]->GetPacketStream()->ReadPacket();
 			while (p.size > 0) {
 				// Process packet
 				uint8_t packetType;
 				m_InputMs->Reset(p.buffer, p.size);
 				((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
 				if (packetType == PacketType::PT_ReplicationData) {
-					ProcessDataFromClientPos(m_Positions[socket], aDeltaTime);
+					ProcessDataFromClientPos(m_Clients[socket]->GetPosition(), aDeltaTime);
 				}
 				else if (packetType == PacketType::PT_Disconnect) {
 					ManageDisconnection(socket);
@@ -134,7 +124,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 					break;
 				}
 				std::free(p.buffer);
-				p = m_PacketStreams[socket]->ReadPacket();
+				p = m_Clients[socket]->GetPacketStream()->ReadPacket();
 			}
 		}
 	}
@@ -143,24 +133,26 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 void CNetworkManagerServer::ManageDisconnection(TCPSocketPtr socket)
 {
 	LOGGER.Info("Socket disconnected");
-	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
+
+	delete m_Clients[socket];
+	m_Clients.erase(socket);
+	
+	
 	auto it = std::find(m_Sockets.begin(), m_Sockets.end(), socket);
 	m_Sockets.erase(it);
-	auto goit = std::find(lGameObjects->begin(), lGameObjects->end(), m_Positions[socket]);
-	lGameObjects->erase(goit);
-	delete m_Positions[socket];
-	m_Positions.erase(socket);
-	delete m_PacketStreams[socket];
-	m_PacketStreams.erase(socket);
 }
 
-void CNetworkManagerServer::InitDataPos(const TCPSocketPtr& socket) {
-	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
-	CPosition* l_Position = new CPosition();
-	l_Position->posx = 100.f;
-	l_Position->posy = 100.f;
-	m_Positions[socket] = l_Position;
-	lGameObjects->push_back(l_Position);
+void CNetworkManagerServer::ManageNewConnection()
+{
+	SocketAddress newClientAddress;
+	auto newSocket = m_Socket->Accept(newClientAddress);
+	if (newSocket > 0) {
+		m_Sockets.push_back(newSocket);
+		CClientProxy* lClientProxy = new CClientProxy();
+		lClientProxy->Init();
+		m_Clients[newSocket] = lClientProxy;
+		LOGGER.Info("New connection received");
+	}
 }
 
 void CNetworkManagerServer::ProcessDataFromClientPos(CPosition* pos, float dt)

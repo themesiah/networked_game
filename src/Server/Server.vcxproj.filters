@@ -30,6 +30,9 @@
     <ClCompile Include="Network\NetworkManagerServer.cpp">
       <Filter>Archivos de código fuente\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Network\ClientProxy.cpp">
+      <Filter>Archivos de código fuente\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEngine\ServerEngine.h">
@@ -39,6 +42,9 @@
       <Filter>Archivos de código fuente\ServerEngine</Filter>
     </ClInclude>
     <ClInclude Include="Network\NetworkManagerServer.h">
+      <Filter>Archivos de código fuente\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\ClientProxy.h">
       <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
   </ItemGroup>

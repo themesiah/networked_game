@@ -7,6 +7,7 @@
 #include "../Engine/Engine.h"
 #include "../Input/ActionManager.h"
 #include "../Graphics/RenderManager.h"
+#include "../Network/NetworkManagerClient.h"
 
 
 #include "imgui.h"
@@ -128,7 +129,7 @@ void CPlayerController::Update(float aDeltaTime)
 
 void CPlayerController::OnBeforeSerialize()
 {
-	m_PacketTime = m_Clock.restart().asSeconds();
+	m_PacketTime = CEngine::GetInstance().GetNetworkManagerClient().GetAverageTimeBetweenPackets();
 	m_Timer = 0.f;
 	m_LastX = m_PosX;
 	m_LastY = m_PosY;
