@@ -19,6 +19,7 @@ CNetworkManagerClient::CNetworkManagerClient() :
 m_AverageTimeBetweenPackets(0.1f)
 , m_NumberOfSamples(1)
 , m_Timer(0.f)
+, m_State(ClientState::NOT_CONNECTED)
 {
 	
 }
@@ -58,19 +59,40 @@ bool CNetworkManagerClient::Connect()
 		return false;
 	}
 	m_Socket->SetNonBlockingMode(true);
+	m_State = ClientState::CONNECTED;
 	return true;
 }
 
 void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 {
-	CMovement* lMovement = CEngine::GetInstance().GetMovement();
-	m_OutputMs->Reset();
-	uint8_t packetType = PacketType::PT_ReplicationData;
-	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-	lMovement->Serialize(m_OutputMs);
-	m_OutputMs->WriteSize();
-	int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
-	lMovement->Reset();
+	switch (m_State)
+	{
+	case ClientState::CONNECTED:
+		{
+			m_OutputMs->Reset();
+			uint8_t packetType = PacketType::PT_Hello;
+			((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+			// TODO: Player name!
+			m_OutputMs->WriteSize();
+			int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+			m_State = ClientState::HELLO_SENT;
+		}
+		break;
+	case ClientState::PLAYING:
+		{
+			CMovement* lMovement = CEngine::GetInstance().GetMovement();
+			m_OutputMs->Reset();
+			uint8_t packetType = PacketType::PT_ReplicationData;
+			((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+			lMovement->Serialize(m_OutputMs);
+			m_OutputMs->WriteSize();
+			int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+			lMovement->Reset();
+		}
+		break;
+	default: // HELLO_SENT and NOT_CONNECTED
+		break;
+	}
 }
 
 void CNetworkManagerClient::UpdateReceivingSockets(float aDeltaTime)
@@ -89,7 +111,7 @@ void CNetworkManagerClient::UpdateReceivingSockets(float aDeltaTime)
 void CNetworkManagerClient::AddSample(float aSample)
 {
 	float lAverageSum = m_AverageTimeBetweenPackets * (float)m_NumberOfSamples;
-	lAverageSum += aSample;
+	lAverageSum += std::min<float>(aSample, 1.f);
 	m_NumberOfSamples++;
 	m_AverageTimeBetweenPackets = lAverageSum / (float)m_NumberOfSamples;
 }
@@ -105,9 +127,12 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 		m_InputMs->Reset(p.buffer, p.size);
 		uint8_t packetType;
 		((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-		if (packetType == PacketType::PT_ReplicationData) {
+		if (packetType == PacketType::PT_ReplicationData && m_State == ClientState::PLAYING) {
 			auto receivedGameObjects = lReplicationManager.ReceiveReplicatedObjects(m_InputMs);
 			lGameObjects->swap(receivedGameObjects);
+		}
+		else if (packetType == PacketType::PT_Hello && m_State == ClientState::HELLO_SENT) {
+			m_State = ClientState::PLAYING;
 		}
 		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();
@@ -125,5 +150,23 @@ void CNetworkManagerClient::ManageDisconnection()
 
 void CNetworkManagerClient::RenderImGui()
 {
-	ImGui::LabelText("Avg time between packets", "%f", m_AverageTimeBetweenPackets);
+	ImGui::Text("Avg: %f", m_AverageTimeBetweenPackets);
+	switch (m_State)
+	{
+	case ClientState::NOT_CONNECTED:
+		ImGui::Text("State: %s", "Not connected");
+		break;
+	case ClientState::CONNECTED:
+		ImGui::Text("State: %s", "Connected");
+		break;
+	case ClientState::HELLO_SENT:
+		ImGui::Text("State: %s", "Hello sent");
+		break;
+	case ClientState::PENDING_DISCONNECTION:
+		ImGui::Text("State: %s", "Pending disconnection");
+		break;
+	case ClientState::PLAYING:
+		ImGui::Text("State: %s", "Playing");
+		break;
+	}
 }

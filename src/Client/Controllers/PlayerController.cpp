@@ -25,6 +25,7 @@ m_PosX(300.f)
 , m_Timer(0.f)
 , m_FirstUpdate(true)
 , m_PacketTime(0.f)
+, m_NameText(NULL)
 {
 	Init();
 }
@@ -72,8 +73,14 @@ void CPlayerController::Init() {
 	m_pAnimationSet->AddAnimation(PlayerAnimations::MOVE_LEFT, lAnimationLeft);
 
 	m_pAnimatedSprite->SetAnimation(lAnimationDown);
+	m_pAnimatedSprite->setOrigin(m_pAnimatedSprite->GetSpriteSize().x/2.f, m_pAnimatedSprite->GetSpriteSize().y/2.f);
 
-	
+	m_NameText = new sf::Text();
+	m_NameText->setFont(*CEngine::GetInstance().GetFontManager().Get("default"));
+	m_NameText->setString("Mesiah");
+	m_NameText->setCharacterSize(14);
+	m_NameText->setFillColor(sf::Color::White);
+	m_NameText->setOrigin(m_NameText->getGlobalBounds().width/2.f, m_NameText->getGlobalBounds().height/2.f);
 }
 
 void CPlayerController::Update(float aDeltaTime)
@@ -116,15 +123,11 @@ void CPlayerController::Update(float aDeltaTime)
 
 	m_Timer += aDeltaTime;
 	m_pAnimatedSprite->setPosition(m_LastX + m_MovX*t, m_LastY + m_MovY*t);
-	/*if (t >= 1.f)
-	{
-		m_LastX = m_PosX;
-		m_LastY = m_PosY;
-		m_Timer = 0.f;
-	}*/
+	m_NameText->setPosition(m_LastX + m_MovX*t, m_LastY + m_MovY*t - 30);
 
 	m_pAnimatedSprite->Update(aDeltaTime);
 	CEngine::GetInstance().GetRenderManager().Draw(m_pAnimatedSprite, 5);
+	CEngine::GetInstance().GetRenderManager().Draw(m_NameText, 6);
 }
 
 void CPlayerController::OnBeforeSerialize()

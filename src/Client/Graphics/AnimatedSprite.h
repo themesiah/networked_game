@@ -25,6 +25,7 @@ public:
 	void SetColor(const sf::Color& aColor);
 	sf::FloatRect GetLocalBounds() const;
 	sf::FloatRect GetGlobalBounds() const;
+	sf::Vector2u GetSpriteSize() const;
 	bool IsLooped() const;
 	bool IsPlaying() const;
 	float GetFrameTime() const;

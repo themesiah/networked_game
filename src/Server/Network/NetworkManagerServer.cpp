@@ -62,12 +62,29 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 		m_OutputMs->Reset();
 		lReplicationManager.ReplicateWorldState(m_OutputMs, *CServerEngine::GetInstance().GetGameObjects());
 		m_OutputMs->WriteSize();
+		std::vector<TCPSocketPtr> lSocketsToGreet;
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
-				socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+				CClientProxy* lClient = m_Clients[socket];
+				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
+					socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+				}
+				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
+					lClient->SetPlaying();
+					lSocketsToGreet.push_back(socket);
+				}
 			}
+		}
+
+		m_OutputMs->Reset();
+		uint8_t packetType = PacketType::PT_Hello;
+		((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+		m_OutputMs->WriteSize();
+		for (const TCPSocketPtr& socket : lSocketsToGreet)
+		{
+			socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 		}
 		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
 	}
@@ -115,13 +132,17 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 				uint8_t packetType;
 				m_InputMs->Reset(p.buffer, p.size);
 				((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-				if (packetType == PacketType::PT_ReplicationData) {
-					ProcessDataFromClientPos(m_Clients[socket]->GetPosition(), aDeltaTime);
+				CClientProxy* lClient = m_Clients[socket];
+				if (packetType == PacketType::PT_ReplicationData && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
+					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime);
 				}
-				else if (packetType == PacketType::PT_Disconnect) {
+				else if (packetType == PacketType::PT_Disconnect && lClient->GetState() != CClientProxy::ClientState::PENDING_DISCONNECTION) {
 					ManageDisconnection(socket);
 					std::free(p.buffer);
 					break;
+				}
+				else if (packetType == PacketType::PT_Hello && lClient->GetState() == CClientProxy::ClientState::CONNECTED) {
+					lClient->SetWaiting();
 				}
 				std::free(p.buffer);
 				p = m_Clients[socket]->GetPacketStream()->ReadPacket();
@@ -136,7 +157,6 @@ void CNetworkManagerServer::ManageDisconnection(TCPSocketPtr socket)
 
 	delete m_Clients[socket];
 	m_Clients.erase(socket);
-	
 	
 	auto it = std::find(m_Sockets.begin(), m_Sockets.end(), socket);
 	m_Sockets.erase(it);

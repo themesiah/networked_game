@@ -8,6 +8,7 @@ CClientProxy::CClientProxy() :
 m_Name("")
 , m_Position(NULL)
 , m_PacketStream(NULL)
+, m_State(ClientState::NOT_CONNECTED)
 {
 
 }
@@ -26,11 +27,23 @@ bool CClientProxy::Init()
 	lGameObjects->push_back(m_Position);
 
 	m_PacketStream = new PacketStream();
+	m_State = ClientState::CONNECTED;
 	return true;
+}
+
+void CClientProxy::SetPlaying()
+{
+	m_State = ClientState::PLAYING;
+}
+
+void CClientProxy::SetWaiting()
+{
+	m_State = ClientState::AWAITING_GAME_STATE;
 }
 
 void CClientProxy::Disconnect()
 {
+	m_State = ClientState::PENDING_DISCONNECTION;
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
 	auto goit = std::find(lGameObjects->begin(), lGameObjects->end(), m_Position);
 	lGameObjects->erase(goit);

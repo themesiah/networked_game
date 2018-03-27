@@ -11,6 +11,13 @@
 class CNetworkManagerClient : public NetworkManager
 {
 public:
+	enum ClientState {
+		NOT_CONNECTED = 0,
+		CONNECTED,
+		HELLO_SENT,
+		PLAYING,
+		PENDING_DISCONNECTION
+	};
 	CNetworkManagerClient();
 	virtual ~CNetworkManagerClient();
 	virtual bool Init(uint16_t aPort) override;
@@ -24,6 +31,7 @@ public:
 		return m_AverageTimeBetweenPackets;
 	}
 private:
+	ClientState m_State;
 	PacketStream m_PacketStream;
 	virtual bool InitReflection() override;
 	void AddSample(float sample);

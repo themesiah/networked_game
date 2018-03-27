@@ -24,6 +24,8 @@
 
 #include "../Other/ImGUILog.h"
 
+#include "SFML\Graphics\Font.hpp"
+
 CEngine::CEngine()
 {
 	m_Movement = new CMovement();
@@ -36,6 +38,7 @@ CEngine::~CEngine()
 	delete m_TextureManager;
 	delete m_SpriteManager;
 	delete m_ReplicationManager;
+	delete m_FontManager;
 	delete m_NetworkManagerClient;
 	delete m_Movement;
 
@@ -61,6 +64,13 @@ void CEngine::Init()
 	CSpriteManager* lSpriteManager = new CSpriteManager();
 	lSpriteManager->SetOnDestructor(DestroyOnDestructor);
 	SetSpriteManager(lSpriteManager);
+
+	CFontManager* lFontManager = new CFontManager();
+	lFontManager->SetOnDestructor(DestroyOnDestructor);
+	sf::Font* lDefaultFont = new sf::Font();
+	lDefaultFont->loadFromFile("Data/BebasNeue.otf");
+	lFontManager->Update("default", lDefaultFont);
+	SetFontManager(lFontManager);
 
 	CRenderManager* lRenderManager = new CRenderManager();
 	lRenderManager->Init();

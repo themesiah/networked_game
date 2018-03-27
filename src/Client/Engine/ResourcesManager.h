@@ -4,6 +4,7 @@
 #define H_RESOURCES_MANAGER
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Font.hpp>
 
 #include "Utils\TemplatedMapVector.h"
 
@@ -104,5 +105,6 @@ private:
 };
 
 typedef CResourcesManager<sf::Sprite> CSpriteManager;
+typedef CResourcesManager<sf::Font> CFontManager;
 
 #endif

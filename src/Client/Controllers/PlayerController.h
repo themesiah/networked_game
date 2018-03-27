@@ -3,6 +3,7 @@
 #include "Replication\GameObject.h"
 
 #include "SFML\System\Clock.hpp"
+#include "SFML\Graphics\Text.hpp"
 
 class CAnimatedSprite;
 class CAnimationSet;
@@ -36,6 +37,7 @@ protected:
 	virtual void OnBeforeSerialize() override;
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
+	sf::Text* m_NameText;
 	CAnimationSet* m_pAnimationSet;
 	float m_PosX;
 	float m_PosY;

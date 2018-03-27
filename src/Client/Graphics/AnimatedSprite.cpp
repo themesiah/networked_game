@@ -159,3 +159,18 @@ void CAnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) co
 		target.draw(m_Vertices, 4, sf::Quads, states);
 	}
 };
+
+sf::FloatRect CAnimatedSprite::GetLocalBounds() const
+{
+	return m_Sprite.getLocalBounds();
+}
+
+sf::FloatRect CAnimatedSprite::GetGlobalBounds() const
+{
+	return m_Sprite.getGlobalBounds();
+}
+
+sf::Vector2u CAnimatedSprite::GetSpriteSize() const
+{
+	return sf::Vector2u(m_Vertices[3].position.x - m_Vertices[0].position.x, m_Vertices[1].position.y - m_Vertices[0].position.y);
+}

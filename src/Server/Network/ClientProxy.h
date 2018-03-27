@@ -30,18 +30,34 @@ class PacketStream;
 class CClientProxy
 {
 public:
+	enum ClientState {
+		NOT_CONNECTED = 0,
+		CONNECTED,
+		AWAITING_GAME_STATE, // After receiving HELLO from client, the server should send the full game state of the player location
+		PLAYING,
+		PENDING_DISCONNECTION
+	};
 	CClientProxy();
 	virtual ~CClientProxy();
 	bool Init();
 	void Disconnect();
+	void SetPlaying();
+	void SetWaiting();
 	GET_SET(std::string, Name);
-	PacketStream* GetPacketStream() {
+	PacketStream* GetPacketStream()
+	{
 		return m_PacketStream;
 	}
-	CPosition* GetPosition() {
+	CPosition* GetPosition()
+	{
 		return m_Position;
 	}
+	ClientState GetState()
+	{
+		return m_State;
+	}
 private:
+	ClientState m_State;
 	std::string m_Name;
 	PacketStream* m_PacketStream;
 	CPosition* m_Position;

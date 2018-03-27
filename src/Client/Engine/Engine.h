@@ -54,6 +54,7 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(RenderManager);
 	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerClient);
+	BUILD_GET_SET_ENGINE_MANAGER(FontManager);
 protected:
 	CEngine();
 	friend class base::utils::CSingleton<CEngine>;
