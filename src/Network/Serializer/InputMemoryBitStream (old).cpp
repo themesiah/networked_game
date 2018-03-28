@@ -4,7 +4,7 @@
 
 InputMemoryBitStream::InputMemoryBitStream(const char* inBuffer, uint32_t inBitCount)
 {
-	mBitCapacity = inBitCount*8;
+	mBitCapacity = inBitCount;
 	mBitHead = 0;
 	mBuffer = const_cast<char*>(inBuffer);
 }

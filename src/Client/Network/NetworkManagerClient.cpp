@@ -69,24 +69,22 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 	{
 	case ClientState::CONNECTED:
 		{
-			m_OutputMs->Reset();
-			uint8_t packetType = PacketType::PT_Hello;
-			((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+			OutputMemoryBitStream l_Output;
+			l_Output.Serialize(PT_Hello, PACKET_BIT_SIZE);
 			// TODO: Player name!
-			m_OutputMs->WriteSize();
-			int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+			l_Output.WriteSize();
+			int sent = m_Socket->Send(l_Output.GetBufferPtr(), l_Output.GetByteLength());
 			m_State = ClientState::HELLO_SENT;
 		}
 		break;
 	case ClientState::PLAYING:
 		{
 			CMovement* lMovement = CEngine::GetInstance().GetMovement();
-			m_OutputMs->Reset();
-			uint8_t packetType = PacketType::PT_ReplicationData;
-			((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-			lMovement->Serialize(m_OutputMs);
-			m_OutputMs->WriteSize();
-			int sent = m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+			OutputMemoryBitStream l_Output;
+			l_Output.Serialize(PT_ReplicationData, PACKET_BIT_SIZE);
+			lMovement->SerializeWrite(l_Output);
+			l_Output.WriteSize();
+			int sent = m_Socket->Send(l_Output.GetBufferPtr(), l_Output.GetByteLength());
 			lMovement->Reset();
 		}
 		break;
@@ -124,11 +122,11 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 	p = m_PacketStream.ReadPacket();
 	while (p.size > 0)
 	{
-		m_InputMs->Reset(p.buffer, p.size);
+		InputMemoryBitStream l_Input(p.buffer, p.size);
 		uint8_t packetType;
-		((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+		l_Input.Serialize(packetType, PACKET_BIT_SIZE);
 		if (packetType == PacketType::PT_ReplicationData && m_State == ClientState::PLAYING) {
-			auto receivedGameObjects = lReplicationManager.ReceiveReplicatedObjects(m_InputMs);
+			auto receivedGameObjects = lReplicationManager.ReceiveReplicatedObjects(l_Input);
 			lGameObjects->swap(receivedGameObjects);
 		}
 		else if (packetType == PacketType::PT_Hello && m_State == ClientState::HELLO_SENT) {
@@ -141,11 +139,10 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 
 void CNetworkManagerClient::ManageDisconnection()
 {
-	m_OutputMs->Reset();
-	uint8_t packetType = PacketType::PT_Disconnect;
-	((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-	m_OutputMs->WriteSize();
-	m_Socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+	OutputMemoryBitStream l_Output;
+	l_Output.Serialize(PT_Disconnect, PACKET_BIT_SIZE);
+	l_Output.WriteSize();
+	m_Socket->Send(l_Output.GetBufferPtr(), l_Output.GetByteLength());
 }
 
 void CNetworkManagerClient::RenderImGui()

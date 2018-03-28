@@ -8,10 +8,6 @@ LinkingContext::LinkingContext() : mNextNetworkId(1)
 
 LinkingContext::~LinkingContext()
 {
-	/*for (std::unordered_map<uint32_t, GameObject*>::iterator it = mNetworkIdToGameObjectMap.begin(); it != mNetworkIdToGameObjectMap.end(); ++it)
-	{
-		delete it->second;
-	}*/
 	mNetworkIdToGameObjectMap.clear();
 	mGameObjectToNetworkIdMap.clear();
 }

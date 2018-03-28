@@ -16,18 +16,18 @@ class CReplicationManager
 public:
 	CReplicationManager();
 	virtual ~CReplicationManager();
-	void ReplicateWorldState(MemoryStream* inStream, const std::vector<GameObject*>& inAllObjects);
-	std::unordered_set<GameObject*> ReceiveReplicatedObjects(MemoryStream* inStream);
+	void ReplicateWorldState(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects);
+	std::unordered_set<GameObject*> ReceiveReplicatedObjects(InputMemoryBitStream& inStream);
 private:
-	void ReplicateIntoStream(MemoryStream* inStream, GameObject* inGameObject);
-	GameObject* ReceiveReplicatedObject(MemoryStream* inStream);
+	void ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject);
+	GameObject* ReceiveReplicatedObject(InputMemoryBitStream& inStream);
 	LinkingContext* mLinkingContext;
 	std::unordered_set<GameObject*> mObjectsReplicatedToMe;
 
-	void ReplicateCreate(MemoryStream* inStream, GameObject* inGameObject);
-	void ReplicateUpdate(MemoryStream* inStream, GameObject* inGameObject);
-	void ReplicateDestroy(MemoryStream*inStream, GameObject* inGameObject);
-	void ProcessReplicationAction(MemoryStream* inStream);
+	void ReplicateCreate(OutputMemoryBitStream& inStream, GameObject* inGameObject);
+	void ReplicateUpdate(OutputMemoryBitStream& inStream, GameObject* inGameObject);
+	void ReplicateDestroy(OutputMemoryBitStream& inStream, GameObject* inGameObject);
+	void ProcessReplicationAction(InputMemoryBitStream& inStream);
 };
 
 #endif

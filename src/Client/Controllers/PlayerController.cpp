@@ -34,6 +34,7 @@ CPlayerController::~CPlayerController()
 {
 	delete m_pAnimatedSprite;
 	delete m_pAnimationSet;
+	delete m_NameText;
 }
 
 void CPlayerController::Init() {
@@ -130,7 +131,7 @@ void CPlayerController::Update(float aDeltaTime)
 	CEngine::GetInstance().GetRenderManager().Draw(m_NameText, 6);
 }
 
-void CPlayerController::OnBeforeSerialize()
+void CPlayerController::OnBeforeSerializeRead()
 {
 	m_PacketTime = CEngine::GetInstance().GetNetworkManagerClient().GetAverageTimeBetweenPackets();
 	m_Timer = 0.f;

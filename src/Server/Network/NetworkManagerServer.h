@@ -24,7 +24,7 @@ public:
 private:
 	bool InitServerListener();
 	virtual bool InitReflection();
-	void ProcessDataFromClientPos(CPosition* pos, float dt);
+	void ProcessDataFromClientPos(CPosition* pos, float dt, InputMemoryBitStream& aInput);
 	void ManageDisconnection(TCPSocketPtr socket);
 	void ManageNewConnection();
 	std::vector<TCPSocketPtr> m_Sockets;

@@ -68,11 +68,13 @@ int MainServer() {
 	return 0;
 }
 
+#include "Replication\GameObject.h"
+#include "Replication\ObjectCreationRegistry.h"
 int main()
 {
 #ifdef _DEBUG
 	MemLeaks::MemoryBegin();
-	//_CrtSetBreakAlloc(1454);
+	_CrtSetBreakAlloc(1583);
 #endif
 	MainServer();
 #ifdef _DEBUG
@@ -81,6 +83,7 @@ int main()
 	return 0;
 	//return DoMoveTest();
 	/*SET_REFLECTION_DATA(TestObject2);
+	OutputMemoryBitStream output;
 	TestObject2 testObject1 = TestObject2();
 	testObject1.a = 4;
 	testObject1.b = 52.35f;
@@ -91,17 +94,14 @@ int main()
 	testObject1.e = std::map<int, int>();
 	testObject1.e[0] = 0; testObject1.e[1] = 10; testObject1.e[5] = 50; testObject1.e[70] = 700;
 	testObject1.f = 56;
-	OutputMemoryBitStream *output = new OutputMemoryBitStream();
-	testObject1.Serialize(output);
+	testObject1.SerializeWrite(output);
 	char* buffer = NULL;
-	size_t size = (output->GetByteLength());
+	size_t size = (output.GetByteLength());
 	buffer = static_cast<char*>(std::realloc(buffer, size));
-	memcpy(buffer, output->GetBufferPtr(), size);
-	delete output;
-	InputMemoryBitStream *input = new InputMemoryBitStream(buffer, size);
+	memcpy(buffer, output.GetBufferPtr(), size);
+	InputMemoryBitStream input(buffer, size);
 	TestObject2 testObject2 = TestObject2();
-	testObject2.Serialize(input);
-	delete input;
+	testObject2.SerializeRead(input);
 
 	std::cout << "Finish" << std::endl;
 	return 0;*/

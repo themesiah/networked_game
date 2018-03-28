@@ -6,14 +6,10 @@
 NetworkManager::NetworkManager() :
 m_Socket(NULL)
 {
-	m_InputMs = new InputMemoryBitStream("a", 8);
-	m_OutputMs = new OutputMemoryBitStream();
 }
 
 NetworkManager::~NetworkManager()
 {
-	delete m_InputMs;
-	delete m_OutputMs;
 }
 
 bool NetworkManager::Init(uint16_t aPort)

@@ -18,24 +18,23 @@ CReplicationManager::~CReplicationManager()
 }
 
 // Memory stream is output
-void CReplicationManager::ReplicateIntoStream(MemoryStream* inStream, GameObject* inGameObject)
+void CReplicationManager::ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {
 	uint32_t nid = mLinkingContext->GetNetworkId(inGameObject, true);
 	uint32_t cid = inGameObject->GetClassId();
 	//write game object id
-	inStream->Serialize(nid);
+	inStream.Serialize(nid);
 	//write game object class
-	inStream->Serialize(cid);
+	inStream.Serialize(cid);
 	//write game object data
-	inGameObject->Serialize(inStream);
+	inGameObject->SerializeWrite(inStream);
 }
 
 // Memory stream is output
-void CReplicationManager::ReplicateWorldState(MemoryStream* inStream, const std::vector<GameObject*>& inAllObjects)
+void CReplicationManager::ReplicateWorldState(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects)
 {
 	//tag as replication data
-	uint8_t packetType = PT_ReplicationData;
-	inStream->Serialize(packetType, PACKET_BIT_SIZE);
+	inStream.Serialize(PT_ReplicationData, PACKET_BIT_SIZE);
 	//write each object
 	for (GameObject* go : inAllObjects)
 	{
@@ -44,33 +43,33 @@ void CReplicationManager::ReplicateWorldState(MemoryStream* inStream, const std:
 }
 
 // Memory stream is output
-void CReplicationManager::ReplicateCreate(MemoryStream* inStream, GameObject* inGameObject)
+void CReplicationManager::ReplicateCreate(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {
 	ReplicationHeader rh(RA_Create, mLinkingContext->GetNetworkId(inGameObject, true), inGameObject->GetClassId());
 	rh.Write(inStream);
-	inGameObject->Serialize(inStream);
+	inGameObject->SerializeWrite(inStream);
 }
 
 // Memory stream is output
-void CReplicationManager::ReplicateUpdate(MemoryStream* inStream, GameObject* inGameObject)
+void CReplicationManager::ReplicateUpdate(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {
 	ReplicationHeader rh(RA_Update, mLinkingContext->GetNetworkId(inGameObject, false), inGameObject->GetClassId());
 	rh.Write(inStream);
-	inGameObject->Serialize(inStream);
+	inGameObject->SerializeWrite(inStream);
 }
 
 // Memory stream is output
-void CReplicationManager::ReplicateDestroy(MemoryStream* inStream, GameObject* inGameObject)
+void CReplicationManager::ReplicateDestroy(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {
 	ReplicationHeader rh(RA_Destroy, mLinkingContext->GetNetworkId(inGameObject, false));
 	rh.Write(inStream);
 }
 
 // Memory stream is input
-std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedObjects(MemoryStream* inStream)
+std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedObjects(InputMemoryBitStream& inStream)
 {
 	std::unordered_set<GameObject*> receivedObjects;
-	while (((InputMemoryBitStream*)inStream)->GetRemainingDataSize() >= 32)
+	while (inStream.GetRemainingDataSize() >= 32)
 	{
 		GameObject* receivedGameObject = ReceiveReplicatedObject(inStream);
 		receivedObjects.insert(receivedGameObject);
@@ -92,11 +91,11 @@ std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedObjects(Me
 }
 
 // Memory stream is input
-GameObject* CReplicationManager::ReceiveReplicatedObject(MemoryStream* inStream){
+GameObject* CReplicationManager::ReceiveReplicatedObject(InputMemoryBitStream& inStream){
 	uint32_t networkId;
 	uint32_t classId;
-	inStream->Serialize(networkId);
-	inStream->Serialize(classId);
+	inStream.Serialize(networkId);
+	inStream.Serialize(classId);
 	GameObject* go = mLinkingContext->GetGameObject(networkId);
 	if (!go)
 	{
@@ -104,13 +103,13 @@ GameObject* CReplicationManager::ReceiveReplicatedObject(MemoryStream* inStream)
 		mLinkingContext->AddGameObject(go, networkId);
 	}
 	//now read update
-	go->Serialize(inStream);
+	go->SerializeRead(inStream);
 	//return gameobject so we can track it was received in packet
 	return go;
 }
 
 // Memory stream is input
-void CReplicationManager::ProcessReplicationAction(MemoryStream* inStream)
+void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream)
 {
 	ReplicationHeader rh;
 	rh.Read(inStream);
@@ -120,7 +119,7 @@ void CReplicationManager::ProcessReplicationAction(MemoryStream* inStream)
 	{
 		GameObject* go = ObjectCreationRegistry::GetInstance().CreateGameObject(rh.mClassId);
 		mLinkingContext->AddGameObject(go, rh.mNetworkId);
-		go->Serialize(inStream);
+		go->SerializeRead(inStream);
 		break;
 	}
 	case RA_Update:
@@ -130,13 +129,13 @@ void CReplicationManager::ProcessReplicationAction(MemoryStream* inStream)
 		//so serialize into a dummy to advance read head
 		if (go)
 		{
-			go->Serialize(inStream);
+			go->SerializeRead(inStream);
 		}
 		else
 		{
 			uint32_t classId = rh.mClassId;
 			go = ObjectCreationRegistry::GetInstance().CreateGameObject(classId);
-			go->Serialize(inStream);
+			go->SerializeRead(inStream);
 			delete go;
 		}
 		break;

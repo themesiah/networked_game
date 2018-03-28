@@ -34,7 +34,7 @@ public:
 	}
 	CLASS_IDENTIFICATION('CPCT', CPlayerController);
 protected:
-	virtual void OnBeforeSerialize() override;
+	virtual void OnBeforeSerializeRead() override;
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
 	sf::Text* m_NameText;

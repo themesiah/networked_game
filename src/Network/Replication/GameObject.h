@@ -20,18 +20,26 @@ public:
 	}
 	CLASS_IDENTIFICATION('GOBJ', GameObject);
 
-	void Serialize(MemoryStream* ms) {
-		OnBeforeSerialize();
-		SerializeUtils::Serialize(ms, (uint8_t*)this, GetClassId());
-		OnAfterSerialize();
+	void SerializeWrite(OutputMemoryBitStream& ms) {
+		OnBeforeSerializeWrite();
+		SerializeUtils::SerializeWrite(ms, (uint8_t*)this, GetClassId());
+		OnAfterSerializeWrite();
+	}
+
+	void SerializeRead(InputMemoryBitStream& ms) {
+		OnBeforeSerializeRead();
+		SerializeUtils::SerializeRead(ms, (uint8_t*)this, GetClassId());
+		OnAfterSerializeRead();
 	}
 
 	virtual void Destroy() {}
 	virtual void Update(float aDeltaTime) {}
 	virtual void RenderImGui() {}
 protected:
-	virtual void OnBeforeSerialize() {}
-	virtual void OnAfterSerialize() {}
+	virtual void OnBeforeSerializeWrite() {}
+	virtual void OnAfterSerializeWrite() {}
+	virtual void OnBeforeSerializeRead() {}
+	virtual void OnAfterSerializeRead() {}
 };
 
 #endif

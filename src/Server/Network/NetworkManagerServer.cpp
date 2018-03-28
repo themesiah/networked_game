@@ -59,32 +59,25 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 	if (m_SendTimer >= SEND_INTERVAL)
 	{
 		CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
-		m_OutputMs->Reset();
-		lReplicationManager.ReplicateWorldState(m_OutputMs, *CServerEngine::GetInstance().GetGameObjects());
-		m_OutputMs->WriteSize();
-		std::vector<TCPSocketPtr> lSocketsToGreet;
+		OutputMemoryBitStream l_Output;
+		lReplicationManager.ReplicateWorldState(l_Output, *CServerEngine::GetInstance().GetGameObjects());
+		l_Output.WriteSize();
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
 				CClientProxy* lClient = m_Clients[socket];
 				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
+					socket->Send(l_Output.GetBufferPtr(), l_Output.GetByteLength());
 				}
 				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
+					OutputMemoryBitStream l_OutHello;
+					l_OutHello.Serialize(PT_Hello, PACKET_BIT_SIZE);
+					l_OutHello.WriteSize();
 					lClient->SetPlaying();
-					lSocketsToGreet.push_back(socket);
+					socket->Send(l_OutHello.GetBufferPtr(), l_OutHello.GetByteLength());
 				}
 			}
-		}
-
-		m_OutputMs->Reset();
-		uint8_t packetType = PacketType::PT_Hello;
-		((MemoryStream*)m_OutputMs)->Serialize(packetType, PACKET_BIT_SIZE);
-		m_OutputMs->WriteSize();
-		for (const TCPSocketPtr& socket : lSocketsToGreet)
-		{
-			socket->Send(m_OutputMs->GetBufferPtr(), m_OutputMs->GetByteLength());
 		}
 		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
 	}
@@ -130,11 +123,11 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 			while (p.size > 0) {
 				// Process packet
 				uint8_t packetType;
-				m_InputMs->Reset(p.buffer, p.size);
-				((MemoryStream*)m_InputMs)->Serialize(packetType, PACKET_BIT_SIZE);
+				InputMemoryBitStream l_Input(p.buffer, p.size);
+				l_Input.Serialize(packetType, PACKET_BIT_SIZE);
 				CClientProxy* lClient = m_Clients[socket];
 				if (packetType == PacketType::PT_ReplicationData && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime);
+					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime, l_Input);
 				}
 				else if (packetType == PacketType::PT_Disconnect && lClient->GetState() != CClientProxy::ClientState::PENDING_DISCONNECTION) {
 					ManageDisconnection(socket);
@@ -175,10 +168,10 @@ void CNetworkManagerServer::ManageNewConnection()
 	}
 }
 
-void CNetworkManagerServer::ProcessDataFromClientPos(CPosition* pos, float dt)
+void CNetworkManagerServer::ProcessDataFromClientPos(CPosition* pos, float dt, InputMemoryBitStream& aInput)
 {
 	const float PLAYER_SPEED = 150.f;
-	m_Movement->Serialize(m_InputMs);
+	m_Movement->SerializeRead(aInput);
 	pos->posx += m_Movement->inputX * PLAYER_SPEED * dt;
 	pos->posy += m_Movement->inputY * PLAYER_SPEED * dt;
 	m_Movement->Reset();

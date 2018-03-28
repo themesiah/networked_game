@@ -28,30 +28,29 @@ public:
 	ReplicationAction mReplicationAction;
 	uint32_t mNetworkId;
 	uint32_t mClassId;
-	void Write(MemoryStream* inStream);
-	void Read(MemoryStream* inStream);
+	void Write(OutputMemoryBitStream& inStream);
+	void Read(InputMemoryBitStream& inStream);
 };
 
 // MemoryStream is output
-void ReplicationHeader::Write(MemoryStream* inStream)
+void ReplicationHeader::Write(OutputMemoryBitStream& inStream)
 {
-	uint8_t replicationAction = mReplicationAction;
-	inStream->Serialize(mReplicationAction, 2);
-	inStream->Serialize(mNetworkId);
+	inStream.Serialize(mReplicationAction, 2);
+	inStream.Serialize(mNetworkId);
 	if (mReplicationAction != RA_Destroy)
 	{
-		inStream->Serialize(mClassId);
+		inStream.Serialize(mClassId);
 	}
 }
 
 // MemoryStream is input
-void ReplicationHeader::Read(MemoryStream* inStream)
+void ReplicationHeader::Read(InputMemoryBitStream& inStream)
 {
-	inStream->Serialize(mReplicationAction, 2);
-	inStream->Serialize(mNetworkId);
+	inStream.Serialize(mReplicationAction, 2);
+	inStream.Serialize(mNetworkId);
 	if (mReplicationAction != RA_Destroy)
 	{
-		inStream->Serialize(mClassId);
+		inStream.Serialize(mClassId);
 	}
 };
 

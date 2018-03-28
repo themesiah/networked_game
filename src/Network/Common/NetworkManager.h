@@ -14,8 +14,6 @@ public:
 	virtual bool Init(uint16_t aPort);
 protected:
 	TCPSocketPtr m_Socket;
-	InputMemoryBitStream* m_InputMs;
-	OutputMemoryBitStream* m_OutputMs;
 private:
 	virtual bool InitReflection() = 0;
 };
