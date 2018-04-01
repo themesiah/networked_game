@@ -15,12 +15,10 @@
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
 {
-	m_Movement = new CMovement();
 }
 
 CNetworkManagerServer::~CNetworkManagerServer()
 {
-	delete m_Movement;
 }
 
 bool CNetworkManagerServer::Init(uint16_t aPort)
@@ -127,7 +125,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 				lInput.Serialize(packetType, PACKET_BIT_SIZE);
 				CClientProxy* lClient = m_Clients[socket];
 				if (packetType == PacketType::PT_ReplicationData && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime, lInput);
+					m_Clients[socket]->ProcessInput(aDeltaTime, lInput);
 				}
 				else if (packetType == PacketType::PT_Disconnect && lClient->GetState() != CClientProxy::ClientState::PENDING_DISCONNECTION) {
 					ManageDisconnection(socket);
@@ -166,13 +164,4 @@ void CNetworkManagerServer::ManageNewConnection()
 		m_Clients[newSocket] = lClientProxy;
 		LOGGER.Info("New connection received");
 	}
-}
-
-void CNetworkManagerServer::ProcessDataFromClientPos(CPosition* pos, float dt, InputMemoryBitStream& aInput)
-{
-	const float PLAYER_SPEED = 150.f;
-	m_Movement->SerializeRead(aInput);
-	pos->posx += m_Movement->inputX * PLAYER_SPEED * dt;
-	pos->posy += m_Movement->inputY * PLAYER_SPEED * dt;
-	m_Movement->Reset();
 }

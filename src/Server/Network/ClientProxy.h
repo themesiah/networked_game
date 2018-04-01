@@ -43,6 +43,7 @@ public:
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
+	void ProcessInput(float dt, InputMemoryBitStream& aInput);
 	GET_SET(std::string, Name);
 	PacketStream* GetPacketStream()
 	{

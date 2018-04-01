@@ -3,6 +3,7 @@
 #include "../ServerEngine/ServerEngine.h"
 
 #include "Serializer\PacketStream.h"
+#include "Movement.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")
@@ -49,4 +50,13 @@ void CClientProxy::Disconnect()
 	lGameObjects->erase(goit);
 	delete m_Position;
 	delete m_PacketStream;
+}
+
+void CClientProxy::ProcessInput(float dt, InputMemoryBitStream& aInput)
+{
+	const float PLAYER_SPEED = 150.f;
+	CMovement lMovement;
+	lMovement.SerializeRead(aInput);
+	m_Position->posx += lMovement.inputX * PLAYER_SPEED * dt;
+	m_Position->posy += lMovement.inputY * PLAYER_SPEED * dt;
 }

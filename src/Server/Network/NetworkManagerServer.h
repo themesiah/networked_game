@@ -24,7 +24,7 @@ public:
 private:
 	bool InitServerListener();
 	virtual bool InitReflection();
-	void ProcessDataFromClientPos(CPosition* pos, float dt, InputMemoryBitStream& aInput);
+	
 	void ManageDisconnection(TCPSocketPtr socket);
 	void ManageNewConnection();
 	std::vector<TCPSocketPtr> m_Sockets;
@@ -32,7 +32,6 @@ private:
 	std::vector<TCPSocketPtr> m_WriteSockets;
 	std::vector<TCPSocketPtr> m_ErrorSockets;
 	float m_SendTimer;
-	CMovement* m_Movement;
 	std::map<TCPSocketPtr, CClientProxy*> m_Clients;
 };
 
