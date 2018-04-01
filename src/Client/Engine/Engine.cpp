@@ -16,8 +16,6 @@
 #include "Socket\SocketAddress.h"
 #include "Socket\SocketAddressFactory.h"
 
-#include "Serializer\OutputMemoryBitStream.h"
-#include "Serializer\InputMemoryBitStream.h"
 
 #include "Movement.h"
 #include "Replication\Packet.h"

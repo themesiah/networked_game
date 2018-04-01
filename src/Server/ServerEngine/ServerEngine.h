@@ -22,9 +22,6 @@ const C##Manager& Get##Manager() const { return *m_##Manager; } \
 C##Manager& Get##Manager() { return *m_##Manager; } \
 bool Has##Manager() { return m_##Manager != nullptr; } \
 
-/*class OutputMemoryBitStream;
-class InputMemoryBitStream;*/
-
 
 class CReplicationManager;
 class CNetworkManagerServer;

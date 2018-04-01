@@ -4,8 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "MemoryStream.h"
+#include <map>
 
 class OutputMemoryBitStream
 {
@@ -20,46 +19,40 @@ public:
 	void Reset();
 	void WriteSize();
 
-	const char* GetBufferPtr() const
-	{
-		return mBuffer;
-	}
-
-	uint32_t GetBitLength() const
-	{
-		return mBitHead;
-	}
-
-	uint32_t GetByteLength() const
-	{
-		return (mBitHead + 7) >> 3;
-	}
+	const char* GetBufferPtr() const;
+	uint32_t GetBitLength() const;
+	uint32_t GetByteLength() const;
 
 	float ConvertFromFixed(uint16_t inNumber, const float& outMin, const float& precision)
 	{
 		return static_cast<float>(inNumber)* precision + outMin;
 	}
+
 	uint16_t ConvertToFixed(const float& inNumber, const float& inMin, const float& precision)
 	{
 		return static_cast<uint16_t>((inNumber - inMin) / precision);
 	}
-	void Serialize(float& ioData, const float& ioMin, const float& precision) {
+
+	void Serialize(float ioData, const float& ioMin, const float& precision) {
 		uint16_t inDataFixed = ConvertToFixed(ioData, ioMin, precision);
 		Serialize<uint16_t>(inDataFixed);
 	}
-	void Serialize(bool& ioData) {
+
+	void Serialize(bool ioData) {
 		Serialize<bool>(ioData, 1);
 	}
-	void Serialize(std::string& ioData) {
+
+	void Serialize(std::string ioData) {
 		size_t size = ioData.size();
 		Serialize<size_t>(size);
 		const char * buffer = ioData.c_str();
 		Serialize<const char *>(buffer, (sizeof(char) * size) << 3);
 	}
+
 	template <typename T> void Serialize(T ioData, size_t inBitCount = sizeof(T) << 3) {
 		WriteBits(&ioData, inBitCount);
-		//Serialize(&ioData, inBitCount);
 	}
+
 	template <typename K, typename V> void Serialize(std::map<K, V>& ioMap, size_t keyBitSize = sizeof(K) << 3, size_t valueBitSize = sizeof(V) << 3) {
 		size_t elementCount = ioMap.size();
 		Serialize<size_t>(elementCount);
@@ -70,6 +63,7 @@ public:
 			Serialize<V>(it->second, valueBitSize);
 		}
 	}
+
 	template <typename T> void Serialize(std::vector<T>& ioVector, size_t elementBitSize = sizeof(T) << 3) {
 		size_t elementCount = ioVector.size();
 		Serialize<size_t>(elementCount);
@@ -77,6 +71,7 @@ public:
 			Serialize<T>(element, elementBitSize);
 		}
 	}
+
 	void Serialize(std::vector<bool>& ioVector) {
 		size_t elementCount = ioVector.size();
 		Serialize<size_t>(elementCount);

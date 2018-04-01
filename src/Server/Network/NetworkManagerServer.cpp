@@ -59,23 +59,23 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 	if (m_SendTimer >= SEND_INTERVAL)
 	{
 		CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
-		OutputMemoryBitStream l_Output;
-		lReplicationManager.ReplicateWorldState(l_Output, *CServerEngine::GetInstance().GetGameObjects());
-		l_Output.WriteSize();
+		OutputMemoryBitStream lOutput;
+		lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
+		lOutput.WriteSize();
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
 				CClientProxy* lClient = m_Clients[socket];
 				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					socket->Send(l_Output.GetBufferPtr(), l_Output.GetByteLength());
+					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 				}
 				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
-					OutputMemoryBitStream l_OutHello;
-					l_OutHello.Serialize(PT_Hello, PACKET_BIT_SIZE);
-					l_OutHello.WriteSize();
 					lClient->SetPlaying();
-					socket->Send(l_OutHello.GetBufferPtr(), l_OutHello.GetByteLength());
+					OutputMemoryBitStream lOutputName;
+					lOutputName.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
+					lOutputName.WriteSize();
+					socket->Send(lOutputName.GetBufferPtr(), lOutputName.GetByteLength());
 				}
 			}
 		}
@@ -123,11 +123,11 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 			while (p.size > 0) {
 				// Process packet
 				uint8_t packetType;
-				InputMemoryBitStream l_Input(p.buffer, p.size);
-				l_Input.Serialize(packetType, PACKET_BIT_SIZE);
+				InputMemoryBitStream lInput(p.buffer, p.size);
+				lInput.Serialize(packetType, PACKET_BIT_SIZE);
 				CClientProxy* lClient = m_Clients[socket];
 				if (packetType == PacketType::PT_ReplicationData && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime, l_Input);
+					ProcessDataFromClientPos(lClient->GetPosition(), aDeltaTime, lInput);
 				}
 				else if (packetType == PacketType::PT_Disconnect && lClient->GetState() != CClientProxy::ClientState::PENDING_DISCONNECTION) {
 					ManageDisconnection(socket);

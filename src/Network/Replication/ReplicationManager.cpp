@@ -20,12 +20,10 @@ CReplicationManager::~CReplicationManager()
 // Memory stream is output
 void CReplicationManager::ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {
-	uint32_t nid = mLinkingContext->GetNetworkId(inGameObject, true);
-	uint32_t cid = inGameObject->GetClassId();
 	//write game object id
-	inStream.Serialize(nid);
+	inStream.Serialize(mLinkingContext->GetNetworkId(inGameObject, true));
 	//write game object class
-	inStream.Serialize(cid);
+	inStream.Serialize(inGameObject->GetClassId());
 	//write game object data
 	inGameObject->SerializeWrite(inStream);
 }

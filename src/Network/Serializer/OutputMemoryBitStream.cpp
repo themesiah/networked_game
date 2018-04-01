@@ -15,6 +15,21 @@ OutputMemoryBitStream::~OutputMemoryBitStream()
 	std::free(mBuffer);
 }
 
+const char* OutputMemoryBitStream::GetBufferPtr() const
+{
+	return mBuffer;
+}
+
+uint32_t OutputMemoryBitStream::GetBitLength() const
+{
+	return mBitHead;
+}
+
+uint32_t OutputMemoryBitStream::GetByteLength() const
+{
+	return (mBitHead + 7) >> 3;
+}
+
 void OutputMemoryBitStream::Reset()
 {
 	//std::free(mBuffer);

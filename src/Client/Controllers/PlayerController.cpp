@@ -34,7 +34,6 @@ CPlayerController::~CPlayerController()
 {
 	delete m_pAnimatedSprite;
 	delete m_pAnimationSet;
-	delete m_NameText;
 }
 
 void CPlayerController::Init() {

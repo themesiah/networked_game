@@ -1,10 +1,8 @@
 #include "InputMemoryBitStream.h"
 
-#include "OutputMemoryBitStream.h"
-
 InputMemoryBitStream::InputMemoryBitStream(const char* inBuffer, uint32_t inBitCount)
 {
-	mBitCapacity = inBitCount*8;
+	mBitCapacity = inBitCount;
 	mBitHead = 0;
 	mBuffer = const_cast<char*>(inBuffer);
 }
@@ -12,6 +10,21 @@ InputMemoryBitStream::InputMemoryBitStream(const char* inBuffer, uint32_t inBitC
 InputMemoryBitStream::~InputMemoryBitStream()
 {
 	//std::free(mBuffer);
+}
+
+const char* InputMemoryBitStream::GetBufferPtr() const
+{
+	return mBuffer;
+}
+
+uint32_t InputMemoryBitStream::GetBitLength() const
+{
+	return mBitHead;
+}
+
+uint32_t InputMemoryBitStream::GetByteLength() const
+{
+	return (mBitHead + 7) >> 3;
 }
 
 void InputMemoryBitStream::Reset(const char* inBuffer, uint32_t inBitCount) {

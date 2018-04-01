@@ -4,8 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "MemoryStream.h"
+#include <map>
 
 class InputMemoryBitStream
 {
@@ -20,20 +19,9 @@ public:
 	void Serialize(void* outData, size_t inBitCount);
 	void Reset(const char* inBuffer, uint32_t inBitCount);
 
-	const char* GetBufferPtr() const
-	{
-		return mBuffer;
-	}
-
-	uint32_t GetBitLength() const
-	{
-		return mBitHead;
-	}
-
-	uint32_t GetByteLength() const
-	{
-		return (mBitHead + 7) >> 3;
-	}
+	const char* GetBufferPtr() const;
+	uint32_t GetBitLength() const;
+	uint32_t GetByteLength() const;
 
 	float ConvertFromFixed(uint16_t inNumber, const float& outMin, const float& precision)
 	{
@@ -43,6 +31,7 @@ public:
 	{
 		return static_cast<uint16_t>((inNumber - inMin) / precision);
 	}
+
 	void Serialize(float& ioData, const float& ioMin, const float& precision) {
 		uint16_t outDataFixed;
 		Serialize<uint16_t>(outDataFixed, 16);

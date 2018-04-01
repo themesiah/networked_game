@@ -4,8 +4,6 @@
 #include <assert.h>
 
 #include "Socket\SocketAddressFactory.h"
-#include "Serializer\OutputMemoryBitStream.h"
-#include "Serializer\InputMemoryBitStream.h"
 #include "Replication\ObjectCreationRegistry.h"
 #include "Replication\Packet.h"
 
