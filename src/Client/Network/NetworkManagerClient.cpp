@@ -72,7 +72,7 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 			OutputMemoryBitStream lOutput;
 			lOutput.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
 			// TODO: Player name!
-			lOutput.WriteSize();
+			lOutput.Close();
 			int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 			m_State = ClientState::HELLO_SENT;
 		}
@@ -83,7 +83,7 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 			OutputMemoryBitStream lOutput;
 			lOutput.Serialize(PacketType::PT_ReplicationData, PACKET_BIT_SIZE);
 			lMovement->SerializeWrite(lOutput);
-			lOutput.WriteSize();
+			lOutput.Close();
 			int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 			lMovement->Reset();
 		}
@@ -143,7 +143,7 @@ void CNetworkManagerClient::ManageDisconnection()
 	OutputMemoryBitStream lOutput;
 	uint8_t packetType = PacketType::PT_Disconnect;
 	lOutput.Serialize(packetType, PACKET_BIT_SIZE);
-	lOutput.WriteSize();
+	lOutput.Close();
 	m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 }
 

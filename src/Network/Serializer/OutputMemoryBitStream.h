@@ -17,7 +17,7 @@ public:
 	bool IsInput() const { return false; }
 	void Serialize(void* inData, size_t inBitCount);
 	void Reset();
-	void WriteSize();
+	void Close();
 
 	const char* GetBufferPtr() const;
 	uint32_t GetBitLength() const;
@@ -80,10 +80,12 @@ public:
 		}
 	}
 private:
+	void WriteSize();
 	void ReallocBuffer(uint32_t inNewBitCapacity);
 	char* mBuffer;
 	uint32_t mBitHead;
 	uint32_t mBitCapacity;
+	bool mClosed;
 };
 
 #endif

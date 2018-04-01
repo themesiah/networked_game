@@ -3,11 +3,13 @@
 #include <algorithm>
 
 #include "PacketStream.h"
+#include "Debug\CustomAssert.h"
 
-OutputMemoryBitStream::OutputMemoryBitStream()
+OutputMemoryBitStream::OutputMemoryBitStream() :
+mClosed(false)
+, mBitHead(0)
 {
 	ReallocBuffer(256);
-	mBitHead = 0;
 }
 
 OutputMemoryBitStream::~OutputMemoryBitStream()
@@ -17,6 +19,7 @@ OutputMemoryBitStream::~OutputMemoryBitStream()
 
 const char* OutputMemoryBitStream::GetBufferPtr() const
 {
+	Assert(mClosed == true, "Cant use a buffer of a non closed stream");
 	return mBuffer;
 }
 
@@ -35,6 +38,13 @@ void OutputMemoryBitStream::Reset()
 	//std::free(mBuffer);
 	ReallocBuffer(256);
 	mBitHead = 0;
+}
+
+void OutputMemoryBitStream::Close()
+{
+	Assert(mClosed == false, "Cant close a closed stream");
+	WriteSize();
+	mClosed = true;
 }
 
 void OutputMemoryBitStream::WriteSize()
@@ -57,6 +67,7 @@ void OutputMemoryBitStream::WriteSize()
 
 void OutputMemoryBitStream::WriteBits(uint8_t inData, size_t inBitCount)
 {
+	Assert(mClosed == false, "Cant write in a closed stream");
 	uint32_t nextBitHead = mBitHead + static_cast<uint32_t>(inBitCount);
 	if (nextBitHead > mBitCapacity)
 	{
