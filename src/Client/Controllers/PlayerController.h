@@ -23,7 +23,7 @@ public:
 	virtual ~CPlayerController();
 	void Init();
 	void Update(float aDeltaTime) override;
-	void RenderImGui();
+	virtual void RenderImGui() override;
 	
 	static DataType* GetReflectionData() {
 		return new DataType({

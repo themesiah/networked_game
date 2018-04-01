@@ -67,7 +67,7 @@ void CReplicationManager::ReplicateDestroy(OutputMemoryBitStream& inStream, Game
 std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedObjects(InputMemoryBitStream& inStream)
 {
 	std::unordered_set<GameObject*> receivedObjects;
-	while (inStream.GetRemainingDataSize() >= 32)
+	while (inStream.GetRemainingDataSize() >= 32) //4*8 bits
 	{
 		GameObject* receivedGameObject = ReceiveReplicatedObject(inStream);
 		receivedObjects.insert(receivedGameObject);

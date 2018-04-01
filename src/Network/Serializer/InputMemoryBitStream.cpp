@@ -2,7 +2,7 @@
 
 InputMemoryBitStream::InputMemoryBitStream(const char* inBuffer, uint32_t inBitCount)
 {
-	mBitCapacity = inBitCount;
+	mBitCapacity = inBitCount << 3;
 	mBitHead = 0;
 	mBuffer = const_cast<char*>(inBuffer);
 }
@@ -29,7 +29,7 @@ uint32_t InputMemoryBitStream::GetByteLength() const
 
 void InputMemoryBitStream::Reset(const char* inBuffer, uint32_t inBitCount) {
 	//std::free(mBuffer);
-	mBitCapacity = inBitCount*8;
+	mBitCapacity = inBitCount << 3;
 	mBitHead = 0;
 	mBuffer = const_cast<char*>(inBuffer);
 }

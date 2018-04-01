@@ -82,10 +82,12 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 			CMovement* lMovement = CEngine::GetInstance().GetMovement();
 			OutputMemoryBitStream lOutput;
 			lOutput.Serialize(PacketType::PT_ReplicationData, PACKET_BIT_SIZE);
-			lMovement->SerializeWrite(lOutput);
-			lOutput.Close();
-			int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
-			lMovement->Reset();
+			if (lMovement->GetDirty() > 0) {
+				lMovement->SerializeWrite(lOutput);
+				lOutput.Close();
+				int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+				lMovement->Undirty();
+			}
 		}
 		break;
 	default: // HELLO_SENT and NOT_CONNECTED
@@ -123,7 +125,6 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 	while (p.size > 0)
 	{
 		InputMemoryBitStream lInput(p.buffer, p.size);
-		lInput.Reset(p.buffer, p.size);
 		uint8_t packetType;
 		lInput.Serialize(packetType, PACKET_BIT_SIZE);
 		if (packetType == PacketType::PT_ReplicationData && m_State == ClientState::PLAYING) {

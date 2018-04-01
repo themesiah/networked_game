@@ -14,6 +14,11 @@ static GameObject* CreateInstance() {return new inClass();}
 
 class GameObject {
 public:
+	GameObject() :
+		mDirty(2) // It begins as dirty
+	{
+
+	}
 	virtual ~GameObject()
 	{
 
@@ -35,11 +40,22 @@ public:
 	virtual void Destroy() {}
 	virtual void Update(float aDeltaTime) {}
 	virtual void RenderImGui() {}
+	void SetDirty() {
+		mDirty = 1;
+	}
+	bool GetDirty() const {
+		return mDirty;
+	}
+	void Undirty() {
+		mDirty = 0;
+	}
 protected:
 	virtual void OnBeforeSerializeRead() {}
 	virtual void OnAfterSerializeRead() {}
 	virtual void OnBeforeSerializeWrite() {}
 	virtual void OnAfterSerializeWrite() {}
+private:
+	int mDirty; // 0 not dirty, 1 updated, 2 created, 3 deleted
 };
 
 #endif

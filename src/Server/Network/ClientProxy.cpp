@@ -57,6 +57,7 @@ void CClientProxy::ProcessInput(float dt, InputMemoryBitStream& aInput)
 	const float PLAYER_SPEED = 150.f;
 	CMovement lMovement;
 	lMovement.SerializeRead(aInput);
-	m_Position->posx += lMovement.inputX * PLAYER_SPEED * dt;
-	m_Position->posy += lMovement.inputY * PLAYER_SPEED * dt;
+	auto pos = lMovement.GetMovement();
+	m_Position->posx += pos[0] * PLAYER_SPEED * dt;
+	m_Position->posy += pos[1] * PLAYER_SPEED * dt;
 }

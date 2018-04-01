@@ -14,7 +14,8 @@
 #include "imgui-SFML.h"
 
 CPlayerController::CPlayerController() :
-m_PosX(300.f)
+GameObject()
+, m_PosX(300.f)
 , m_PosY(300.f)
 , m_pAnimatedSprite(new CAnimatedSprite())
 , m_pAnimationSet(new CAnimationSet())
@@ -140,12 +141,10 @@ void CPlayerController::OnBeforeSerializeRead()
 
 void CPlayerController::RenderImGui()
 {
-	float x = 0.f;
+	/*float x = 0.f;
 	float y = 0.f;
 	x = m_PosX - m_LastX;
-	y = m_PosY - m_LastY;
-	ImGui::Begin("Character");
+	y = m_PosY - m_LastY;*/
 	ImGui::Text("PositionX: %f, PositionY: %f", m_PosX, m_PosY);
-	ImGui::Text("LastX: %f, LastY: %f", m_LastX, m_LastY);
-	ImGui::End();
+	//ImGui::Text("LastX: %f, LastY: %f", m_LastX, m_LastY);
 }

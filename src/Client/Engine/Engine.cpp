@@ -91,12 +91,14 @@ void CEngine::ProcessInputs()
 void CEngine::Update(float aDeltaTime)
 {
 	// MANAGE INPUT
+	float x = 0.f, y = 0.f;
 	if (CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->active) {
-		m_Movement->inputX = CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->value;
+		x = CEngine::GetInstance().GetActionManager().Get("HORIZONTAL")->value;
 	}
 	else if (CEngine::GetInstance().GetActionManager().Get("VERTICAL")->active) {
-		m_Movement->inputY = CEngine::GetInstance().GetActionManager().Get("VERTICAL")->value;
+		y = CEngine::GetInstance().GetActionManager().Get("VERTICAL")->value;
 	}
+	m_Movement->SetMovement(x, y);
 	// END MANAGE INPUT
 
 	m_NetworkManagerClient->UpdateSendingSockets(aDeltaTime);
@@ -117,12 +119,22 @@ void CEngine::Render(sf::RenderWindow* window)
 void CEngine::ShowDebugHelpers()
 {
 	IMLOG_DRAW;
-	ImGui::Begin("Sample window"); // begin window
+	ImGui::Begin("Debug"); // begin window
 	ImGui::Text("FPS: %d", (int)ImGui::GetIO().Framerate);
 	if (ImGui::CollapsingHeader("Network Manager")) {
 		ImGui::Indent();
 		ImGui::PushID("NETWORKMANAGER");
 		m_NetworkManagerClient->RenderImGui();
+		ImGui::PopID();
+		ImGui::Unindent();
+	}
+	if (ImGui::CollapsingHeader("Game Objects")) {
+		ImGui::Indent();
+		ImGui::PushID("ENGINEINFO");
+		for (GameObject* go : m_GameObjects)
+		{
+			go->RenderImGui();
+		}
 		ImGui::PopID();
 		ImGui::Unindent();
 	}

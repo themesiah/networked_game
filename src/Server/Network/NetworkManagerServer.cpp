@@ -56,12 +56,12 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 
 	if (m_SendTimer >= SEND_INTERVAL)
 	{
-		CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
-		OutputMemoryBitStream lOutput;
-		lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
-		lOutput.Close();
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
+			CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
+			OutputMemoryBitStream lOutput;
+			lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
+			lOutput.Close();
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
 				CClientProxy* lClient = m_Clients[socket];
@@ -74,6 +74,7 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 					lOutputName.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
 					lOutputName.Close();
 					socket->Send(lOutputName.GetBufferPtr(), lOutputName.GetByteLength());
+					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 				}
 			}
 		}
