@@ -8,7 +8,7 @@
 #include "../Serializer/OutputMemoryBitStream.h"
 #include "../Serializer/InputMemoryBitStream.h"
 
-enum ReplicationAction
+enum ReplicationAction : uint8_t
 {
 	RA_Create,
 	RA_Update,
@@ -35,7 +35,7 @@ public:
 // MemoryStream is output
 void ReplicationHeader::Write(OutputMemoryBitStream& inStream)
 {
-	inStream.Serialize(mReplicationAction, 2);
+	inStream.Serialize(mReplicationAction, 3);
 	inStream.Serialize(mNetworkId);
 	if (mReplicationAction != RA_Destroy)
 	{
@@ -46,7 +46,7 @@ void ReplicationHeader::Write(OutputMemoryBitStream& inStream)
 // MemoryStream is input
 void ReplicationHeader::Read(InputMemoryBitStream& inStream)
 {
-	inStream.Serialize(mReplicationAction, 2);
+	inStream.Serialize(mReplicationAction, 3);
 	inStream.Serialize(mNetworkId);
 	if (mReplicationAction != RA_Destroy)
 	{

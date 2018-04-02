@@ -28,7 +28,6 @@ void CReplicationManager::ReplicateIntoStream(OutputMemoryBitStream& inStream, G
 	inGameObject->SerializeWrite(inStream);
 }
 
-// Memory stream is output
 void CReplicationManager::ReplicateWorldState(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects)
 {
 	//tag as replication data
@@ -37,6 +36,33 @@ void CReplicationManager::ReplicateWorldState(OutputMemoryBitStream& inStream, c
 	for (GameObject* go : inAllObjects)
 	{
 		ReplicateIntoStream(inStream, go);
+	}
+}
+
+void CReplicationManager::ReplicateWorldDeltas(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects)
+{
+	//tag as replication data
+	inStream.Serialize(PT_ReplicationDeltas, PACKET_BIT_SIZE);
+	//write each object
+	for (GameObject* go : inAllObjects)
+	{
+		GameObject::DirtyType lDirty = go->GetDirty();
+		switch (lDirty)
+		{
+		case GameObject::DirtyType::UPDATE:
+			ReplicateUpdate(inStream, go);
+			go->Undirty();
+			break;
+		case GameObject::DirtyType::CREATE:
+			ReplicateCreate(inStream, go);
+			go->Undirty();
+			break;
+		case GameObject::DirtyType::DESTROY:
+			ReplicateDestroy(inStream, go);
+			go->PrepareToDestroy();
+			break;
+			// PREPARE TO DESTROY and NOT DIRTY cases not handled
+		}
 	}
 }
 
@@ -106,6 +132,15 @@ GameObject* CReplicationManager::ReceiveReplicatedObject(InputMemoryBitStream& i
 	return go;
 }
 
+std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedDeltas(InputMemoryBitStream& inStream)
+{
+	while (inStream.GetRemainingDataSize() >= 34) //4*8 + 2 bits
+	{
+		ProcessReplicationAction(inStream);
+	}
+	return mObjectsReplicatedToMe;
+}
+
 // Memory stream is input
 void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream)
 {
@@ -118,6 +153,7 @@ void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStrea
 		GameObject* go = ObjectCreationRegistry::GetInstance().CreateGameObject(rh.mClassId);
 		mLinkingContext->AddGameObject(go, rh.mNetworkId);
 		go->SerializeRead(inStream);
+		mObjectsReplicatedToMe.insert(go);
 		break;
 	}
 	case RA_Update:
@@ -142,6 +178,7 @@ void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStrea
 	{
 		GameObject* go = mLinkingContext->GetGameObject(rh.mNetworkId);
 		mLinkingContext->RemoveGameObject(go);
+		mObjectsReplicatedToMe.erase(go);
 		go->Destroy();
 		break;
 	}

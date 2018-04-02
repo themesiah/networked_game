@@ -59,6 +59,9 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
 			CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
+			OutputMemoryBitStream lOutputDeltas;
+			lReplicationManager.ReplicateWorldDeltas(lOutputDeltas, *CServerEngine::GetInstance().GetGameObjects());
+			lOutputDeltas.Close();
 			OutputMemoryBitStream lOutput;
 			lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
 			lOutput.Close();
@@ -66,7 +69,7 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 			{
 				CClientProxy* lClient = m_Clients[socket];
 				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+					socket->Send(lOutputDeltas.GetBufferPtr(), lOutputDeltas.GetByteLength());
 				}
 				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
 					lClient->SetPlaying();

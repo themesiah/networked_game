@@ -14,8 +14,15 @@ static GameObject* CreateInstance() {return new inClass();}
 
 class GameObject {
 public:
+	enum DirtyType {
+		NO_DIRTY = 0,
+		UPDATE,
+		CREATE,
+		DESTROY,
+		PREPARED_TO_DESTROY
+	};
 	GameObject() :
-		mDirty(2) // It begins as dirty
+		mDirty(DirtyType::CREATE) // It begins as dirty
 	{
 
 	}
@@ -37,17 +44,24 @@ public:
 		OnAfterSerializeWrite();
 	}
 
-	virtual void Destroy() {}
+	virtual void Destroy() {
+		mDirty = DirtyType::DESTROY;
+	}
 	virtual void Update(float aDeltaTime) {}
 	virtual void RenderImGui() {}
 	void SetDirty() {
-		mDirty = 1;
+		if (mDirty == DirtyType::NO_DIRTY)
+			mDirty = DirtyType::UPDATE;
 	}
-	bool GetDirty() const {
+	DirtyType GetDirty() const {
 		return mDirty;
 	}
 	void Undirty() {
-		mDirty = 0;
+		mDirty = DirtyType::NO_DIRTY;
+	}
+	void PrepareToDestroy() {
+		if (mDirty == DirtyType::DESTROY)
+			mDirty = DirtyType::PREPARED_TO_DESTROY;
 	}
 protected:
 	virtual void OnBeforeSerializeRead() {}
@@ -55,7 +69,7 @@ protected:
 	virtual void OnBeforeSerializeWrite() {}
 	virtual void OnAfterSerializeWrite() {}
 private:
-	int mDirty; // 0 not dirty, 1 updated, 2 created, 3 deleted
+	DirtyType mDirty; // 0 not dirty, 1 updated, 2 created, 3 deleted, 4 prepared to delete
 };
 
 #endif

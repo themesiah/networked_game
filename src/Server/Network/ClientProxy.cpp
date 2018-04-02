@@ -60,4 +60,8 @@ void CClientProxy::ProcessInput(float dt, InputMemoryBitStream& aInput)
 	auto pos = lMovement.GetMovement();
 	m_Position->posx += pos[0] * PLAYER_SPEED * dt;
 	m_Position->posy += pos[1] * PLAYER_SPEED * dt;
+	if (pos[0] != 0.f || pos[1] != 0.f)
+	{
+		m_Position->SetDirty();
+	}
 }

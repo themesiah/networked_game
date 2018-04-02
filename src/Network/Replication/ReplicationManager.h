@@ -17,7 +17,9 @@ public:
 	CReplicationManager();
 	virtual ~CReplicationManager();
 	void ReplicateWorldState(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects);
+	void ReplicateWorldDeltas(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects);
 	std::unordered_set<GameObject*> ReceiveReplicatedObjects(InputMemoryBitStream& inStream);
+	std::unordered_set<GameObject*> ReceiveReplicatedDeltas(InputMemoryBitStream& inStream);
 private:
 	void ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject);
 	GameObject* ReceiveReplicatedObject(InputMemoryBitStream& inStream);

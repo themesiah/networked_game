@@ -45,11 +45,12 @@ public:
 		Serialize<size_t>(stringSize);
 		char* buffer = NULL;
 		buffer = static_cast<char*>(std::realloc(buffer, stringSize));
-		Serialize<char *>(buffer, (sizeof(char) * stringSize) << 3);
+		size_t bitSize = sizeof(char) * stringSize << 3;
+		ReadBits(buffer, bitSize);
 		ioData = std::string(buffer, stringSize);
 	}
 	template <typename T> void Serialize(T& ioData, size_t inBitCount = sizeof(T) << 3) {
-		Serialize(&ioData, inBitCount);
+		ReadBits(&ioData, inBitCount);
 	}
 	template <typename K, typename V> void Serialize(std::map<K, V>& ioMap, size_t keyBitSize = sizeof(K) << 3, size_t valueBitSize = sizeof(V) << 3) {
 		ioMap.clear();

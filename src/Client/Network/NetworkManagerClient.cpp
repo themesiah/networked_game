@@ -131,6 +131,10 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 			auto receivedGameObjects = lReplicationManager.ReceiveReplicatedObjects(lInput);
 			lGameObjects->swap(receivedGameObjects);
 		}
+		else if (packetType == PacketType::PT_ReplicationDeltas && m_State == ClientState::PLAYING) {
+			auto receivedGameObjects = lReplicationManager.ReceiveReplicatedDeltas(lInput);
+			lGameObjects->swap(receivedGameObjects);
+		}
 		else if (packetType == PacketType::PT_Hello && m_State == ClientState::HELLO_SENT) {
 			m_State = ClientState::PLAYING;
 		}

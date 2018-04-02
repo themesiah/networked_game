@@ -42,11 +42,11 @@ public:
 		Serialize<bool>(ioData, 1);
 	}
 
-	void Serialize(std::string ioData) {
+	void Serialize(const std::string& ioData) {
 		size_t size = ioData.size();
 		Serialize<size_t>(size);
 		const char * buffer = ioData.c_str();
-		Serialize<const char *>(buffer, (sizeof(char) * size) << 3);
+		WriteBits(buffer, (sizeof(char) * size) << 3);
 	}
 
 	template <typename T> void Serialize(T ioData, size_t inBitCount = sizeof(T) << 3) {
