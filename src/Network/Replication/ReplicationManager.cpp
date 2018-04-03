@@ -134,6 +134,7 @@ GameObject* CReplicationManager::ReceiveReplicatedObject(InputMemoryBitStream& i
 
 std::unordered_set<GameObject*> CReplicationManager::ReceiveReplicatedDeltas(InputMemoryBitStream& inStream)
 {
+	mObjectsReplicatedToMe.clear();
 	while (inStream.GetRemainingDataSize() >= 34) //4*8 + 2 bits
 	{
 		ProcessReplicationAction(inStream);
@@ -178,7 +179,7 @@ void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStrea
 	{
 		GameObject* go = mLinkingContext->GetGameObject(rh.mNetworkId);
 		mLinkingContext->RemoveGameObject(go);
-		mObjectsReplicatedToMe.erase(go);
+		//mObjectsReplicatedToMe.erase(go);
 		go->Destroy();
 		break;
 	}

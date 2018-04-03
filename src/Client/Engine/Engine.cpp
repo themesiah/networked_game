@@ -105,9 +105,30 @@ void CEngine::Update(float aDeltaTime)
 	m_NetworkManagerClient->UpdateReceivingSockets(aDeltaTime);
 	m_NetworkManagerClient->UpdatePackets(aDeltaTime);
 
+	// First destroy. Then update the rest.
+	ManageObjectsDestroy();
 	for (GameObject* go : m_GameObjects)
 	{
 		go->Update(aDeltaTime);
+	}
+}
+
+void CEngine::ManageObjectsDestroy()
+{
+	std::vector<GameObject*> toDestroy;
+	for (auto go : m_GameObjects)
+	{
+		if (go->GetDirty() == GameObject::DirtyType::PREPARED_TO_DESTROY)
+		{
+			toDestroy.push_back(go);
+		}
+	}
+
+	for (auto go : toDestroy)
+	{
+		auto goit = std::find(m_GameObjects.begin(), m_GameObjects.end(), go);
+		m_GameObjects.erase(goit);
+		delete go;
 	}
 }
 

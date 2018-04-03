@@ -57,5 +57,25 @@ void CServerEngine::Update()
 
 	m_NetworkManagerServer->UpdateSendingSockets(dt);
 	m_NetworkManagerServer->UpdateReceivingSockets(dt);
-	m_NetworkManagerServer->UpdatePackets(dt);	
+	m_NetworkManagerServer->UpdatePackets(dt);
+	ManageObjectsDestroy();
+}
+
+void CServerEngine::ManageObjectsDestroy()
+{
+	std::vector<GameObject*> toDestroy;
+	for (auto go : m_GameObjects)
+	{
+		if (go->GetDirty() == GameObject::DirtyType::PREPARED_TO_DESTROY)
+		{
+			toDestroy.push_back(go);
+		}
+	}
+
+	for (auto go : toDestroy)
+	{
+		auto goit = std::find(m_GameObjects.begin(), m_GameObjects.end(), go);
+		m_GameObjects.erase(goit);
+		delete go;
+	}
 }

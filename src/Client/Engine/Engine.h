@@ -59,6 +59,7 @@ protected:
 	CEngine();
 	friend class base::utils::CSingleton<CEngine>;
 private:
+	void ManageObjectsDestroy();
 	std::unordered_set<GameObject*> m_GameObjects;
 	CMovement* m_Movement;
 };

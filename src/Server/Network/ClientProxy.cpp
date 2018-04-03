@@ -46,9 +46,10 @@ void CClientProxy::Disconnect()
 {
 	m_State = ClientState::PENDING_DISCONNECTION;
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
-	auto goit = std::find(lGameObjects->begin(), lGameObjects->end(), m_Position);
-	lGameObjects->erase(goit);
-	delete m_Position;
+	//auto goit = std::find(lGameObjects->begin(), lGameObjects->end(), m_Position);
+	//lGameObjects->erase(goit);
+	m_Position->DestroySignal();
+	//delete m_Position;
 	delete m_PacketStream;
 }
 

@@ -45,6 +45,9 @@ public:
 	}
 
 	virtual void Destroy() {
+		mDirty = DirtyType::PREPARED_TO_DESTROY;
+	}
+	virtual void DestroySignal() {
 		mDirty = DirtyType::DESTROY;
 	}
 	virtual void Update(float aDeltaTime) {}

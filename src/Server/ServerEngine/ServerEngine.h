@@ -42,6 +42,7 @@ protected:
 	CServerEngine();
 	friend class base::utils::CSingleton<CServerEngine>;
 private:
+	void ManageObjectsDestroy();
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
 	
