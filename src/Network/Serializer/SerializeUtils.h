@@ -117,6 +117,9 @@ public:
 			case EPT_MapIntInt:
 				ms.Serialize(*(std::map<int, int>*)mvData);
 				break;
+			case EPT_IntArray:
+				ms.Serialize(*(std::vector<int>*)mvData);
+				break;
 			}
 		}
 	}
@@ -143,6 +146,9 @@ public:
 				break;
 			case EPT_MapIntInt:
 				ms.Serialize(*(std::map<int, int>*)mvData);
+				break;
+			case EPT_IntArray:
+				ms.Serialize(*(std::vector<int>*)mvData);
 				break;
 			}
 		}

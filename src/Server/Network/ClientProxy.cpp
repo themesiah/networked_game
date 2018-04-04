@@ -3,7 +3,7 @@
 #include "../ServerEngine/ServerEngine.h"
 
 #include "Serializer\PacketStream.h"
-#include "Movement.h"
+#include "CommonClasses\Movement.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")

@@ -19,6 +19,12 @@
     <Filter Include="Archivos de código fuente\Network">
       <UniqueIdentifier>{5bd411f1-5744-4281-89df-d31d6df4d9bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Model">
+      <UniqueIdentifier>{39e4e09b-dce8-4c15-b25e-13698553fac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Model\Scenario">
+      <UniqueIdentifier>{94760091-6fda-476c-8f05-d4957c925489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,6 +39,9 @@
     <ClCompile Include="Network\ClientProxy.cpp">
       <Filter>Archivos de código fuente\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Scenario\TilemapServer.cpp">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEngine\ServerEngine.h">
@@ -46,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Network\ClientProxy.h">
       <Filter>Archivos de código fuente\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Scenario\TilemapServer.h">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

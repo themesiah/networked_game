@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +105,7 @@
     <ClCompile Include="Graphics\Animation.cpp" />
     <ClCompile Include="Graphics\AnimationSet.cpp" />
     <ClCompile Include="Graphics\RenderManager.cpp" />
+    <ClCompile Include="Graphics\TilemapClient.cpp" />
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Network\NetworkManagerClient.cpp" />
@@ -118,7 +119,7 @@
     <ClInclude Include="Graphics\Animation.h" />
     <ClInclude Include="Graphics\AnimationSet.h" />
     <ClInclude Include="Graphics\RenderManager.h" />
-    <ClInclude Include="Graphics\Tilemap.h" />
+    <ClInclude Include="Graphics\TilemapClient.h" />
     <ClInclude Include="Input\ActionManager.h" />
     <ClInclude Include="Input\ActionTrigger.h" />
     <ClInclude Include="Input\InputDefinitions.h" />

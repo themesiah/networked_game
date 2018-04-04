@@ -8,7 +8,9 @@
 #include "Replication\Packet.h"
 #include "Replication\ReplicationManager.h"
 
-#include "Movement.h"
+#include "CommonClasses\Movement.h"
+#include "../Model/Scenario/TilemapServer.h"
+
 #include "../Server/ServerEngine/ServerEngine.h"
 #include "ClientProxy.h"
 
@@ -46,6 +48,7 @@ bool CNetworkManagerServer::InitReflection()
 	LOGGER.Log("Setting reflection data of networked classes");
 	SET_REFLECTION_DATA(CPosition);
 	SET_REFLECTION_DATA(CMovement);
+	SET_REFLECTION_DATA(TilemapServer);
 	return true;
 }
 

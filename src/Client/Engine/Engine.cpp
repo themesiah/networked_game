@@ -17,7 +17,7 @@
 #include "Socket\SocketAddressFactory.h"
 
 
-#include "Movement.h"
+#include "CommonClasses\Movement.h"
 #include "Replication\Packet.h"
 
 #include "../Other/ImGUILog.h"

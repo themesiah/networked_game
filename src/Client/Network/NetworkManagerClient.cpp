@@ -10,7 +10,8 @@
 #include "Replication\Packet.h"
 #include "Replication\ObjectCreationRegistry.h"
 
-#include "Movement.h"
+#include "CommonClasses\Movement.h"
+#include "../Graphics/TilemapClient.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -38,6 +39,7 @@ bool CNetworkManagerClient::InitReflection()
 {
 	SET_REFLECTION_DATA(CPlayerController);
 	SET_REFLECTION_DATA(CMovement);
+	SET_REFLECTION_DATA(TilemapClient);
 	return true;
 }
 

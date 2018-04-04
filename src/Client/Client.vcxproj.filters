@@ -71,6 +71,9 @@
     <ClCompile Include="Network\NetworkManagerClient.cpp">
       <Filter>Archivos de código fuente\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\TilemapClient.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -90,9 +93,6 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourcesManager.h">
       <Filter>Archivos de código fuente\MainEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Tilemap.h">
-      <Filter>Archivos de código fuente\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\RenderManager.h">
       <Filter>Archivos de código fuente\Graphics</Filter>
@@ -117,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="Network\NetworkManagerClient.h">
       <Filter>Archivos de código fuente\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TilemapClient.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
