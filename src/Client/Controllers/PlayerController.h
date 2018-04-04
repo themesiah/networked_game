@@ -37,7 +37,7 @@ protected:
 	virtual void OnBeforeSerializeRead() override;
 private:
 	CAnimatedSprite* m_pAnimatedSprite;
-	sf::Text* m_NameText;
+	sf::Text m_NameText;
 	CAnimationSet* m_pAnimationSet;
 	float m_PosX;
 	float m_PosY;
