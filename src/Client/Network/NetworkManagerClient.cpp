@@ -4,6 +4,8 @@
 
 #include "../Engine/Engine.h"
 #include "Replication\ReplicationManager.h"
+#include "Replication\LinkingContext.h"
+#include "../Graphics/CameraController.h"
 
 #include "Socket\SocketAddress.h"
 #include "Socket\SocketAddressFactory.h"
@@ -140,6 +142,9 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 		}
 		else if (packetType == PacketType::PT_Hello && m_State == ClientState::HELLO_SENT) {
 			m_State = ClientState::PLAYING;
+			uint32_t lNetworkId;
+			lInput.Serialize(lNetworkId);
+			CEngine::GetInstance().GetCameraController().SetFollow(lNetworkId);
 		}
 		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();

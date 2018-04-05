@@ -7,6 +7,7 @@
 #include "Replication\ReplicationManager.h"
 #include "TextureManager.h"
 #include "../Network/NetworkManagerClient.h"
+#include "../Graphics/CameraController.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -38,6 +39,7 @@ CEngine::~CEngine()
 	delete m_ReplicationManager;
 	delete m_FontManager;
 	delete m_NetworkManagerClient;
+	delete m_CameraController;
 	delete m_Movement;
 
 	for (std::unordered_set<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
@@ -47,7 +49,7 @@ CEngine::~CEngine()
 	m_GameObjects.clear();
 }
 
-void CEngine::Init()
+void CEngine::Init(sf::RenderWindow* aWindow)
 {
 	bool success = true;
 	CActionManager* lActionManager = new CActionManager();
@@ -81,6 +83,10 @@ void CEngine::Init()
 	success = lNetworkManagerClient->Init(0);
 	success = lNetworkManagerClient->Connect();
 	SetNetworkManagerClient(lNetworkManagerClient);
+
+	CCameraController* lCameraController = new CCameraController();
+	lCameraController->Init(aWindow);
+	SetCameraController(lCameraController);
 }
 
 void CEngine::ProcessInputs()
@@ -111,6 +117,8 @@ void CEngine::Update(float aDeltaTime)
 	{
 		go->Update(aDeltaTime);
 	}
+
+	m_CameraController->Update(aDeltaTime);
 }
 
 void CEngine::ManageObjectsDestroy()
@@ -159,6 +167,14 @@ void CEngine::ShowDebugHelpers()
 		ImGui::PopID();
 		ImGui::Unindent();
 	}
+	if (ImGui::CollapsingHeader("Camera Controller")) {
+		ImGui::Indent();
+		ImGui::PushID("CAMERACONTROLLER");
+		m_CameraController->RenderImgui();
+		ImGui::PopID();
+		ImGui::Unindent();
+	}
+	
 	ImGui::End();
 }
 

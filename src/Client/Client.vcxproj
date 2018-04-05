@@ -104,6 +104,7 @@
     <ClCompile Include="Graphics\AnimatedSprite.cpp" />
     <ClCompile Include="Graphics\Animation.cpp" />
     <ClCompile Include="Graphics\AnimationSet.cpp" />
+    <ClCompile Include="Graphics\CameraController.cpp" />
     <ClCompile Include="Graphics\RenderManager.cpp" />
     <ClCompile Include="Graphics\TilemapClient.cpp" />
     <ClCompile Include="Input\ActionManager.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Graphics\AnimatedSprite.h" />
     <ClInclude Include="Graphics\Animation.h" />
     <ClInclude Include="Graphics\AnimationSet.h" />
+    <ClInclude Include="Graphics\CameraController.h" />
     <ClInclude Include="Graphics\RenderManager.h" />
     <ClInclude Include="Graphics\TilemapClient.h" />
     <ClInclude Include="Input\ActionManager.h" />

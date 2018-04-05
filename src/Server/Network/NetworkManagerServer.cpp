@@ -13,6 +13,7 @@
 
 #include "../Server/ServerEngine/ServerEngine.h"
 #include "ClientProxy.h"
+#include "Replication\LinkingContext.h"
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
@@ -78,6 +79,12 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 					lClient->SetPlaying();
 					OutputMemoryBitStream lOutputName;
 					lOutputName.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
+
+					// Add the network id of the player character to the packet, so the client knows what is its character
+					LinkingContext* lLink = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
+					uint32_t lNetworkId = lLink->GetNetworkId(lClient->GetPosition(), true);
+					lOutputName.Serialize(lNetworkId);
+
 					lOutputName.Close();
 					socket->Send(lOutputName.GetBufferPtr(), lOutputName.GetByteLength());
 					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());

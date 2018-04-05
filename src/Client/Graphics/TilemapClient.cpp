@@ -3,6 +3,9 @@
 #include "../Engine/Engine.h"
 #include "RenderManager.h"
 
+#include "../Engine/Engine.h"
+#include "../Engine/TextureManager.h"
+
 #include "imgui.h"
 
 TilemapClient::TilemapClient() :
@@ -10,6 +13,11 @@ Tilemap()
 , m_loaded(false)
 {
 
+}
+
+TilemapClient::~TilemapClient()
+{
+	m_vertices.clear();
 }
 
 void TilemapClient::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -20,6 +20,7 @@ public:
 	void ReplicateWorldDeltas(OutputMemoryBitStream& inStream, const std::vector<GameObject*>& inAllObjects);
 	std::unordered_set<GameObject*> ReceiveReplicatedObjects(InputMemoryBitStream& inStream);
 	std::unordered_set<GameObject*> ReceiveReplicatedDeltas(InputMemoryBitStream& inStream);
+	LinkingContext* GetLinkingContext();
 private:
 	void ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject);
 	GameObject* ReceiveReplicatedObject(InputMemoryBitStream& inStream);

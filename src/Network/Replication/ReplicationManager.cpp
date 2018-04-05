@@ -17,6 +17,11 @@ CReplicationManager::~CReplicationManager()
 	mObjectsReplicatedToMe.clear();
 }
 
+LinkingContext* CReplicationManager::GetLinkingContext()
+{
+	return mLinkingContext;
+}
+
 // Memory stream is output
 void CReplicationManager::ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject)
 {

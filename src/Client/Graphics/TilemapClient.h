@@ -11,6 +11,7 @@ class TilemapClient : public Tilemap, public sf::Drawable, public sf::Transforma
 {
 public:
 	TilemapClient();
+	virtual ~TilemapClient();
 	void Update(float aDeltaTime);
 	virtual void RenderImGui();
 	CLASS_IDENTIFICATION('TLMP', TilemapClient);

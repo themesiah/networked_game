@@ -74,6 +74,9 @@
     <ClCompile Include="Graphics\TilemapClient.cpp">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\CameraController.cpp">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -119,6 +122,9 @@
       <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\TilemapClient.h">
+      <Filter>Archivos de código fuente\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraController.h">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

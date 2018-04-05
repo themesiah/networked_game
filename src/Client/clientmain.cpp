@@ -59,13 +59,13 @@ int MainGame() {
 	bool fHandled = false;
 
 	// INIT WINDOW
-	sf::RenderWindow window(sf::VideoMode(1366, 768), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(1366, 768), "Banned Lands");
 	window.setVerticalSyncEnabled(true);
 	ImGui::SFML::Init(window);
 
 	// INIT ENGINE
 	CEngine& lEngine = CEngine::GetInstance();
-	lEngine.Init();
+	lEngine.Init(&window);
 
 	// INIT NETWORK
 
@@ -128,7 +128,7 @@ int MainGame() {
 int main() {
 #ifdef _DEBUG
 	MemLeaks::MemoryBegin();
-	//_CrtSetBreakAlloc(4402);
+	//_CrtSetBreakAlloc(4057);
 #endif
 	MainGame();
 #ifdef _DEBUG

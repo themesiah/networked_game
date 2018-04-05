@@ -24,6 +24,8 @@ public:
 	void Init();
 	void Update(float aDeltaTime) override;
 	virtual void RenderImGui() override;
+
+	sf::Vector2f GetPosition();
 	
 	static DataType* GetReflectionData() {
 		return new DataType({

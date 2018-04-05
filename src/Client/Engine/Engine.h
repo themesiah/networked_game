@@ -31,10 +31,11 @@ class CTextureManager;
 class CReplicationManager;
 class CMovement;
 class CNetworkManagerClient;
+class CCameraController;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
-	void Init();
+	void Init(sf::RenderWindow* aWindow);
 	void ProcessInputs();
 	void Update(float aDeltaTime);
 	void Render(sf::RenderWindow* window);
@@ -55,6 +56,7 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerClient);
 	BUILD_GET_SET_ENGINE_MANAGER(FontManager);
+	BUILD_GET_SET_ENGINE_MANAGER(CameraController);
 protected:
 	CEngine();
 	friend class base::utils::CSingleton<CEngine>;

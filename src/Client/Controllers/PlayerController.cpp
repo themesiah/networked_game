@@ -138,6 +138,12 @@ void CPlayerController::OnBeforeSerializeRead()
 	m_LastY = m_PosY;
 }
 
+sf::Vector2f CPlayerController::GetPosition()
+{
+	return m_pAnimatedSprite->getPosition();
+	//return sf::Vector2f(m_PosX, m_PosY);
+}
+
 void CPlayerController::RenderImGui()
 {
 	/*float x = 0.f;
