@@ -1,8 +1,8 @@
 #include "TilemapServer.h"
 
-void TilemapServer::SetData(const std::string& tileset, unsigned int tileWidth, unsigned int tileHeight, const int* tiles, unsigned int width, unsigned int height)
+void TilemapServer::SetData(const uint16_t& tileset, unsigned int tileWidth, unsigned int tileHeight, const int* tiles, unsigned int width, unsigned int height)
 {
-	mTilesetName = tileset;
+	mTilemapId = tileset;
 	mTileWidth = tileWidth;
 	mTileHeight = tileHeight;
 	mWidth = width;

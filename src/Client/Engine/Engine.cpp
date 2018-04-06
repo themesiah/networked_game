@@ -1,8 +1,5 @@
 #include "Engine.h"
 
-#include <iostream>
-#include <fstream>
-
 #include "../Input/ActionManager.h"
 #include "Replication\ReplicationManager.h"
 #include "TextureManager.h"
@@ -12,14 +9,7 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-#include "Replication\ObjectCreationRegistry.h"
-
-#include "Socket\SocketAddress.h"
-#include "Socket\SocketAddressFactory.h"
-
-
 #include "CommonClasses\Movement.h"
-#include "Replication\Packet.h"
 
 #include "../Other/ImGUILog.h"
 
@@ -52,6 +42,10 @@ CEngine::~CEngine()
 void CEngine::Init(sf::RenderWindow* aWindow)
 {
 	bool success = true;
+
+	m_MasterTable.Load("Data/Tables/resourcesMasterTable.txt");
+	m_TexturesTable.Load(m_MasterTable.GetResourcePath(CResourcesTable::TablesKeys::TEXTURES));
+
 	CActionManager* lActionManager = new CActionManager();
 	lActionManager->InitInputManager();
 	lActionManager->LoadActions("actions.xml");

@@ -1,0 +1,2 @@
+1:Data/tilemap.png
+2:Data/player.png

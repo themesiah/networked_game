@@ -110,13 +110,13 @@ void CPlayerController::Update(float aDeltaTime)
 		lNewAnimation = PlayerAnimations::MOVE_UP;
 	}
 
-	if (lNewAnimation != m_CurrentAnimation)
+	if (lNewAnimation != m_CurrentAnimation || !m_pAnimatedSprite->IsPlaying())
 	{
 		m_CurrentAnimation = lNewAnimation;
 		m_pAnimatedSprite->Play(m_pAnimationSet->GetAnimation(m_CurrentAnimation));
 	}
 
-	if (m_MovX == 0.f && m_MovY == 0.f && t >= 1)
+	if (m_Timer > m_PacketTime)
 	{
 		m_pAnimatedSprite->Stop();
 	}

@@ -26,6 +26,8 @@
     <ClInclude Include="Utils\StringUtils.h" />
     <ClInclude Include="Utils\TemplatedMap.h" />
     <ClInclude Include="Utils\TemplatedMapVector.h" />
+    <ClInclude Include="Utils\TemplatedPairMap.h" />
+    <ClInclude Include="Utils\TemplatedPairMapVector.h" />
     <ClInclude Include="Utils\Types.h" />
     <ClInclude Include="XML\tinyxml2\tinyxml2.h" />
     <ClInclude Include="XML\XML.h" />

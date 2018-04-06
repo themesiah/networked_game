@@ -8,10 +8,9 @@
 #include "../Graphics/RenderManager.h"
 #include "../Controllers/PlayerController.h"
 
-#include "Socket\SocketUtil.h"
-#include "Socket\TCPSocket.h"
+#include "Utils\Defines.h"
 
-#include "Serializer\PacketStream.h"
+#include "ResourcesTable.h"
 
 #define SEGMENT_SIZE 1500
 
@@ -24,6 +23,15 @@ void Set##Manager(C##Manager* a##Manager) { m_##Manager = a##Manager;  } \
 const C##Manager& Get##Manager() const { return *m_##Manager; } \
 C##Manager& Get##Manager() { return *m_##Manager; } \
 bool Has##Manager() { return m_##Manager != nullptr; } \
+
+#define GET_SET_TABLE(TABLE_NAME) \
+private: \
+CResourcesTable m_##TABLE_NAME; \
+public: \
+CResourcesTable& Get##TABLE_NAME() \
+	{ \
+    return m_##TABLE_NAME; \
+	} \
 
 
 class CActionManager;
@@ -57,6 +65,9 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerClient);
 	BUILD_GET_SET_ENGINE_MANAGER(FontManager);
 	BUILD_GET_SET_ENGINE_MANAGER(CameraController);
+
+	GET_SET_TABLE(MasterTable);
+	GET_SET_TABLE(TexturesTable);
 protected:
 	CEngine();
 	friend class base::utils::CSingleton<CEngine>;

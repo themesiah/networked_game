@@ -26,7 +26,7 @@ void TilemapClient::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 	states.transform *= getTransform();
 
 	// apply the tileset texture
-	states.texture = &m_tileset;
+	states.texture = m_tileset;
 
 	// draw the vertex array
 	target.draw(m_vertices, states);
@@ -35,7 +35,9 @@ void TilemapClient::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 void TilemapClient::OnAfterSerializeRead()
 {
 	// load the tileset texture
-	if (!m_tileset.loadFromFile(mTilesetName))
+	mTilesetName = CEngine::GetInstance().GetTexturesTable().GetResourcePath(mTilemapId);
+	m_tileset = CEngine::GetInstance().GetTextureManager().LoadTexture(mTilesetName);
+	if (m_tileset == nullptr)
 		return;
 
 	// resize the vertex array to fit the level size
@@ -50,8 +52,8 @@ void TilemapClient::OnAfterSerializeRead()
 			int tileNumber = mTiles[i + j * mWidth];
 
 			// find its position in the tileset texture
-			int tu = tileNumber % (m_tileset.getSize().x / mTileWidth);
-			int tv = tileNumber / (m_tileset.getSize().x / mTileWidth);
+			int tu = tileNumber % (m_tileset->getSize().x / mTileWidth);
+			int tv = tileNumber / (m_tileset->getSize().x / mTileWidth);
 
 			// get a pointer to the current tile's quad
 			sf::Vertex* quad = &m_vertices[(i + j * mWidth) * 4];

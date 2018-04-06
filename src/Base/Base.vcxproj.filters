@@ -72,6 +72,12 @@
     <ClInclude Include="Utils\MemLeaks\Releaser.h">
       <Filter>Utils\Memleaks</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\TemplatedPairMapVector.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TemplatedPairMap.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XML\XML.cpp">

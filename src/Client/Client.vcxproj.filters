@@ -127,5 +127,8 @@
     <ClInclude Include="Graphics\CameraController.h">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourcesTable.h">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
