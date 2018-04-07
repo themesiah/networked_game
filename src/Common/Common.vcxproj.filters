@@ -20,5 +20,8 @@
     <ClInclude Include="CommonClasses\PlayerName.h">
       <Filter>Archivos de código fuente</Filter>
     </ClInclude>
+    <ClInclude Include="CommonClasses\PlayerController.h">
+      <Filter>Archivos de código fuente</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

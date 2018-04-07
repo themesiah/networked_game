@@ -33,7 +33,7 @@ void CCameraController::Update(const float& aDeltaTime)
 		GameObject* go = m_LinkingContext->GetGameObject(m_NetworkId);
 		if (go != nullptr)
 		{
-			CPlayerController* lPlayer = static_cast<CPlayerController*>(go);
+			CPlayerControllerClient* lPlayer = static_cast<CPlayerControllerClient*>(go);
 			if (lPlayer != nullptr)
 			{
 				SetFollow(lPlayer);
@@ -47,7 +47,7 @@ void CCameraController::Update(const float& aDeltaTime)
 	}
 }
 
-void CCameraController::SetFollow(CPlayerController* aFollow)
+void CCameraController::SetFollow(CPlayerControllerClient* aFollow)
 {
 	m_Follow = aFollow;
 }

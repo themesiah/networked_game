@@ -1,1 +1,2 @@
 1:Data/Tables/texturesTable.txt
+2:Data/Tables/animationsTable.txt

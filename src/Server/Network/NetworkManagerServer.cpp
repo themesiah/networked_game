@@ -15,6 +15,7 @@
 #include "../Server/ServerEngine/ServerEngine.h"
 #include "ClientProxy.h"
 #include "Replication\LinkingContext.h"
+#include "../Model/Player/PlayerControllerServer.h"
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
@@ -48,10 +49,10 @@ bool CNetworkManagerServer::InitServerListener()
 bool CNetworkManagerServer::InitReflection()
 {
 	LOGGER.Log("Setting reflection data of networked classes");
-	SET_REFLECTION_DATA(CPosition);
 	SET_REFLECTION_DATA(CMovement);
 	SET_REFLECTION_DATA(TilemapServer);
 	SET_REFLECTION_DATA(PlayernameServer);
+	SET_REFLECTION_DATA(CPlayerControllerServer);
 	return true;
 }
 
@@ -84,7 +85,7 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 
 					// Add the network id of the player character to the packet, so the client knows what is its character
 					LinkingContext* lLink = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
-					uint32_t lNetworkId = lLink->GetNetworkId(lClient->GetPosition(), true);
+					uint32_t lNetworkId = lLink->GetNetworkId(lClient->GetPlayerController(), true);
 					lOutputName.Serialize(lNetworkId);
 
 					lOutputName.Close();
@@ -149,7 +150,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 					break;
 				}
 				else if (packetType == PacketType::PT_Hello && lClient->GetState() == CClientProxy::ClientState::CONNECTED) {
-					lClient->SetName(lInput);
+					lClient->InitPlayer(lInput);
 					lClient->SetWaiting();
 				}
 				std::free(p.buffer);

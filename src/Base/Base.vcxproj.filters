@@ -78,6 +78,9 @@
     <ClInclude Include="Utils\TemplatedPairMap.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\TemplatedPairMapPtr.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XML\XML.cpp">

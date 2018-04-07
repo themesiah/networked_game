@@ -10,7 +10,7 @@
 #define CLASS_IDENTIFICATION(inCode, inClass) \
 enum{kClassId = inCode}; \
 virtual uint32_t GetClassId() const {return kClassId;} \
-static GameObject* CreateInstance() {return new inClass();}
+static GameObject* CreateInstance() { return new inClass();}
 
 class GameObject {
 public:
@@ -23,6 +23,7 @@ public:
 	};
 	GameObject() :
 		mDirty(DirtyType::CREATE) // It begins as dirty
+		, mInitialized(false)
 	{
 
 	}
@@ -35,6 +36,11 @@ public:
 	void SerializeRead(InputMemoryBitStream& ms) {
 		OnBeforeSerializeRead();
 		SerializeUtils::SerializeRead(ms, (uint8_t*)this, GetClassId());
+		if (mInitialized == false)
+		{
+			Init();
+			mInitialized = true;
+		}
 		OnAfterSerializeRead();
 	}
 
@@ -50,6 +56,7 @@ public:
 	virtual void DestroySignal() {
 		mDirty = DirtyType::DESTROY;
 	}
+	virtual void Init() {}
 	virtual void Update(float aDeltaTime) {}
 	virtual void RenderImGui() {}
 	void SetDirty() {
@@ -73,6 +80,7 @@ protected:
 	virtual void OnAfterSerializeWrite() {}
 private:
 	DirtyType mDirty; // 0 not dirty, 1 updated, 2 created, 3 deleted, 4 prepared to delete
+	bool mInitialized;
 };
 
 #endif

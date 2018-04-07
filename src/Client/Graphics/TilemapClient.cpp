@@ -35,7 +35,7 @@ void TilemapClient::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 void TilemapClient::OnAfterSerializeRead()
 {
 	// load the tileset texture
-	mTilesetName = CEngine::GetInstance().GetTexturesTable().GetResourcePath(mTilemapId);
+	mTilesetName = CEngine::GetInstance().GetResourceTable(CResourcesTable::TEXTURES)->GetResourcePath(mTilemapId);
 	m_tileset = CEngine::GetInstance().GetTextureManager().LoadTexture(mTilesetName);
 	if (m_tileset == nullptr)
 		return;

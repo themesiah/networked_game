@@ -6,6 +6,8 @@
 #include <SFML\Graphics\Rect.hpp>
 #include <SFML\Graphics\Texture.hpp>
 
+#include "../Engine/Resource.h"
+
 class CAnimation {
 public:
 	CAnimation();

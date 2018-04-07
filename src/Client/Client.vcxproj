@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;$(SolutionDir)..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Network;$(SolutionDir)\..\SFML-2.4.2\include;$(SolutionDir)\Base;$(SolutionDir)..\include\imgui-master;$(SolutionDir)\Common;$(SolutionDir)..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,9 +99,11 @@
     <ClCompile Include="..\..\include\imgui-master\imgui_demo.cpp" />
     <ClCompile Include="..\..\include\imgui-master\imgui_draw.cpp" />
     <ClCompile Include="clientmain.cpp" />
-    <ClCompile Include="Controllers\PlayerController.cpp" />
+    <ClCompile Include="Controllers\PlayerControllerClient.cpp" />
     <ClCompile Include="Controllers\PlayernameClient.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\GUIManager.cpp" />
+    <ClCompile Include="Engine\ResourcesTable.cpp" />
     <ClCompile Include="Graphics\AnimatedSprite.cpp" />
     <ClCompile Include="Graphics\Animation.cpp" />
     <ClCompile Include="Graphics\AnimationSet.cpp" />
@@ -113,10 +115,14 @@
     <ClCompile Include="Network\NetworkManagerClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controllers\PlayerController.h" />
+    <ClInclude Include="Controllers\PlayerControllerClient.h" />
     <ClInclude Include="Controllers\PlayernameClient.h" />
+    <ClInclude Include="Engine\AnimationsetManager.h" />
     <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\GUIManager.h" />
+    <ClInclude Include="Engine\Resource.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
+    <ClInclude Include="Engine\ResourcesMasterTable.h" />
     <ClInclude Include="Engine\ResourcesTable.h" />
     <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="Graphics\AnimatedSprite.h" />

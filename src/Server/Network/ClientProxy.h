@@ -11,23 +11,8 @@
 
 #include "Utils\Defines.h"
 
-class CPosition : public GameObject {
-public:
-	CPosition() {
-	}
-	float posx;
-	float posy;
-	static DataType* GetReflectionData() {
-		return new DataType({
-			MemberVariable("posx", OffsetOf(CPosition, posx), -1000.0f, 0.1f),
-			MemberVariable("posy", OffsetOf(CPosition, posy), -1000.0f, 0.1f)
-		}
-		);
-	}
-	CLASS_IDENTIFICATION('CPCT', CPosition);
-};
-
 class PacketStream;
+class CPlayerControllerServer;
 class CClientProxy
 {
 public:
@@ -41,7 +26,7 @@ public:
 	CClientProxy();
 	virtual ~CClientProxy();
 	bool Init();
-	void SetName(InputMemoryBitStream& aInput);
+	void InitPlayer(InputMemoryBitStream& aInput);
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
@@ -51,9 +36,9 @@ public:
 	{
 		return m_PacketStream;
 	}
-	CPosition* GetPosition()
+	CPlayerControllerServer* GetPlayerController()
 	{
-		return m_Position;
+		return m_PlayerController;
 	}
 	ClientState GetState()
 	{
@@ -63,7 +48,7 @@ private:
 	ClientState m_State;
 	std::string m_Name;
 	PacketStream* m_PacketStream;
-	CPosition* m_Position;
+	CPlayerControllerServer* m_PlayerController;;
 	PlayernameServer* m_Playername;
 };
 

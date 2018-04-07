@@ -5,6 +5,8 @@
 #include "TextureManager.h"
 #include "../Network/NetworkManagerClient.h"
 #include "../Graphics/CameraController.h"
+#include "GUIManager.h"
+#include "AnimationsetManager.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -27,6 +29,7 @@ CEngine::~CEngine()
 	delete m_TextureManager;
 	delete m_SpriteManager;
 	delete m_ReplicationManager;
+	delete m_GUIManager;
 	delete m_FontManager;
 	delete m_NetworkManagerClient;
 	delete m_CameraController;
@@ -44,7 +47,6 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 	bool success = true;
 
 	m_MasterTable.Load("Data/Tables/resourcesMasterTable.txt");
-	m_TexturesTable.Load(m_MasterTable.GetResourcePath(CResourcesTable::TablesKeys::TEXTURES));
 
 	CActionManager* lActionManager = new CActionManager();
 	lActionManager->InitInputManager();
@@ -59,6 +61,10 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 	lSpriteManager->SetOnDestructor(DestroyOnDestructor);
 	SetSpriteManager(lSpriteManager);
 
+	CAnimationsetManager* lAnimationsetManager = new CAnimationsetManager();
+	lAnimationsetManager->SetOnDestructor(DestroyOnDestructor);
+	SetAnimationsetManager(lAnimationsetManager);
+
 	CFontManager* lFontManager = new CFontManager();
 	lFontManager->SetOnDestructor(DestroyOnDestructor);
 	sf::Font* lDefaultFont = new sf::Font();
@@ -72,6 +78,9 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 
 	CReplicationManager* lReplicationManager = new CReplicationManager();
 	SetReplicationManager(lReplicationManager);
+
+	CGUIManager* lGuiManager = new CGUIManager();
+	SetGUIManager(lGuiManager);
 
 	CNetworkManagerClient* lNetworkManagerClient = new CNetworkManagerClient();
 	success = lNetworkManagerClient->Init(0);

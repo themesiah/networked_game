@@ -14,6 +14,7 @@ namespace base {
 		long GetFileSize(std::string filename);
 		bool DoesFileExists(const std::string& file);
 		void GetFilesFromPath(const std::string& Path, const std::string& Extension, std::vector<std::string>& _OutFiles);
+		std::string GetTextFromFile(const std::string& path);
     }
 }
 

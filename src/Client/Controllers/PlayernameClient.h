@@ -4,7 +4,7 @@
 #define H_PLAYERNAME_CLIENT
 
 #include "CommonClasses\PlayerName.h"
-#include "PlayerController.h"
+#include "PlayerControllerClient.h"
 
 class CPlayerController;
 class LinkingContext;
@@ -17,6 +17,7 @@ public:
 	CLASS_IDENTIFICATION('PLYN', PlayernameClient);
 private:
 	LinkingContext* m_LinkingContext;
+	bool m_Set;
 };
 
 #endif

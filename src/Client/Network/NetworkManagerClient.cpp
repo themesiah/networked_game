@@ -6,6 +6,7 @@
 #include "Replication\ReplicationManager.h"
 #include "Replication\LinkingContext.h"
 #include "../Graphics/CameraController.h"
+#include "../Engine/GUIManager.h"
 
 #include "Socket\SocketAddress.h"
 #include "Socket\SocketAddressFactory.h"
@@ -15,6 +16,7 @@
 #include "CommonClasses\Movement.h"
 #include "../Graphics/TilemapClient.h"
 #include "../Controllers/PlayernameClient.h"
+#include "../Controllers/PlayerControllerClient.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -40,7 +42,7 @@ bool CNetworkManagerClient::Init(uint16_t aPort)
 
 bool CNetworkManagerClient::InitReflection()
 {
-	SET_REFLECTION_DATA(CPlayerController);
+	SET_REFLECTION_DATA(CPlayerControllerClient);
 	SET_REFLECTION_DATA(CMovement);
 	SET_REFLECTION_DATA(TilemapClient);
 	SET_REFLECTION_DATA(PlayernameClient);
@@ -75,20 +77,16 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 	{
 	case ClientState::CONNECTED:
 		{
-			ImGui::Begin("LOGIN");
-			ImGui::InputText("Name", m_Name, 50);
-			if (strcmp(m_Name, "") != 0) {
-				if (ImGui::Button("Connect")) {
-					OutputMemoryBitStream lOutput;
-					lOutput.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
-					std::string lName(m_Name);
-					lOutput.Serialize(lName);
-					lOutput.Close();
-					int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
-					m_State = ClientState::HELLO_SENT;
-				}
+			CGUIManager::LoginData lLoginData = CEngine::GetInstance().GetGUIManager().LoginGUI();
+			if (lLoginData.success == true) {
+				OutputMemoryBitStream lOutput;
+				lOutput.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
+				lOutput.Serialize(lLoginData.name);
+				lOutput.Serialize(lLoginData.graphicId);
+				lOutput.Close();
+				int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+				m_State = ClientState::HELLO_SENT;
 			}
-			ImGui::End();
 		}
 		break;
 	case ClientState::PLAYING:

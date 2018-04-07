@@ -7,6 +7,8 @@
 #include <sstream>
 #include <string>
 #include <sys\stat.h>
+#include <streambuf>
+#include <fstream>
 
 namespace base {
     namespace utils
@@ -40,6 +42,17 @@ namespace base {
 					hFind = INVALID_HANDLE_VALUE;
 				}
 			}
+		}
+
+		std::string GetTextFromFile(const std::string& path)
+		{
+			std::ifstream f(path);
+			std::string str = "";
+			if (f.is_open() == true)
+			{
+				str = std::string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+			}
+			return str;
 		}
     }
 }

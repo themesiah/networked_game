@@ -25,6 +25,9 @@
     <Filter Include="Archivos de código fuente\Model\Scenario">
       <UniqueIdentifier>{94760091-6fda-476c-8f05-d4957c925489}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Model\Player">
+      <UniqueIdentifier>{1b03545a-edb8-4f5d-9fa7-0edf39f2f2e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Model\PlayernameServer.h">
       <Filter>Archivos de código fuente\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player\PlayerControllerServer.h">
+      <Filter>Archivos de código fuente\Model\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

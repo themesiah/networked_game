@@ -4,6 +4,7 @@
 #define H_TEXTURE_MANAGER
 
 #include "ResourcesManager.h"
+#include "Engine.h"
 
 #include <SFML\Graphics\Texture.hpp>
 
@@ -25,6 +26,11 @@ public:
 				return nullptr;
 			}
 		}
+	}
+
+	sf::Texture* LoadTexture(const uint16_t& aResourceId)
+	{
+		return LoadTexture(CEngine::GetInstance().GetResourceTable(CResourcesTable::TEXTURES)->GetResourcePath(aResourceId));
 	}
 };
 

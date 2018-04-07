@@ -4,7 +4,8 @@
 #include "Replication\ReplicationManager.h"
 #include "Replication\LinkingContext.h"
 
-PlayernameClient::PlayernameClient()
+PlayernameClient::PlayernameClient() :
+m_Set(false)
 {
 	m_LinkingContext = CEngine::GetInstance().GetReplicationManager().GetLinkingContext();
 }
@@ -16,16 +17,16 @@ PlayernameClient::~PlayernameClient()
 
 void PlayernameClient::Update(float aDeltaTime)
 {
-	if (m_PlayerId != 0)
+	if (m_PlayerId != 0 && !m_Set)
 	{
 		GameObject* go = m_LinkingContext->GetGameObject(m_PlayerId);
 		if (go != nullptr)
 		{
-			CPlayerController* lPlayer = static_cast<CPlayerController*>(go);
+			CPlayerControllerClient* lPlayer = static_cast<CPlayerControllerClient*>(go);
 			if (lPlayer != nullptr)
 			{
 				lPlayer->SetName(m_PlayerName);
-				Destroy();
+				m_Set = true;
 			}
 		}
 	}
