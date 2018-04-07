@@ -95,6 +95,7 @@
     <ClCompile Include="ServerEngine\ServerEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\PlayernameServer.h" />
     <ClInclude Include="Model\Scenario\TilemapServer.h" />
     <ClInclude Include="Network\ClientProxy.h" />
     <ClInclude Include="Network\NetworkManagerServer.h" />

@@ -12,6 +12,7 @@ enum EPrimitiveType
 {
 	EPT_Int,
 	EPT_Short,
+	EPT_Long,
 	EPT_String,
 	EPT_Float,
 	EPT_Bool,

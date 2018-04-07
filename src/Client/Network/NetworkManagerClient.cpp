@@ -14,6 +14,7 @@
 
 #include "CommonClasses\Movement.h"
 #include "../Graphics/TilemapClient.h"
+#include "../Controllers/PlayernameClient.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -42,6 +43,7 @@ bool CNetworkManagerClient::InitReflection()
 	SET_REFLECTION_DATA(CPlayerController);
 	SET_REFLECTION_DATA(CMovement);
 	SET_REFLECTION_DATA(TilemapClient);
+	SET_REFLECTION_DATA(PlayernameClient);
 	return true;
 }
 
@@ -73,12 +75,20 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 	{
 	case ClientState::CONNECTED:
 		{
-			OutputMemoryBitStream lOutput;
-			lOutput.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
-			// TODO: Player name!
-			lOutput.Close();
-			int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
-			m_State = ClientState::HELLO_SENT;
+			ImGui::Begin("LOGIN");
+			ImGui::InputText("Name", m_Name, 50);
+			if (strcmp(m_Name, "") != 0) {
+				if (ImGui::Button("Connect")) {
+					OutputMemoryBitStream lOutput;
+					lOutput.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
+					std::string lName(m_Name);
+					lOutput.Serialize(lName);
+					lOutput.Close();
+					int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+					m_State = ClientState::HELLO_SENT;
+				}
+			}
+			ImGui::End();
 		}
 		break;
 	case ClientState::PLAYING:

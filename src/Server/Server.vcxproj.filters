@@ -59,5 +59,8 @@
     <ClInclude Include="Model\Scenario\TilemapServer.h">
       <Filter>Archivos de código fuente\Model\Scenario</Filter>
     </ClInclude>
+    <ClInclude Include="Model\PlayernameServer.h">
+      <Filter>Archivos de código fuente\Model</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

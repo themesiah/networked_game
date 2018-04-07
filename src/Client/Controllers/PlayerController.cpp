@@ -77,7 +77,7 @@ void CPlayerController::Init() {
 
 	m_NameText;
 	m_NameText.setFont(*CEngine::GetInstance().GetFontManager().Get("default"));
-	m_NameText.setString("Mesiah");
+	m_NameText.setString("Unnamed");
 	m_NameText.setCharacterSize(14);
 	m_NameText.setFillColor(sf::Color::White);
 	m_NameText.setOrigin(m_NameText.getGlobalBounds().width/2.f, m_NameText.getGlobalBounds().height/2.f);
@@ -142,6 +142,12 @@ sf::Vector2f CPlayerController::GetPosition()
 {
 	return m_pAnimatedSprite->getPosition();
 	//return sf::Vector2f(m_PosX, m_PosY);
+}
+
+void CPlayerController::SetName(const std::string& aName)
+{
+	m_NameText.setString(aName);
+	m_NameText.setOrigin(m_NameText.getGlobalBounds().width / 2.f, m_NameText.getGlobalBounds().height / 2.f);
 }
 
 void CPlayerController::RenderImGui()

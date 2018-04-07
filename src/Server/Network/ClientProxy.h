@@ -7,6 +7,7 @@
 
 #include "Socket\TCPSocket.h"
 #include "Replication\GameObject.h"
+#include "../Model/PlayernameServer.h"
 
 #include "Utils\Defines.h"
 
@@ -40,6 +41,7 @@ public:
 	CClientProxy();
 	virtual ~CClientProxy();
 	bool Init();
+	void SetName(InputMemoryBitStream& aInput);
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
@@ -62,6 +64,7 @@ private:
 	std::string m_Name;
 	PacketStream* m_PacketStream;
 	CPosition* m_Position;
+	PlayernameServer* m_Playername;
 };
 
 #endif

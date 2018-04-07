@@ -26,6 +26,7 @@ public:
 	virtual void RenderImGui() override;
 
 	sf::Vector2f GetPosition();
+	void SetName(const std::string& aName);
 	
 	static DataType* GetReflectionData() {
 		return new DataType({

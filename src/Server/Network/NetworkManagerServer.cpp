@@ -10,6 +10,7 @@
 
 #include "CommonClasses\Movement.h"
 #include "../Model/Scenario/TilemapServer.h"
+#include "../Model/PlayernameServer.h"
 
 #include "../Server/ServerEngine/ServerEngine.h"
 #include "ClientProxy.h"
@@ -50,6 +51,7 @@ bool CNetworkManagerServer::InitReflection()
 	SET_REFLECTION_DATA(CPosition);
 	SET_REFLECTION_DATA(CMovement);
 	SET_REFLECTION_DATA(TilemapServer);
+	SET_REFLECTION_DATA(PlayernameServer);
 	return true;
 }
 
@@ -147,6 +149,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 					break;
 				}
 				else if (packetType == PacketType::PT_Hello && lClient->GetState() == CClientProxy::ClientState::CONNECTED) {
+					lClient->SetName(lInput);
 					lClient->SetWaiting();
 				}
 				std::free(p.buffer);

@@ -108,6 +108,9 @@ public:
 			case EPT_Short:
 				SERIALIZE_TYPE_READ(short);
 				break;
+			case EPT_Long:
+				SERIALIZE_TYPE_READ(long);
+				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);
 				break;
@@ -140,6 +143,9 @@ public:
 				break;
 			case EPT_Short:
 				SERIALIZE_TYPE_WRITE(short);
+				break;
+			case EPT_Long:
+				SERIALIZE_TYPE_WRITE(long);
 				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);

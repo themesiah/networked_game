@@ -5,11 +5,15 @@
 #include "Serializer\PacketStream.h"
 #include "CommonClasses\Movement.h"
 
+#include "Replication\ReplicationManager.h"
+#include "Replication\LinkingContext.h"
+
 CClientProxy::CClientProxy() :
 m_Name("")
 , m_Position(NULL)
 , m_PacketStream(NULL)
 , m_State(ClientState::NOT_CONNECTED)
+, m_Playername(NULL)
 {
 
 }
@@ -29,7 +33,19 @@ bool CClientProxy::Init()
 
 	m_PacketStream = new PacketStream();
 	m_State = ClientState::CONNECTED;
+	
 	return true;
+}
+
+void CClientProxy::SetName(InputMemoryBitStream& aInput)
+{
+	std::string lName;
+	aInput.Serialize(lName);
+	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
+	LinkingContext* lLinkingContext = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
+	m_Playername = new PlayernameServer();
+	m_Playername->SetPlayer(lLinkingContext->GetNetworkId(m_Position, true), lName);
+	lGameObjects->push_back(m_Playername);
 }
 
 void CClientProxy::SetPlaying()
@@ -46,10 +62,8 @@ void CClientProxy::Disconnect()
 {
 	m_State = ClientState::PENDING_DISCONNECTION;
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
-	//auto goit = std::find(lGameObjects->begin(), lGameObjects->end(), m_Position);
-	//lGameObjects->erase(goit);
 	m_Position->DestroySignal();
-	//delete m_Position;
+	m_Playername->DestroySignal();
 	delete m_PacketStream;
 }
 

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonClasses\Movement.h" />
+    <ClInclude Include="CommonClasses\PlayerName.h" />
     <ClInclude Include="CommonClasses\Tilemap.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

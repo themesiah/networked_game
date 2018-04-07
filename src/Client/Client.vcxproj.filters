@@ -77,6 +77,9 @@
     <ClCompile Include="Graphics\CameraController.cpp">
       <Filter>Archivos de código fuente\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\PlayernameClient.cpp">
+      <Filter>Archivos de código fuente\Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Engine.h">
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourcesTable.h">
       <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\PlayernameClient.h">
+      <Filter>Archivos de código fuente\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
