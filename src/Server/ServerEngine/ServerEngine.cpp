@@ -10,10 +10,12 @@
 #include "Replication\ReplicationManager.h"
 #include "../Network/NetworkManagerServer.h"
 #include "CommonClasses\Movement.h"
+#include "../Network/RPCManagerServer.h"
 
 #include "../Model/Scenario/TilemapServer.h"
 
-CServerEngine::CServerEngine()
+CServerEngine::CServerEngine() :
+m_Finished(false)
 {
 	
 }
@@ -22,6 +24,7 @@ CServerEngine::~CServerEngine()
 {
 	delete m_ReplicationManager;
 	delete m_NetworkManagerServer;
+	delete m_RPCManagerServer;
 
 	for (std::vector<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
 	{
@@ -33,8 +36,13 @@ void CServerEngine::Init()
 {
 	bool success = true;
 	LOGGER.Info("Initializing server");
+	LOGGER.Info("Initializing RPC");
+	CRPCManagerServer* lRPCManager = new CRPCManagerServer();
+	SetRPCManagerServer(lRPCManager);
+	BindRPCFunctionsServer<CServerEngine>(lRPCManager);
 	LOGGER.Info("Initializing replication manager");
 	CReplicationManager* lReplicationManager = new CReplicationManager();
+	lReplicationManager->SetRPCManager(lRPCManager);
 	SetReplicationManager(lReplicationManager);
 	LOGGER.Info("Initializing network manager");
 	CNetworkManagerServer* lNetworkManager = new CNetworkManagerServer();
@@ -122,4 +130,9 @@ void CServerEngine::ManageObjectsDestroy()
 		m_GameObjects.erase(goit);
 		delete go;
 	}
+}
+
+void CServerEngine::Shutdown() {
+	m_Finished = true;
+	m_NetworkManagerServer->Shutdown();
 }

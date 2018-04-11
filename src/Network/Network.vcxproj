@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\NetworkManager.h" />
+    <ClInclude Include="Common\RPCManager.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Replication\GameObject.h" />
     <ClInclude Include="Replication\LinkingContext.h" />

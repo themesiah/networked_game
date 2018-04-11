@@ -11,6 +11,7 @@
 
 class GameObject;
 class LinkingContext;
+class CRPCManager;
 class CReplicationManager
 {
 public:
@@ -21,6 +22,7 @@ public:
 	std::unordered_set<GameObject*> ReceiveReplicatedObjects(InputMemoryBitStream& inStream);
 	std::unordered_set<GameObject*> ReceiveReplicatedDeltas(InputMemoryBitStream& inStream);
 	LinkingContext* GetLinkingContext();
+	void SetRPCManager(CRPCManager* aRPCManager);
 private:
 	void ReplicateIntoStream(OutputMemoryBitStream& inStream, GameObject* inGameObject);
 	GameObject* ReceiveReplicatedObject(InputMemoryBitStream& inStream);
@@ -31,6 +33,7 @@ private:
 	void ReplicateUpdate(OutputMemoryBitStream& inStream, GameObject* inGameObject);
 	void ReplicateDestroy(OutputMemoryBitStream& inStream, GameObject* inGameObject);
 	void ProcessReplicationAction(InputMemoryBitStream& inStream);
+	CRPCManager* m_RPCManager;
 };
 
 #endif

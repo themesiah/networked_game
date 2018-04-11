@@ -21,6 +21,7 @@ public:
 	void UpdateSendingSockets(float aDeltaTime);
 	void UpdateReceivingSockets(float aDeltaTime);
 	void UpdatePackets(float aDeltaTime);
+	void Shutdown();
 private:
 	bool InitServerListener();
 	virtual bool InitReflection();
@@ -33,6 +34,7 @@ private:
 	std::vector<TCPSocketPtr> m_ErrorSockets;
 	float m_SendTimer;
 	std::map<TCPSocketPtr, CClientProxy*> m_Clients;
+	bool m_Closing;
 };
 
 #endif

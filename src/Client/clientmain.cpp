@@ -72,7 +72,7 @@ int MainGame() {
 
 	// MAIN LOOP
 	mImguiClock.restart();
-	while (window.isOpen())
+	while (window.isOpen() && !lEngine.IsFinished())
 	{
 		// Reestart the main FPS clock
 		float lDeltaTime = mMainClock.restart().asSeconds();
@@ -128,7 +128,7 @@ int MainGame() {
 int main() {
 #ifdef _DEBUG
 	MemLeaks::MemoryBegin();
-	//_CrtSetBreakAlloc(4607);
+	//_CrtSetBreakAlloc(3678);
 #endif
 	MainGame();
 #ifdef _DEBUG

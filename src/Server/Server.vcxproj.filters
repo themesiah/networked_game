@@ -28,6 +28,9 @@
     <Filter Include="Archivos de código fuente\Model\Player">
       <UniqueIdentifier>{1b03545a-edb8-4f5d-9fa7-0edf39f2f2e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\RPCBindings">
+      <UniqueIdentifier>{b9e0dc09-51f8-4c99-a1c1-9092a7b2e666}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="Model\Scenario\TilemapServer.cpp">
       <Filter>Archivos de código fuente\Model\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCBindings\GeneralBindingsServer.cpp">
+      <Filter>Archivos de código fuente\RPCBindings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="Model\Player\PlayerControllerServer.h">
       <Filter>Archivos de código fuente\Model\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\RPCManagerServer.h">
+      <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

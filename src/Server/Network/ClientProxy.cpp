@@ -8,6 +8,7 @@
 #include "Replication\ReplicationManager.h"
 #include "Replication\LinkingContext.h"
 #include "../Model/Player/PlayerControllerServer.h"
+#include "../Network/RPCManagerServer.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")
@@ -80,4 +81,9 @@ void CClientProxy::ProcessInput(float dt, InputMemoryBitStream& aInput)
 	lMovement.SerializeRead(aInput);
 	auto mov = lMovement.GetMovement();
 	m_PlayerController->Move(mov[0], mov[1], dt);
+}
+
+void CClientProxy::ProcessRPC(InputMemoryBitStream& aInput)
+{
+	CServerEngine::GetInstance().GetRPCManagerServer().ProcessPlayerRPC(aInput, this);
 }

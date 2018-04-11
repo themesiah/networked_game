@@ -27,6 +27,9 @@
     <Filter Include="Archivos de código fuente\Network">
       <UniqueIdentifier>{62ffa406-add5-4560-9c09-aaff139dc3a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\RPCFunctions">
+      <UniqueIdentifier>{e7b92bfa-b27e-40f4-abf9-e1ef94285405}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="clientmain.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Controllers\PlayerControllerClient.cpp">
       <Filter>Archivos de código fuente\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCFunctions\EngineBindingsClient.cpp">
+      <Filter>Archivos de código fuente\RPCFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

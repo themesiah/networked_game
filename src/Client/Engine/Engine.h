@@ -36,6 +36,7 @@ class CNetworkManagerClient;
 class CCameraController;
 class CGUIManager;
 class CAnimationsetManager;
+class CRPCManager;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
@@ -61,6 +62,14 @@ public:
 	{
 		m_Tables.Update(aTableId, aTable);
 	}
+	bool IsFinished()
+	{
+		return m_Finished;
+	}
+	void Shutdown()
+	{
+		m_Finished = true;
+	}
 	BUILD_GET_SET_ENGINE_MANAGER(ActionManager);
 	BUILD_GET_SET_ENGINE_MANAGER(TextureManager);
 	BUILD_GET_SET_ENGINE_MANAGER(SpriteManager);
@@ -71,6 +80,7 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(CameraController);
 	BUILD_GET_SET_ENGINE_MANAGER(GUIManager);
 	BUILD_GET_SET_ENGINE_MANAGER(AnimationsetManager);
+	BUILD_GET_SET_ENGINE_MANAGER(RPCManager);
 
 protected:
 	CEngine();
@@ -81,4 +91,5 @@ private:
 	CMovement* m_Movement;
 	CResourcesMasterTable m_MasterTable;
 	base::utils::CTemplatedMapPtr<uint16_t, CResourcesTable> m_Tables;
+	bool m_Finished;
 };

@@ -5,10 +5,16 @@
 #include "Packet.h"
 #include "ObjectCreationRegistry.h"
 #include "ReplicationHeader.h"
+#include "../Common/RPCManager.h"
 
 CReplicationManager::CReplicationManager()
 {
 	mLinkingContext = new LinkingContext();
+}
+
+void CReplicationManager::SetRPCManager(CRPCManager* aRPCManager)
+{
+	m_RPCManager = aRPCManager;
 }
 
 CReplicationManager::~CReplicationManager()
@@ -186,6 +192,11 @@ void CReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStrea
 		mLinkingContext->RemoveGameObject(go);
 		//mObjectsReplicatedToMe.erase(go);
 		go->Destroy();
+		break;
+	}
+	case RA_RPC:
+	{
+		m_RPCManager->ProcessRPC(inStream);
 		break;
 	}
 	default:

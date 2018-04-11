@@ -26,6 +26,7 @@ bool Has##Manager() { return m_##Manager != nullptr; } \
 class CReplicationManager;
 class CNetworkManagerServer;
 class CMovement;
+class CRPCManagerServer;
 class CServerEngine : public base::utils::CSingleton<CServerEngine>
 {
 public:
@@ -36,8 +37,13 @@ public:
 	{
 		return &m_GameObjects;
 	}
+	bool IsFinished() {
+		return m_Finished;
+	}
+	void Shutdown();
 	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerServer);
+	BUILD_GET_SET_ENGINE_MANAGER(RPCManagerServer);
 protected:
 	CServerEngine();
 	friend class base::utils::CSingleton<CServerEngine>;
@@ -46,7 +52,8 @@ private:
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
 	
-	std::vector<GameObject*> m_GameObjects; // TEMP: Make container with add, erase and a double buffer
+	std::vector<GameObject*> m_GameObjects;
+	bool m_Finished;
 };
 
 #endif

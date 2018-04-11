@@ -92,6 +92,9 @@
     <ClInclude Include="Common\NetworkManager.h">
       <Filter>Archivos de código fuente\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Common\RPCManager.h">
+      <Filter>Archivos de código fuente\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serializer\OutputMemoryStream.cpp">

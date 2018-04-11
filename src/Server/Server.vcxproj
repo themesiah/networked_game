@@ -92,6 +92,7 @@
     <ClCompile Include="Model\Scenario\TilemapServer.cpp" />
     <ClCompile Include="Network\ClientProxy.cpp" />
     <ClCompile Include="Network\NetworkManagerServer.cpp" />
+    <ClCompile Include="RPCBindings\GeneralBindingsServer.cpp" />
     <ClCompile Include="ServerEngine\ServerEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="Model\Scenario\TilemapServer.h" />
     <ClInclude Include="Network\ClientProxy.h" />
     <ClInclude Include="Network\NetworkManagerServer.h" />
+    <ClInclude Include="Network\RPCManagerServer.h" />
     <ClInclude Include="ServerEngine\ServerEngine.h" />
     <ClInclude Include="ServerLogger.h" />
   </ItemGroup>

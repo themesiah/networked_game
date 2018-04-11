@@ -113,6 +113,7 @@
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Network\NetworkManagerClient.cpp" />
+    <ClCompile Include="RPCFunctions\EngineBindingsClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\PlayerControllerClient.h" />

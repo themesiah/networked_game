@@ -7,6 +7,7 @@
 #include "../Graphics/CameraController.h"
 #include "GUIManager.h"
 #include "AnimationsetManager.h"
+#include "Common\RPCManager.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -17,7 +18,8 @@
 
 #include "SFML\Graphics\Font.hpp"
 
-CEngine::CEngine()
+CEngine::CEngine() :
+m_Finished(false)
 {
 	m_Movement = new CMovement();
 }
@@ -34,6 +36,8 @@ CEngine::~CEngine()
 	delete m_NetworkManagerClient;
 	delete m_CameraController;
 	delete m_Movement;
+	delete m_RPCManager;
+	delete m_AnimationsetManager;
 
 	for (std::unordered_set<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
 	{
@@ -76,7 +80,12 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 	lRenderManager->Init();
 	SetRenderManager(lRenderManager);
 
+	CRPCManager* lRPCManager = new CRPCManager();
+	SetRPCManager(lRPCManager);
+	BindRPCFunctions<CEngine>(lRPCManager);
+
 	CReplicationManager* lReplicationManager = new CReplicationManager();
+	lReplicationManager->SetRPCManager(lRPCManager);
 	SetReplicationManager(lReplicationManager);
 
 	CGUIManager* lGuiManager = new CGUIManager();

@@ -7,6 +7,8 @@
 #include <inttypes.h>
 #include <SFML\Graphics.hpp>
 
+#include "Serializer\OutputMemoryBitStream.h"
+
 class CGUIManager
 {
 public:
@@ -18,12 +20,20 @@ public:
 	CGUIManager();
 	virtual ~CGUIManager();
 	LoginData LoginGUI();
+	bool DebugGUI(OutputMemoryBitStream& aOutputStream);
+	void DisconnectionMessage(const std::string& aReason);
 private:
+	// Login
 	void SetSelectedSprite();
-	char m_Name[50];
+	char m_Name[20];
 	sf::Texture* m_SelectedTexture;
 	sf::FloatRect m_TextureRect;
 	uint16_t m_CurrentSelectedAnimation;
+
+	// Debug
+	char m_Secret[20];
+
+	// Disconnection
 };
 
 #endif

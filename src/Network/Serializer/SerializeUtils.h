@@ -113,6 +113,7 @@ public:
 				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);
+				//ms.Serialize(*(char*)mvData);
 				break;
 			case EPT_Float:
 				SERIALIZE_FLOAT_READ;
@@ -149,6 +150,7 @@ public:
 				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);
+				//ms.Serialize(*(char*)mvData);
 				break;
 			case EPT_Float:
 				SERIALIZE_FLOAT_WRITE;

@@ -48,6 +48,7 @@ public:
 		size_t bitSize = sizeof(char) * stringSize << 3;
 		ReadBits(buffer, bitSize);
 		ioData = std::string(buffer, stringSize);
+		std::free(buffer);
 	}
 	template <typename T> void Serialize(T& ioData, size_t inBitCount = sizeof(T) << 3) {
 		ReadBits(&ioData, inBitCount);

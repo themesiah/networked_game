@@ -19,6 +19,7 @@
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
+, m_Closing(false)
 {
 }
 
@@ -58,6 +59,8 @@ bool CNetworkManagerServer::InitReflection()
 
 void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 {
+	if (m_Closing)
+		return;
 	// Update the sending at different intervals
 	m_SendTimer += aDeltaTime;
 
@@ -100,6 +103,8 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 
 void CNetworkManagerServer::UpdateReceivingSockets(float aDeltaTime)
 {
+	if (m_Closing)
+		return;
 	if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 	{
 		for (const TCPSocketPtr& socket : m_ReadSockets)
@@ -128,6 +133,8 @@ void CNetworkManagerServer::UpdateReceivingSockets(float aDeltaTime)
 
 void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 {
+	if (m_Closing)
+		return;
 	std::vector<TCPSocketPtr> tempSocketList = m_Sockets;
 	for (const TCPSocketPtr& socket : tempSocketList)
 	{
@@ -153,11 +160,20 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 					lClient->InitPlayer(lInput);
 					lClient->SetWaiting();
 				}
+				else if (packetType == PacketType::PT_RPC && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
+					lClient->ProcessRPC(lInput);
+					if (m_Closing) {
+						std::free(p.buffer);
+						tempSocketList.clear();
+						return;
+					}
+				}
 				std::free(p.buffer);
 				p = m_Clients[socket]->GetPacketStream()->ReadPacket();
 			}
 		}
 	}
+	tempSocketList.clear();
 }
 
 void CNetworkManagerServer::ManageDisconnection(TCPSocketPtr socket)
@@ -182,4 +198,19 @@ void CNetworkManagerServer::ManageNewConnection()
 		m_Clients[newSocket] = lClientProxy;
 		LOGGER.Info("New connection received");
 	}
+}
+
+void CNetworkManagerServer::Shutdown()
+{
+	OutputMemoryBitStream lOutputShutdown;
+	lOutputShutdown.Serialize(PT_Disconnect, PACKET_BIT_SIZE);
+	std::string reason = "Server shutdown";
+	lOutputShutdown.Serialize(reason);
+	lOutputShutdown.Close();
+	for(auto socket : m_Sockets)
+	{
+		int sent = socket->Send(lOutputShutdown.GetBufferPtr(), lOutputShutdown.GetByteLength());
+		delete m_Clients[socket];
+	}
+	m_Closing = true;
 }

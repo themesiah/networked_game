@@ -38,6 +38,7 @@ private:
 	float m_AverageTimeBetweenPackets;
 	uint32_t m_NumberOfSamples;
 	float m_Timer;
+	std::string m_Reason;
 };
 
 #endif

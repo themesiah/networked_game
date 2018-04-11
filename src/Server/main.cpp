@@ -59,9 +59,8 @@ public:
 int MainServer() {
 	CServerEngine& lServer = CServerEngine::GetInstance();
 	lServer.Init();
-	bool lFinish = false;
 
-	while (!lFinish)
+	while (!lServer.IsFinished())
 	{
 		lServer.Update();
 	}
@@ -73,7 +72,7 @@ int main()
 {
 #ifdef _DEBUG
 	MemLeaks::MemoryBegin();
-	//_CrtSetBreakAlloc(1454);
+	//_CrtSetBreakAlloc(846);
 #endif
 	MainServer();
 #ifdef _DEBUG

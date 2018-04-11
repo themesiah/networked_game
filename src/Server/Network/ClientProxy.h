@@ -31,6 +31,7 @@ public:
 	void SetPlaying();
 	void SetWaiting();
 	void ProcessInput(float dt, InputMemoryBitStream& aInput);
+	void ProcessRPC(InputMemoryBitStream& aInput);
 	GET_SET(std::string, Name);
 	PacketStream* GetPacketStream()
 	{

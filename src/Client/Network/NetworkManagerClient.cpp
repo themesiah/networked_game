@@ -100,8 +100,20 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 				int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 				lMovement->Undirty();
 			}
+
+			OutputMemoryBitStream lRPCOutput;
+			if (CEngine::GetInstance().GetGUIManager().DebugGUI(lRPCOutput)) {
+				lRPCOutput.Close();
+				int sent = m_Socket->Send(lRPCOutput.GetBufferPtr(), lRPCOutput.GetByteLength());
+			}
+			
 		}
 		break;
+	case ClientState::PENDING_DISCONNECTION:
+	{
+		CEngine::GetInstance().GetGUIManager().DisconnectionMessage(m_Reason);
+		break;
+	}
 	default: // HELLO_SENT and NOT_CONNECTED
 		break;
 	}
@@ -154,6 +166,10 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 			lInput.Serialize(lNetworkId);
 			CEngine::GetInstance().GetCameraController().SetFollow(lNetworkId);
 		}
+		else if (packetType == PacketType::PT_Disconnect) {
+			m_State = ClientState::PENDING_DISCONNECTION;
+			lInput.Serialize(m_Reason);
+		}
 		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();
 	}
@@ -161,11 +177,15 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 
 void CNetworkManagerClient::ManageDisconnection()
 {
-	OutputMemoryBitStream lOutput;
-	uint8_t packetType = PacketType::PT_Disconnect;
-	lOutput.Serialize(packetType, PACKET_BIT_SIZE);
-	lOutput.Close();
-	m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+	if (m_State != ClientState::PENDING_DISCONNECTION)
+	{
+		OutputMemoryBitStream lOutput;
+		uint8_t packetType = PacketType::PT_Disconnect;
+		lOutput.Serialize(packetType, PACKET_BIT_SIZE);
+		lOutput.Close();
+		m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
+		m_State = ClientState::PENDING_DISCONNECTION;
+	}
 }
 
 void CNetworkManagerClient::RenderImGui()
