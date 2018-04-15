@@ -75,15 +75,7 @@ void CClientProxy::Disconnect()
 	delete m_PacketStream;
 }
 
-void CClientProxy::ProcessInput(float dt, InputMemoryBitStream& aInput)
+void CClientProxy::ProcessRPC(InputMemoryBitStream& aInput, float dt)
 {
-	CMovement lMovement;
-	lMovement.SerializeRead(aInput);
-	auto mov = lMovement.GetMovement();
-	m_PlayerController->Move(mov[0], mov[1], dt);
-}
-
-void CClientProxy::ProcessRPC(InputMemoryBitStream& aInput)
-{
-	CServerEngine::GetInstance().GetRPCManagerServer().ProcessPlayerRPC(aInput, this);
+	CServerEngine::GetInstance().GetRPCManagerServer().ProcessPlayerRPC(aInput, this, dt);
 }

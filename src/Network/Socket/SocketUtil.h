@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef H_SOCKET_UTIL
+#define H_SOCKET_UTIL
+
 #include <WinSock2.h>
 #include <string>
 #include <vector>
@@ -26,3 +30,5 @@ public:
 						const std::vector<TCPSocketPtr>* inWriteSet, std::vector<TCPSocketPtr>* outWriteSet,
 						const std::vector<TCPSocketPtr>* inExceptSet, std::vector<TCPSocketPtr>* outExceptSet);
 };
+
+#endif

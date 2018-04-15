@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef H_SOCKET_ADDRESS
+#define H_SOCKET_ADDRESS
+
 #include <WinSock2.h>
 #include <stdint.h>
 #include <memory>
@@ -18,3 +22,5 @@ private:
 
 };
 typedef std::shared_ptr<SocketAddress> SocketAddressPtr;
+
+#endif

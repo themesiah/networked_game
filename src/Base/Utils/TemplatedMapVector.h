@@ -29,7 +29,7 @@ namespace base{
             CTemplatedMapVector(){}
             virtual ~CTemplatedMapVector()
             {
-                Destroy();
+               //Destroy();
             }
 
             size_t GetCount()

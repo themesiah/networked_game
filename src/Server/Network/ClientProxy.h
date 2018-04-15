@@ -30,8 +30,7 @@ public:
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
-	void ProcessInput(float dt, InputMemoryBitStream& aInput);
-	void ProcessRPC(InputMemoryBitStream& aInput);
+	void ProcessRPC(InputMemoryBitStream& aInput, float dt);
 	GET_SET(std::string, Name);
 	PacketStream* GetPacketStream()
 	{

@@ -16,6 +16,7 @@ enum EPrimitiveType
 	EPT_String,
 	EPT_Float,
 	EPT_Bool,
+	EPT_Char,
 	EPT_MapIntInt,
 	EPT_IntArray,
 	EPT_GameObject

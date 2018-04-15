@@ -1,0 +1,3 @@
+ServerData\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\ServerData;         Debug
+
+ServerData\*.*;        bin\_KEYWORD_CONFIG_NAME_\_KEYWORD_PROJECT_NAME_\ServerData;         Release

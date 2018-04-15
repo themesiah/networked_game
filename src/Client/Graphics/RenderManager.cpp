@@ -33,7 +33,7 @@ void CRenderManager::Render(sf::RenderWindow* aWindow)
 	}
 }
 
-void CRenderManager::Draw(sf::Drawable* aDrawable, unsigned int layer)
+void CRenderManager::Draw(sf::Drawable* aDrawable, unsigned char layer)
 {
 	if (layer > m_LayerCount)
 	{

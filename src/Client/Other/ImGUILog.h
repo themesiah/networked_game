@@ -6,14 +6,18 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-#define IMLOG_ERROR( x, ... )     ImguiLog.AddErrorLog(x, __VA_ARGS__ );
-#define IMLOG_WARNING( x, ...  )  ImguiLog.AddWarningLog(x, __VA_ARGS__ );
-#define IMLOG_INFO( x, ...  )     ImguiLog.AddInfoLog(x, __VA_ARGS__ );
-#define IMLOG_NETWORK( x, ...  )     ImguiLog.AddNetworkLog(x, __VA_ARGS__ );
-#define IMLOG_DRAW ImguiLog.Draw("LOG", &ImguiLogWindowOpen);
+#include "Utils\Singleton.h"
 
-struct ImguiAppLog
+#define IMLOG_ERROR( x, ... )     ImguiAppLog::GetInstance().AddErrorLog(x, __VA_ARGS__ );
+#define IMLOG_WARNING( x, ...  )  ImguiAppLog::GetInstance().AddWarningLog(x, __VA_ARGS__ );
+#define IMLOG_INFO( x, ...  )     ImguiAppLog::GetInstance().AddInfoLog(x, __VA_ARGS__ );
+#define IMLOG_NETWORK( x, ...  )     ImguiAppLog::GetInstance().AddNetworkLog(x, __VA_ARGS__ );
+#define IMLOG_DRAW ImguiAppLog::GetInstance().Draw("LOG", &ImguiAppLog::GetInstance().ImguiLogWindowOpen);
+
+class ImguiAppLog : public base::utils::CSingleton<ImguiAppLog>
 {
+public:
+	bool ImguiLogWindowOpen;
 	ImGuiTextBuffer     Buf;
 	ImGuiTextFilter     Filter;
 	ImVector<int>       LineOffsets;        // Index to lines offset
@@ -106,9 +110,13 @@ struct ImguiAppLog
 		ImGui::EndChild();
 		ImGui::End();
 	}
-};
+protected:
+	ImguiAppLog() :
+		ImguiLogWindowOpen(true)
+	{
 
-static ImguiAppLog ImguiLog;
-bool ImguiLogWindowOpen = true;
+	}
+	friend class base::utils::CSingleton<ImguiAppLog>;
+};
 
 #endif

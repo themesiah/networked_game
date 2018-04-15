@@ -6,7 +6,7 @@
 #include "Common\RPCManager.h"
 
 class CClientProxy;
-typedef void(*RPCUnwrapPlayerFunc)(InputMemoryBitStream&, CClientProxy*);
+typedef void(*RPCUnwrapPlayerFunc)(InputMemoryBitStream&, CClientProxy*, float);
 
 class CRPCManagerServer : public CRPCManager
 {
@@ -16,13 +16,13 @@ public:
 		Assert(mNameToPlayerRPCTable.find(inName) == mNameToPlayerRPCTable.end(), "Player RPC function already exist.");
 		mNameToPlayerRPCTable[inName] = inFunc;
 	}
-	void ProcessPlayerRPC(InputMemoryBitStream& inStream, CClientProxy* inClient)
+	void ProcessPlayerRPC(InputMemoryBitStream& inStream, CClientProxy* inClient, float dt)
 	{
 		uint32_t name;
 		inStream.Serialize(name);
 		Assert(mNameToPlayerRPCTable.find(name) != mNameToPlayerRPCTable.end(), "Player RPC function does not exist.");
 		if (mNameToPlayerRPCTable.find(name) != mNameToPlayerRPCTable.end()) {
-			mNameToPlayerRPCTable[name](inStream, inClient);
+			mNameToPlayerRPCTable[name](inStream, inClient, dt);
 		}
 	}
 private:

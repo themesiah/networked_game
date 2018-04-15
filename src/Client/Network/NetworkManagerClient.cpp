@@ -92,9 +92,10 @@ void CNetworkManagerClient::UpdateSendingSockets(float aDeltaTime)
 	case ClientState::PLAYING:
 		{
 			CMovement* lMovement = CEngine::GetInstance().GetMovement();
-			OutputMemoryBitStream lOutput;
-			lOutput.Serialize(PacketType::PT_ReplicationData, PACKET_BIT_SIZE);
 			if (lMovement->GetDirty() > 0) {
+				OutputMemoryBitStream lOutput;
+				lOutput.Serialize(PacketType::PT_RPC, PACKET_BIT_SIZE);
+				lOutput.Serialize<uint32_t>('MOVE');
 				lMovement->SerializeWrite(lOutput);
 				lOutput.Close();
 				int sent = m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());

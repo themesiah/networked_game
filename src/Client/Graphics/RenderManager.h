@@ -18,7 +18,7 @@ public:
 	virtual ~CRenderManager();
 	void Init();
 	void Render(sf::RenderWindow* aWindow);
-	void Draw(sf::Drawable* aDrawable, unsigned int layer);
+	void Draw(sf::Drawable* aDrawable, unsigned char layer);
 private:
 	void Resize();
 	LayerType m_Layers;

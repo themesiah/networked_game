@@ -56,6 +56,7 @@ public:
 	}
 	CResourcesTable* GetResourceTable(uint16_t aTableId)
 	{
+		Assert(m_Tables.Exist(aTableId), "The table with id %d does not exist", aTableId);
 		return m_Tables.Get(aTableId);
 	}
 	void SetResourcesTable(uint16_t aTableId, CResourcesTable* aTable)

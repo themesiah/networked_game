@@ -84,6 +84,16 @@ bool CGUIManager::DebugGUI(OutputMemoryBitStream& aOutputStream)
 		ImGui::End();
 		return true;
 	}
+	if (ImGui::Button("Reload Map"))
+	{
+		OutputMemoryBitStream lOutput;
+		aOutputStream.Serialize(PT_RPC, PACKET_BIT_SIZE);
+		aOutputStream.Serialize<uint32_t>('MRLD');
+		std::string secret(m_Secret);
+		aOutputStream.Serialize(secret);
+		ImGui::End();
+		return true;
+	}
 	ImGui::End();
 	return false;
 }

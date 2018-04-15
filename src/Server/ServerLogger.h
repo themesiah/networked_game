@@ -4,7 +4,6 @@
 #define H_SERVER_LOGGER
 
 #include <Utils\Singleton.h>
-#include <iostream>
 #include <Windows.h>
 
 #define LOGGER CServerLogger::GetInstance()

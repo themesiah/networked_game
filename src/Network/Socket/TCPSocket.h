@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef H_TCP_SOCKET
+#define H_TCP_SOCKET
+
 #include <memory>
 #include <WinSock2.h>
 
@@ -21,3 +24,5 @@ private:
 	SOCKET mSocket;
 };
 typedef std::shared_ptr<TCPSocket> TCPSocketPtr;
+
+#endif

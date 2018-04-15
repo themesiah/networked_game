@@ -113,7 +113,6 @@ public:
 				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);
-				//ms.Serialize(*(char*)mvData);
 				break;
 			case EPT_Float:
 				SERIALIZE_FLOAT_READ;
@@ -126,6 +125,9 @@ public:
 				break;
 			case EPT_IntArray:
 				ms.Serialize(*(std::vector<int>*)mvData);
+				break;
+			case EPT_Char:
+				ms.Serialize(*(unsigned char*)mvData);
 				break;
 			}
 		}
@@ -150,7 +152,6 @@ public:
 				break;
 			case EPT_String:
 				ms.Serialize(*(std::string*) mvData);
-				//ms.Serialize(*(char*)mvData);
 				break;
 			case EPT_Float:
 				SERIALIZE_FLOAT_WRITE;
@@ -163,6 +164,9 @@ public:
 				break;
 			case EPT_IntArray:
 				ms.Serialize(*(std::vector<int>*)mvData);
+				break;
+			case EPT_Char:
+				ms.Serialize(*(unsigned char*)mvData);
 				break;
 			}
 		}

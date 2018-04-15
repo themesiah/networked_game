@@ -51,6 +51,12 @@
     <ClCompile Include="RPCBindings\GeneralBindingsServer.cpp">
       <Filter>Archivos de código fuente\RPCBindings</Filter>
     </ClCompile>
+    <ClCompile Include="RPCBindings\ClientProxyBindingsServer.cpp">
+      <Filter>Archivos de código fuente\RPCBindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Scenario\CityMap.cpp">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEngine\ServerEngine.h">
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Network\RPCManagerServer.h">
       <Filter>Archivos de código fuente\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Scenario\CityMap.h">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

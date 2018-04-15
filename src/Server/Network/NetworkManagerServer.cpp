@@ -16,6 +16,7 @@
 #include "ClientProxy.h"
 #include "Replication\LinkingContext.h"
 #include "../Model/Player/PlayerControllerServer.h"
+#include "Socket\SocketUtil.h"
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
@@ -149,7 +150,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 				lInput.Serialize(packetType, PACKET_BIT_SIZE);
 				CClientProxy* lClient = m_Clients[socket];
 				if (packetType == PacketType::PT_ReplicationData && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					m_Clients[socket]->ProcessInput(aDeltaTime, lInput);
+					assert(false); // There is no direct replication from the client!
 				}
 				else if (packetType == PacketType::PT_Disconnect && lClient->GetState() != CClientProxy::ClientState::PENDING_DISCONNECTION) {
 					ManageDisconnection(socket);
@@ -161,7 +162,7 @@ void CNetworkManagerServer::UpdatePackets(float aDeltaTime)
 					lClient->SetWaiting();
 				}
 				else if (packetType == PacketType::PT_RPC && lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					lClient->ProcessRPC(lInput);
+					lClient->ProcessRPC(lInput, aDeltaTime);
 					if (m_Closing) {
 						std::free(p.buffer);
 						tempSocketList.clear();

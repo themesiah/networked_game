@@ -7,9 +7,6 @@
 #include <chrono>
 
 #include "Utils\Singleton.h"
-#include "Socket\SocketUtil.h"
-#include "Replication\GameObject.h"
-#include "../ServerLogger.h"
 
 #define TARGET_FPS 60
 
@@ -27,6 +24,8 @@ class CReplicationManager;
 class CNetworkManagerServer;
 class CMovement;
 class CRPCManagerServer;
+class GameObject;
+class CityMap;
 class CServerEngine : public base::utils::CSingleton<CServerEngine>
 {
 public:
@@ -40,6 +39,10 @@ public:
 	bool IsFinished() {
 		return m_Finished;
 	}
+	CityMap* GetCityMap()
+	{
+		return m_CityMap;
+	}
 	void Shutdown();
 	BUILD_GET_SET_ENGINE_MANAGER(ReplicationManager);
 	BUILD_GET_SET_ENGINE_MANAGER(NetworkManagerServer);
@@ -51,9 +54,9 @@ private:
 	void ManageObjectsDestroy();
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
-	
 	std::vector<GameObject*> m_GameObjects;
 	bool m_Finished;
+	CityMap* m_CityMap;
 };
 
 #endif

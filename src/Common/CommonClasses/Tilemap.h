@@ -19,7 +19,8 @@ public:
 			MemberVariable("mTileWidth", EPT_Int, OffsetOf(Tilemap, mTileWidth)),
 			MemberVariable("mTileHeight", EPT_Int, OffsetOf(Tilemap, mTileHeight)),
 			MemberVariable("mTilemapId", EPT_Short, OffsetOf(Tilemap, mTilemapId)),
-			MemberVariable("mTiles", EPT_IntArray, OffsetOf(Tilemap, mTiles))
+			MemberVariable("mTiles", EPT_IntArray, OffsetOf(Tilemap, mTiles)),
+			MemberVariable("mRenderLayer", EPT_Char, OffsetOf(Tilemap, mRenderLayer))
 		}
 		);
 	}
@@ -30,6 +31,7 @@ protected:
 	unsigned int mTileWidth;
 	unsigned int mTileHeight;
 	uint16_t mTilemapId;
+	unsigned char mRenderLayer;
 };
 
 #endif

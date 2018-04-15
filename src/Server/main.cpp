@@ -4,7 +4,7 @@
 #include "Utils\MemLeaks\MemLeaks.h"
 #endif
 
-class TestObject : public GameObject {
+/*class TestObject : public GameObject {
 public:
 	TestObject() {
 	}
@@ -54,7 +54,7 @@ public:
 		);
 	}
 	CLASS_IDENTIFICATION('TES2', TestObject2);
-};
+};*/
 
 int MainServer() {
 	CServerEngine& lServer = CServerEngine::GetInstance();
