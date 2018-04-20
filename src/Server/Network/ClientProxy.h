@@ -13,6 +13,7 @@
 
 class PacketStream;
 class CPlayerControllerServer;
+class CityMap;
 class CClientProxy
 {
 public:
@@ -30,6 +31,7 @@ public:
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
+	void Update(const float& dt);
 	void ProcessRPC(InputMemoryBitStream& aInput, float dt);
 	GET_SET(std::string, Name);
 	PacketStream* GetPacketStream()
@@ -44,12 +46,18 @@ public:
 	{
 		return m_State;
 	}
+	CityMap* GetCityMap()
+	{
+		return m_CityMap;
+	}
 private:
 	ClientState m_State;
 	std::string m_Name;
 	PacketStream* m_PacketStream;
 	CPlayerControllerServer* m_PlayerController;;
 	PlayernameServer* m_Playername;
+	CityMap* m_CityMap;
+	
 };
 
 #endif

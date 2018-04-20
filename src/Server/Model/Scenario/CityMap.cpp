@@ -28,11 +28,10 @@ bool CityMap::Load(const std::string& aPath)
 	std::string jsonData = base::utils::GetTextFromFile(aPath);
 	Document document;
 	document.Parse(jsonData.c_str(), jsonData.size());
-	int lWidth, lHeight, lTilewidth, lTileheight;
-	lWidth = document["width"].GetInt();
-	lHeight = document["height"].GetInt();
-	lTilewidth = document["tilewidth"].GetInt();
-	lTileheight = document["tileheight"].GetInt();
+	m_Width = document["width"].GetInt();
+	m_Height = document["height"].GetInt();
+	m_TileWidth = document["tilewidth"].GetInt();
+	m_TileHeight = document["tileheight"].GetInt();
 	const Value& layers = document["layers"];
 	SizeType layersSize = layers.Size();
 	for (SizeType i = 0; i < layersSize; ++i)
@@ -50,15 +49,28 @@ bool CityMap::Load(const std::string& aPath)
 			}
 			if (!m_Tilemaps.Exist(lLayerName)) {
 				TilemapServer* tilemapServer = new TilemapServer();
-				tilemapServer->SetData(lTileset, lTilewidth, lTileheight, lTilesVector, lWidth, lHeight, lRenderLayer);
+				tilemapServer->SetData(lTileset, m_TileWidth, m_TileHeight, lTilesVector, m_Width, m_Height, lRenderLayer);
 				CServerEngine::GetInstance().GetGameObjects()->push_back(tilemapServer);
 				m_Tilemaps.Add(lLayerName, tilemapServer);
 			}
 			else {
-				m_Tilemaps.Get(lLayerName)->SetData(lTileset, lTilewidth, lTileheight, lTilesVector, lWidth, lHeight, lRenderLayer);
+				m_Tilemaps.Get(lLayerName)->SetData(lTileset, m_TileWidth, m_TileHeight, lTilesVector, m_Width, m_Height, lRenderLayer);
 			}
 		}
-		// TODO: Collision layer!
+		else {
+			const Value& lTilesArray = layers[i]["data"];
+			std::vector<bool> lTilesVector;
+			for (auto& v : lTilesArray.GetArray())
+			{
+				if (v.GetInt() == 0) {
+					lTilesVector.push_back(false);
+				}
+				else {
+					lTilesVector.push_back(true);
+				}
+			}
+			m_CollisionMap.SetTiles(lTilesVector);
+		}
 	}
 	LOGGER.Log("Done loading %d layers", layersSize);
 	return true;
@@ -66,7 +78,6 @@ bool CityMap::Load(const std::string& aPath)
 
 void CityMap::Destroy()
 {
-	//delete m_CollisionMap;
 	for (int i = 0; i < m_Tilemaps.GetCount(); ++i)
 	{
 		m_Tilemaps.GetIndex(i)->DestroySignal();

@@ -9,6 +9,7 @@
 #include "Replication\LinkingContext.h"
 #include "../Model/Player/PlayerControllerServer.h"
 #include "../Network/RPCManagerServer.h"
+#include "../Model/Scenario/CityMap.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")
@@ -17,7 +18,7 @@ m_Name("")
 , m_State(ClientState::NOT_CONNECTED)
 , m_Playername(NULL)
 {
-
+	m_CityMap = CServerEngine::GetInstance().GetCityMap();
 }
 
 CClientProxy::~CClientProxy()
@@ -42,7 +43,7 @@ void CClientProxy::InitPlayer(InputMemoryBitStream& aInput)
 
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
 	m_PlayerController = new CPlayerControllerServer();
-	m_PlayerController->SetPosition(100.f, 100.f);
+	m_PlayerController->Init(m_CityMap);
 	m_PlayerController->SetAnimationId(lAnimationId);
 	lGameObjects->push_back(m_PlayerController);
 
@@ -78,4 +79,12 @@ void CClientProxy::Disconnect()
 void CClientProxy::ProcessRPC(InputMemoryBitStream& aInput, float dt)
 {
 	CServerEngine::GetInstance().GetRPCManagerServer().ProcessPlayerRPC(aInput, this, dt);
+}
+
+void CClientProxy::Update(const float& dt)
+{
+	if (m_State == ClientState::PLAYING)
+	{
+		m_PlayerController->Update(dt);
+	}
 }

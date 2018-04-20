@@ -58,6 +58,20 @@ bool CNetworkManagerServer::InitReflection()
 	return true;
 }
 
+void CNetworkManagerServer::Update(float aDeltaTime)
+{
+	UpdateSendingSockets(aDeltaTime);
+	UpdateReceivingSockets(aDeltaTime);
+	UpdatePackets(aDeltaTime);
+	for (auto socket : m_Sockets)
+	{
+		if (socket != m_Socket)
+		{
+			m_Clients[socket]->Update(aDeltaTime);
+		}
+	}
+}
+
 void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 {
 	if (m_Closing)

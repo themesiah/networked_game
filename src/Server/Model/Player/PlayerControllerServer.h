@@ -9,29 +9,40 @@
 
 #define PLAYER_SPEED 150.f
 
+class CityMap;
 class CPlayerControllerServer : public CPlayerController
 {
 public:
-	void SetPosition(const float& x, const float& y)
+	enum Direction : uint8_t
 	{
-		m_PosX = x;
-		m_PosY = y;
-		SetDirty();
-	}
-	void Move(float x, float y, const float& dt)
+		LEFT = 0,
+		TOP = 1,
+		RIGHT = 2,
+		BOTTOM = 3
+	};
+	struct CoordinatePair
 	{
-		if (x != 0.f || y != 0.f)
-		{
-			m_PosX += x * PLAYER_SPEED * dt;
-			m_PosY += y * PLAYER_SPEED * dt;
-			SetDirty();
-		}
-	}
-	void SetAnimationId(const uint16_t& aAnimationId)
+		int x;
+		int y;
+	};
+	struct PositionPair
 	{
-		m_AnimationId = aAnimationId;
-	}
+		float x;
+		float y;
+	};
+	void Move(float x, float y, const float& dt);
+	void SetAnimationId(const uint16_t& aAnimationId);
 	CLASS_IDENTIFICATION('CPCT', CPlayerControllerServer);
+	void Init(CityMap* aCityMap);
+	void MoveTile(Direction aDirection);
+	int MapToIndex(int x, int y);
+	CoordinatePair IndexToMap(int index);
+	PositionPair MapToPosition(int x, int y);
+	void Update(const float& dt);
+private:
+	unsigned int m_CurrentTile;
+	unsigned int m_NextTile;
+	CityMap* m_CityMap;
 };
 
 #endif

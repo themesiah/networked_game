@@ -57,6 +57,12 @@
     <ClCompile Include="Model\Scenario\CityMap.cpp">
       <Filter>Archivos de código fuente\Model\Scenario</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Scenario\CollisionMap.cpp">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Player\PlayerControllerServer.cpp">
+      <Filter>Archivos de código fuente\Model\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerEngine\ServerEngine.h">
@@ -84,6 +90,9 @@
       <Filter>Archivos de código fuente\Network</Filter>
     </ClInclude>
     <ClInclude Include="Model\Scenario\CityMap.h">
+      <Filter>Archivos de código fuente\Model\Scenario</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Scenario\CollisionMap.h">
       <Filter>Archivos de código fuente\Model\Scenario</Filter>
     </ClInclude>
   </ItemGroup>

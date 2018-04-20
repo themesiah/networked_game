@@ -21,6 +21,7 @@ public:
 	void UpdateSendingSockets(float aDeltaTime);
 	void UpdateReceivingSockets(float aDeltaTime);
 	void UpdatePackets(float aDeltaTime);
+	void Update(float aDeltaTime);
 	void Shutdown();
 private:
 	bool InitServerListener();

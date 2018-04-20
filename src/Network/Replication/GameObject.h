@@ -33,7 +33,7 @@ public:
 	}
 	CLASS_IDENTIFICATION('GOBJ', GameObject);
 
-	void SerializeRead(InputMemoryBitStream& ms) {
+	virtual void SerializeRead(InputMemoryBitStream& ms) {
 		OnBeforeSerializeRead();
 		SerializeUtils::SerializeRead(ms, (uint8_t*)this, GetClassId());
 		if (mInitialized == false)
@@ -44,7 +44,7 @@ public:
 		OnAfterSerializeRead();
 	}
 
-	void SerializeWrite(OutputMemoryBitStream& ms) {
+	virtual void SerializeWrite(OutputMemoryBitStream& ms) {
 		OnBeforeSerializeWrite();
 		SerializeUtils::SerializeWrite(ms, (uint8_t*)this, GetClassId());
 		OnAfterSerializeWrite();

@@ -7,6 +7,13 @@
 
 class CMovement : public GameObject {
 public:
+	enum Direction : uint8_t
+	{
+		LEFT = 0,
+		TOP = 1,
+		RIGHT = 2,
+		BOTTOM = 3
+	};
 	CMovement() :
 		GameObject()
 		, inputX(0.f)
@@ -21,6 +28,26 @@ public:
 		);
 	}
 	CLASS_IDENTIFICATION('CMOV', CMovement);
+
+	virtual void SerializeWrite(OutputMemoryBitStream& ms) override {
+		if (inputX < 0.f)
+		{
+			ms.Serialize(LEFT, 2);
+		}
+		else if (inputX > 0.f)
+		{
+			ms.Serialize(RIGHT, 2);
+		}
+		else if (inputY < 0.f)
+		{
+			ms.Serialize(TOP, 2);
+		}
+		else if (inputY > 0.f)
+		{
+			ms.Serialize(BOTTOM, 2);
+		}
+	}
+
 	void SetMovement(float x, float y) {
 		inputX = x;
 		inputY = y;

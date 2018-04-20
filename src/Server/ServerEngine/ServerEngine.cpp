@@ -73,9 +73,7 @@ void CServerEngine::Update()
 	float dt = lChronoDeltaTime.count();// > 0.5f ? 0.5f : lChronoDeltaTime.count();
 	// DELTA TIME CALCULATION END
 
-	m_NetworkManagerServer->UpdateSendingSockets(dt);
-	m_NetworkManagerServer->UpdateReceivingSockets(dt);
-	m_NetworkManagerServer->UpdatePackets(dt);
+	m_NetworkManagerServer->Update(dt);
 	ManageObjectsDestroy();
 }
 
