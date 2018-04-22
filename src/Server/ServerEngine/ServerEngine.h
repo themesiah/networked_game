@@ -24,7 +24,6 @@ class CReplicationManager;
 class CNetworkManagerServer;
 class CMovement;
 class CRPCManagerServer;
-class GameObject;
 class Place;
 class CServerEngine : public base::utils::CSingleton<CServerEngine>
 {
@@ -32,10 +31,6 @@ public:
 	virtual ~CServerEngine();
 	void Init();
 	void Update();
-	std::vector<GameObject*>* GetGameObjects()
-	{
-		return &m_GameObjects;
-	}
 	bool IsFinished() {
 		return m_Finished;
 	}
@@ -51,10 +46,8 @@ protected:
 	CServerEngine();
 	friend class base::utils::CSingleton<CServerEngine>;
 private:
-	void ManageObjectsDestroy();
 	std::chrono::monotonic_clock m_Clock;
 	std::chrono::monotonic_clock::time_point m_PrevTime;
-	std::vector<GameObject*> m_GameObjects;
 	bool m_Finished;
 	Place* m_CityMap;
 };

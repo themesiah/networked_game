@@ -6,7 +6,7 @@
 
 void Chat(InputMemoryBitStream& inStream, CClientProxy* aClientProxy, float dt)
 {
-	aClientProxy->GetCityMap()->ManageChatRPC(inStream, aClientProxy);
+	aClientProxy->GetPlace()->ManageChatRPC(inStream, aClientProxy);
 }
 
 template <>

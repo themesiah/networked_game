@@ -38,7 +38,7 @@ public:
 	int MapToIndex(int x, int y);
 	CoordinatePair IndexToMap(int index);
 	PositionPair MapToPosition(int x, int y);
-	void Update(const float& dt);
+	virtual void Update(float dt) override;
 private:
 	unsigned int m_CurrentTile;
 	unsigned int m_NextTile;

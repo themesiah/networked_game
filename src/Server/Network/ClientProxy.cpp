@@ -6,11 +6,12 @@
 #include "CommonClasses\Movement.h"
 
 #include "Replication\ReplicationManager.h"
+#include "Replication\GameObject.h"
 #include "Replication\LinkingContext.h"
-#include "../Model/Player/PlayerControllerServer.h"
+
 #include "../Network/RPCManagerServer.h"
 #include "../Model/Scenario/CityMap.h"
-#include "../Model/Place.h"
+#include "../Model/PlayernameServer.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")
@@ -41,17 +42,17 @@ void CClientProxy::InitPlayer(InputMemoryBitStream& aInput)
 	aInput.Serialize(m_Name);
 	aInput.Serialize(lAnimationId); // TODO: Check if its a valid ID!
 
-	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
+	//auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
 	m_PlayerController = new CPlayerControllerServer();
 	m_PlayerController->Init((CityMap*)m_CityMap);
 	m_PlayerController->SetAnimationId(lAnimationId);
-	m_CityMap->RegisterClient(this);
-	lGameObjects->push_back(m_PlayerController);
+	//lGameObjects->push_back(m_PlayerController);
 
 	LinkingContext* lLinkingContext = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
 	m_Playername = new PlayernameServer();
 	m_Playername->SetPlayer(lLinkingContext->GetNetworkId(m_PlayerController, true), m_Name);
-	lGameObjects->push_back(m_Playername);
+	//lGameObjects->push_back(m_Playername);
+	m_CityMap->RegisterClient(this);
 }
 
 void CClientProxy::SetPlaying()
@@ -68,13 +69,6 @@ void CClientProxy::Disconnect()
 {
 	m_State = ClientState::PENDING_DISCONNECTION;
 	m_CityMap->UnregisterClient(this);
-	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
-	if (m_PlayerController != NULL) {
-		m_PlayerController->DestroySignal();
-	}
-	if (m_Playername != NULL) {
-		m_Playername->DestroySignal();
-	}
 	delete m_PacketStream;
 }
 
@@ -83,10 +77,23 @@ void CClientProxy::ProcessRPC(InputMemoryBitStream& aInput, float dt)
 	CServerEngine::GetInstance().GetRPCManagerServer().ProcessPlayerRPC(aInput, this, dt);
 }
 
-void CClientProxy::Update(const float& dt)
+PacketStream* CClientProxy::GetPacketStream()
 {
-	if (m_State == ClientState::PLAYING)
-	{
-		m_PlayerController->Update(dt);
-	}
+	return m_PacketStream;
+}
+CPlayerControllerServer* CClientProxy::GetPlayerController()
+{
+	return m_PlayerController;
+}
+PlayernameServer* CClientProxy::GetPlayernameServer()
+{
+	return m_Playername;
+}
+CClientProxy::ClientState CClientProxy::GetState()
+{
+	return m_State;
+}
+Place* CClientProxy::GetPlace()
+{
+	return m_CityMap;
 }

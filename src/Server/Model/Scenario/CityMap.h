@@ -3,9 +3,14 @@
 #ifndef H_CITY_MAP
 #define H_CITY_MAP
 
+#include <vector>
+
 #include "Utils\TemplatedMapVector.h"
 #include "CollisionMap.h"
 #include "../Place.h"
+
+#include "Serializer\InputMemoryBitStream.h"
+#include "Serializer\OutputMemoryBitStream.h"
 
 class TilemapServer;
 class CityMap : public Place
@@ -40,6 +45,18 @@ public:
 	{
 		return true;
 	}
+	virtual void Update(const float& dt) override;
+	virtual void ProcessPlace() override;
+	virtual void OnClientRegister(CClientProxy* aClient) override;
+	virtual void OnClientUnregister(CClientProxy* aClient) override;
+	virtual OutputMemoryBitStream& GetOutput() override
+	{
+		return m_Output;
+	}
+	virtual OutputMemoryBitStream& GetDeltasOutput() override
+	{
+		return m_DeltasOutput;
+	};
 private:
 	std::string m_ResourcePath;
 	base::utils::CTemplatedMapVector<TilemapServer> m_Tilemaps;
@@ -48,6 +65,8 @@ private:
 	int m_TileHeight;
 	int m_Width;
 	int m_Height;
+	OutputMemoryBitStream m_Output;
+	OutputMemoryBitStream m_DeltasOutput;
 };
 
 #endif

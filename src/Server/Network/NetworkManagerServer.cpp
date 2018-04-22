@@ -11,14 +11,15 @@
 #include "CommonClasses\Movement.h"
 #include "../Model/Scenario/TilemapServer.h"
 #include "../Model/PlayernameServer.h"
+#include "../Model/Player/PlayerControllerServer.h"
 
 #include "../Server/ServerEngine/ServerEngine.h"
 #include "ClientProxy.h"
 #include "Replication\LinkingContext.h"
-#include "../Model/Player/PlayerControllerServer.h"
 #include "Socket\SocketUtil.h"
 
 #include "../Model/Place.h"
+#include "../Model/Scenario/CityMap.h"
 
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
@@ -65,13 +66,6 @@ void CNetworkManagerServer::Update(float aDeltaTime)
 	UpdateSendingSockets(aDeltaTime);
 	UpdateReceivingSockets(aDeltaTime);
 	UpdatePackets(aDeltaTime);
-	for (auto socket : m_Sockets)
-	{
-		if (socket != m_Socket)
-		{
-			m_Clients[socket]->Update(aDeltaTime);
-		}
-	}
 }
 
 void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
@@ -85,25 +79,21 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 	{
 		if (SocketUtil::Select(&m_Sockets, &m_ReadSockets, &m_Sockets, &m_WriteSockets, &m_Sockets, &m_ErrorSockets))
 		{
-			CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
-			OutputMemoryBitStream lOutputDeltas;
-			lReplicationManager.ReplicateWorldDeltas(lOutputDeltas, *CServerEngine::GetInstance().GetGameObjects());
-			lOutputDeltas.Close();
-			OutputMemoryBitStream lOutput;
-			lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
-			lOutput.Close();
-			
-			CServerEngine::GetInstance().GetCityMap()->ProcessChatMessages(); // TODO: All places!
 
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
 				CClientProxy* lClient = m_Clients[socket];
+				Place* lPlace = lClient->GetPlace();
 				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
-					socket->Send(lOutputDeltas.GetBufferPtr(), lOutputDeltas.GetByteLength());
-					OutputMemoryBitStream& lChatOutput = lClient->GetCityMap()->GetOutput();
+					OutputMemoryBitStream& lChatOutput = lPlace->GetChatOutput();
+					OutputMemoryBitStream& lDeltasOutput = lPlace->GetDeltasOutput();
 					if (lChatOutput.GetByteLength() > 0)
 					{
 						socket->Send(lChatOutput.GetBufferPtr(), lChatOutput.GetByteLength());
+					}
+					if (lDeltasOutput.GetByteLength() > 0)
+					{
+						socket->Send(lDeltasOutput.GetBufferPtr(), lDeltasOutput.GetByteLength());
 					}
 				}
 				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
@@ -111,18 +101,17 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 					OutputMemoryBitStream lOutputName;
 					lOutputName.Serialize(PacketType::PT_Hello, PACKET_BIT_SIZE);
 
-					// Add the network id of the player character to the packet, so the client knows what is its character
+					// Add the network id of the player character to the packet, so the client knows that is its character
 					LinkingContext* lLink = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
 					uint32_t lNetworkId = lLink->GetNetworkId(lClient->GetPlayerController(), true);
 					lOutputName.Serialize(lNetworkId);
 
 					lOutputName.Close();
+					OutputMemoryBitStream& lOutput = lPlace->GetOutput();
 					socket->Send(lOutputName.GetBufferPtr(), lOutputName.GetByteLength());
 					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 				}
 			}
-
-			CServerEngine::GetInstance().GetCityMap()->Reset();
 		}
 
 		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);

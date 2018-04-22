@@ -18,7 +18,7 @@ m_ChatWindowOpen(true)
 
 CChatManager::~CChatManager()
 {
-
+	std::free(m_MessageBuffer);
 }
 
 void CChatManager::Clear()

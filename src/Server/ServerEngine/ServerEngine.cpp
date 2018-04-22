@@ -29,11 +29,6 @@ CServerEngine::~CServerEngine()
 	delete m_NetworkManagerServer;
 	delete m_RPCManagerServer;
 	delete m_CityMap;
-
-	for (std::vector<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
-	{
-		delete *it;
-	}
 }
 
 void CServerEngine::Init()
@@ -74,27 +69,9 @@ void CServerEngine::Update()
 	float dt = lChronoDeltaTime.count();// > 0.5f ? 0.5f : lChronoDeltaTime.count();
 	// DELTA TIME CALCULATION END
 
+	m_CityMap->Update(dt);
 	m_NetworkManagerServer->Update(dt);
-	ManageObjectsDestroy();
-}
-
-void CServerEngine::ManageObjectsDestroy()
-{
-	std::vector<GameObject*> toDestroy;
-	for (auto go : m_GameObjects)
-	{
-		if (go->GetDirty() == GameObject::DirtyType::PREPARED_TO_DESTROY)
-		{
-			toDestroy.push_back(go);
-		}
-	}
-
-	for (auto go : toDestroy)
-	{
-		auto goit = std::find(m_GameObjects.begin(), m_GameObjects.end(), go);
-		m_GameObjects.erase(goit);
-		delete go;
-	}
+	m_CityMap->ManageObjectsDestroy();
 }
 
 void CServerEngine::Shutdown() {

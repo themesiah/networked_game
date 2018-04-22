@@ -6,14 +6,13 @@
 #include <string>
 
 #include "Socket\TCPSocket.h"
-#include "Replication\GameObject.h"
 #include "../Model/PlayernameServer.h"
+#include "../Model/Place.h"
+#include "../Model/Player/PlayerControllerServer.h"
 
 #include "Utils\Defines.h"
 
 class PacketStream;
-class CPlayerControllerServer;
-class Place;
 class CClientProxy
 {
 public:
@@ -31,25 +30,13 @@ public:
 	void Disconnect();
 	void SetPlaying();
 	void SetWaiting();
-	void Update(const float& dt);
 	void ProcessRPC(InputMemoryBitStream& aInput, float dt);
 	GET_SET(std::string, Name);
-	PacketStream* GetPacketStream()
-	{
-		return m_PacketStream;
-	}
-	CPlayerControllerServer* GetPlayerController()
-	{
-		return m_PlayerController;
-	}
-	ClientState GetState()
-	{
-		return m_State;
-	}
-	Place* GetCityMap()
-	{
-		return m_CityMap;
-	}
+	PacketStream* GetPacketStream();
+	CPlayerControllerServer* GetPlayerController();
+	PlayernameServer* GetPlayernameServer();
+	ClientState GetState();
+	Place* GetPlace();
 private:
 	ClientState m_State;
 	std::string m_Name;

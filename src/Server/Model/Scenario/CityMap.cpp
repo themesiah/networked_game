@@ -2,11 +2,19 @@
 
 #include <rapidjson\document.h>
 
+#include "../../Network/ClientProxy.h"
+#include "../Place.h"
+#include "TilemapServer.h"
+
 #include "Utils\FileUtils.h"
+#include "../../ServerLogger.h"
 
 #include "../../ServerEngine/ServerEngine.h"
-#include "TilemapServer.h"
-#include "../../ServerLogger.h"
+
+#include "Replication\ReplicationManager.h"
+#include "Replication\GameObject.h"
+
+
 
 using namespace rapidjson;
 
@@ -50,7 +58,7 @@ bool CityMap::Load(const std::string& aPath)
 			if (!m_Tilemaps.Exist(lLayerName)) {
 				TilemapServer* tilemapServer = new TilemapServer();
 				tilemapServer->SetData(lTileset, m_TileWidth, m_TileHeight, lTilesVector, m_Width, m_Height, lRenderLayer);
-				CServerEngine::GetInstance().GetGameObjects()->push_back(tilemapServer);
+				m_MapObjects.push_back(tilemapServer);
 				m_Tilemaps.Add(lLayerName, tilemapServer);
 			}
 			else {
@@ -83,10 +91,46 @@ void CityMap::Destroy()
 		m_Tilemaps.GetIndex(i)->DestroySignal();
 	}
 	m_Tilemaps.Clear();
+	ManageObjectsDestroy();
 }
 
 bool CityMap::Reload()
 {
 	LOGGER.Log("Reloading map with path %s", m_ResourcePath.c_str());
 	return Load(m_ResourcePath);
+}
+
+void CityMap::ProcessPlace()
+{
+	Place::ProcessPlace();
+	m_Output.Reset();
+	m_DeltasOutput.Reset();
+	CReplicationManager& lReplicationManager = CServerEngine::GetInstance().GetReplicationManager();
+	lReplicationManager.ReplicateWorldDeltas(m_DeltasOutput, m_MapObjects);
+	m_DeltasOutput.Close();
+	lReplicationManager.ReplicateWorldState(m_Output, m_MapObjects);
+	m_Output.Close();
+}
+
+void CityMap::OnClientRegister(CClientProxy* aClient)
+{
+	m_MapObjects.push_back((GameObject*)aClient->GetPlayerController());
+	m_MapObjects.push_back((GameObject*)aClient->GetPlayernameServer());
+}
+
+void CityMap::OnClientUnregister(CClientProxy* aClient)
+{
+	GameObject* lPlayerController = (GameObject*)aClient->GetPlayerController();
+	GameObject* lPlayernameServer = (GameObject*)aClient->GetPlayernameServer();
+	lPlayerController->DestroySignal();
+	lPlayernameServer->DestroySignal();
+}
+
+void CityMap::Update(const float& dt)
+{
+	for (const auto& go : m_MapObjects)
+	{
+		go->Update(dt);
+	}
+	ProcessPlace();
 }

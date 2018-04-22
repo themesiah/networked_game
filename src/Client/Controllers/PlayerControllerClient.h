@@ -26,9 +26,8 @@ public:
 	CPlayerControllerClient();
 	virtual ~CPlayerControllerClient();
 	virtual void Init() override;
-	void Update(float aDeltaTime) override;
+	virtual void Update(float aDeltaTime) override;
 	virtual void RenderImGui() override;
-
 	sf::Vector2f GetPosition();
 	void SetName(const std::string& aName);
 	CLASS_IDENTIFICATION('CPCT', CPlayerControllerClient);

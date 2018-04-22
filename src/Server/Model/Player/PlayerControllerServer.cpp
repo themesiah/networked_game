@@ -20,7 +20,7 @@ void CPlayerControllerServer::SetAnimationId(const uint16_t& aAnimationId)
 	m_AnimationId = aAnimationId;
 }
 
-void CPlayerControllerServer::Update(const float& dt)
+void CPlayerControllerServer::Update(float dt)
 {
 	if (m_CurrentTile != m_NextTile)
 	{
