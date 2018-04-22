@@ -25,7 +25,7 @@ class CNetworkManagerServer;
 class CMovement;
 class CRPCManagerServer;
 class GameObject;
-class CityMap;
+class Place;
 class CServerEngine : public base::utils::CSingleton<CServerEngine>
 {
 public:
@@ -39,7 +39,7 @@ public:
 	bool IsFinished() {
 		return m_Finished;
 	}
-	CityMap* GetCityMap()
+	Place* GetCityMap()
 	{
 		return m_CityMap;
 	}
@@ -56,7 +56,7 @@ private:
 	std::chrono::monotonic_clock::time_point m_PrevTime;
 	std::vector<GameObject*> m_GameObjects;
 	bool m_Finished;
-	CityMap* m_CityMap;
+	Place* m_CityMap;
 };
 
 #endif

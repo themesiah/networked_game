@@ -38,6 +38,7 @@ void OutputMemoryBitStream::Reset()
 	//std::free(mBuffer);
 	ReallocBuffer(256);
 	mBitHead = 0;
+	mClosed = false;
 }
 
 void OutputMemoryBitStream::Close()

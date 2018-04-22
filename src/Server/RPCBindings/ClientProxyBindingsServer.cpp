@@ -9,10 +9,6 @@
 
 void Move(InputMemoryBitStream& inStream, CClientProxy* aClientProxy, float dt)
 {
-	/*CMovement lMovement;
-	lMovement.SerializeRead(inStream);
-	auto mov = lMovement.GetMovement();
-	aClientProxy->GetPlayerController()->Move(mov[0], mov[1], dt);*/
 	CPlayerControllerServer::Direction dir;
 	inStream.Serialize(dir, 2);
 	aClientProxy->GetPlayerController()->MoveTile(dir);

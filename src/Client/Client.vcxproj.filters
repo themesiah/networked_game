@@ -89,7 +89,10 @@
     <ClCompile Include="Controllers\PlayerControllerClient.cpp">
       <Filter>Archivos de código fuente\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="RPCFunctions\EngineBindingsClient.cpp">
+    <ClCompile Include="Engine\ChatManager.cpp">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCFunctions\ChatBindingsClient.cpp">
       <Filter>Archivos de código fuente\RPCFunctions</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="Controllers\PlayerControllerClient.h">
       <Filter>Archivos de código fuente\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ChatManager.h">
+      <Filter>Archivos de código fuente\MainEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@
 #include "../Model/Player/PlayerControllerServer.h"
 #include "../Network/RPCManagerServer.h"
 #include "../Model/Scenario/CityMap.h"
+#include "../Model/Place.h"
 
 CClientProxy::CClientProxy() :
 m_Name("")
@@ -36,20 +37,20 @@ bool CClientProxy::Init()
 
 void CClientProxy::InitPlayer(InputMemoryBitStream& aInput)
 {
-	std::string lName;
 	uint16_t lAnimationId;
-	aInput.Serialize(lName);
+	aInput.Serialize(m_Name);
 	aInput.Serialize(lAnimationId); // TODO: Check if its a valid ID!
 
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
 	m_PlayerController = new CPlayerControllerServer();
-	m_PlayerController->Init(m_CityMap);
+	m_PlayerController->Init((CityMap*)m_CityMap);
 	m_PlayerController->SetAnimationId(lAnimationId);
+	m_CityMap->RegisterClient(this);
 	lGameObjects->push_back(m_PlayerController);
 
 	LinkingContext* lLinkingContext = CServerEngine::GetInstance().GetReplicationManager().GetLinkingContext();
 	m_Playername = new PlayernameServer();
-	m_Playername->SetPlayer(lLinkingContext->GetNetworkId(m_PlayerController, true), lName);
+	m_Playername->SetPlayer(lLinkingContext->GetNetworkId(m_PlayerController, true), m_Name);
 	lGameObjects->push_back(m_Playername);
 }
 
@@ -66,6 +67,7 @@ void CClientProxy::SetWaiting()
 void CClientProxy::Disconnect()
 {
 	m_State = ClientState::PENDING_DISCONNECTION;
+	m_CityMap->UnregisterClient(this);
 	auto lGameObjects = CServerEngine::GetInstance().GetGameObjects();
 	if (m_PlayerController != NULL) {
 		m_PlayerController->DestroySignal();

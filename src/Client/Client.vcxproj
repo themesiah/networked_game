@@ -101,6 +101,7 @@
     <ClCompile Include="clientmain.cpp" />
     <ClCompile Include="Controllers\PlayerControllerClient.cpp" />
     <ClCompile Include="Controllers\PlayernameClient.cpp" />
+    <ClCompile Include="Engine\ChatManager.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\GUIManager.cpp" />
     <ClCompile Include="Engine\ResourcesTable.cpp" />
@@ -113,12 +114,13 @@
     <ClCompile Include="Input\ActionManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Network\NetworkManagerClient.cpp" />
-    <ClCompile Include="RPCFunctions\EngineBindingsClient.cpp" />
+    <ClCompile Include="RPCFunctions\ChatBindingsClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\PlayerControllerClient.h" />
     <ClInclude Include="Controllers\PlayernameClient.h" />
     <ClInclude Include="Engine\AnimationsetManager.h" />
+    <ClInclude Include="Engine\ChatManager.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\GUIManager.h" />
     <ClInclude Include="Engine\Resource.h" />

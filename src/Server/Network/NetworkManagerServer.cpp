@@ -18,6 +18,8 @@
 #include "../Model/Player/PlayerControllerServer.h"
 #include "Socket\SocketUtil.h"
 
+#include "../Model/Place.h"
+
 CNetworkManagerServer::CNetworkManagerServer() : NetworkManager()
 , m_SendTimer(0.f)
 , m_Closing(false)
@@ -90,11 +92,19 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 			OutputMemoryBitStream lOutput;
 			lReplicationManager.ReplicateWorldState(lOutput, *CServerEngine::GetInstance().GetGameObjects());
 			lOutput.Close();
+			
+			CServerEngine::GetInstance().GetCityMap()->ProcessChatMessages(); // TODO: All places!
+
 			for (const TCPSocketPtr& socket : m_WriteSockets)
 			{
 				CClientProxy* lClient = m_Clients[socket];
 				if (lClient->GetState() == CClientProxy::ClientState::PLAYING) {
 					socket->Send(lOutputDeltas.GetBufferPtr(), lOutputDeltas.GetByteLength());
+					OutputMemoryBitStream& lChatOutput = lClient->GetCityMap()->GetOutput();
+					if (lChatOutput.GetByteLength() > 0)
+					{
+						socket->Send(lChatOutput.GetBufferPtr(), lChatOutput.GetByteLength());
+					}
 				}
 				else if (lClient->GetState() == CClientProxy::ClientState::AWAITING_GAME_STATE) {
 					lClient->SetPlaying();
@@ -111,7 +121,10 @@ void CNetworkManagerServer::UpdateSendingSockets(float aDeltaTime)
 					socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 				}
 			}
+
+			CServerEngine::GetInstance().GetCityMap()->Reset();
 		}
+
 		m_SendTimer = fmod(m_SendTimer, SEND_INTERVAL);
 	}
 }

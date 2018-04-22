@@ -5,15 +5,16 @@
 
 #include "Utils\TemplatedMapVector.h"
 #include "CollisionMap.h"
+#include "../Place.h"
 
 class TilemapServer;
-class CityMap
+class CityMap : public Place
 {
 public:
 	CityMap();
 	virtual ~CityMap();
-	bool Reload();
-	bool Load(const std::string& path);
+	virtual bool Reload() override;
+	virtual bool Load(const std::string& path) override;
 	void Destroy();
 	int GetMapWidth()
 	{
@@ -34,6 +35,10 @@ public:
 	bool IsTrespassable(const int& index)
 	{
 		return m_CollisionMap.IsTrespassable(index);
+	}
+	virtual bool IsCity() override
+	{
+		return true;
 	}
 private:
 	std::string m_ResourcePath;

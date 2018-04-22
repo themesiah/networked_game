@@ -7,6 +7,7 @@
 #include "Replication\LinkingContext.h"
 #include "../Graphics/CameraController.h"
 #include "../Engine/GUIManager.h"
+#include "Common\RPCManager.h"
 
 #include "Socket\SocketAddress.h"
 #include "Socket\SocketAddressFactory.h"
@@ -161,6 +162,9 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 			lGameObjects->insert(receivedGameObjects.begin(), receivedGameObjects.end());
 			//lGameObjects->swap(receivedGameObjects);
 		}
+		else if (packetType == PacketType::PT_RPC && m_State == ClientState::PLAYING) {
+			CEngine::GetInstance().GetRPCManager().ProcessRPC(lInput);
+		}
 		else if (packetType == PacketType::PT_Hello && m_State == ClientState::HELLO_SENT) {
 			m_State = ClientState::PLAYING;
 			uint32_t lNetworkId;
@@ -174,6 +178,11 @@ void CNetworkManagerClient::UpdatePackets(float aDeltaTime)
 		std::free(p.buffer);
 		p = m_PacketStream.ReadPacket();
 	}
+}
+
+void CNetworkManagerClient::RPCSend(OutputMemoryBitStream& lOutput)
+{
+	m_Socket->Send(lOutput.GetBufferPtr(), lOutput.GetByteLength());
 }
 
 void CNetworkManagerClient::ManageDisconnection()

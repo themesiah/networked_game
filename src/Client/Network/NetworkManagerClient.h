@@ -6,6 +6,8 @@
 #include "Common\NetworkManager.h"
 #include "Serializer\PacketStream.h"
 
+#include "Serializer\OutputMemoryBitStream.h"
+
 #define SEGMENT_SIZE 1500
 
 class CNetworkManagerClient : public NetworkManager
@@ -27,8 +29,13 @@ public:
 	void UpdatePackets(float aDeltaTime);
 	void ManageDisconnection();
 	void RenderImGui();
+	void RPCSend(OutputMemoryBitStream& lOutput);
 	float GetAverageTimeBetweenPackets() {
 		return m_AverageTimeBetweenPackets;
+	}
+	ClientState GetState()
+	{
+		return m_State;
 	}
 private:
 	ClientState m_State;

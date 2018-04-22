@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\Place.cpp" />
     <ClCompile Include="Model\Player\PlayerControllerServer.cpp" />
     <ClCompile Include="Model\Scenario\CityMap.cpp" />
     <ClCompile Include="Model\Scenario\CollisionMap.cpp" />
@@ -103,9 +104,11 @@
     <ClCompile Include="Network\NetworkManagerServer.cpp" />
     <ClCompile Include="RPCBindings\ClientProxyBindingsServer.cpp" />
     <ClCompile Include="RPCBindings\GeneralBindingsServer.cpp" />
+    <ClCompile Include="RPCBindings\PlaceBindingsServer.cpp" />
     <ClCompile Include="ServerEngine\ServerEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\Place.h" />
     <ClInclude Include="Model\PlayernameServer.h" />
     <ClInclude Include="Model\Player\PlayerControllerServer.h" />
     <ClInclude Include="Model\Scenario\CityMap.h" />

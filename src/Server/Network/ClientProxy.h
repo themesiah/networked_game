@@ -13,7 +13,7 @@
 
 class PacketStream;
 class CPlayerControllerServer;
-class CityMap;
+class Place;
 class CClientProxy
 {
 public:
@@ -46,7 +46,7 @@ public:
 	{
 		return m_State;
 	}
-	CityMap* GetCityMap()
+	Place* GetCityMap()
 	{
 		return m_CityMap;
 	}
@@ -56,7 +56,7 @@ private:
 	PacketStream* m_PacketStream;
 	CPlayerControllerServer* m_PlayerController;;
 	PlayernameServer* m_Playername;
-	CityMap* m_CityMap;
+	Place* m_CityMap;
 	
 };
 

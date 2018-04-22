@@ -45,6 +45,7 @@ void CServerEngine::Init()
 	SetRPCManagerServer(lRPCManager);
 	BindRPCFunctionsServer<CServerEngine>(lRPCManager);
 	BindRPCFunctionsServer<CClientProxy>(lRPCManager);
+	BindRPCFunctionsServer<Place>(lRPCManager);
 	LOGGER.Info("Initializing replication manager");
 	CReplicationManager* lReplicationManager = new CReplicationManager();
 	lReplicationManager->SetRPCManager(lRPCManager);

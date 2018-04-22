@@ -37,6 +37,7 @@ class CCameraController;
 class CGUIManager;
 class CAnimationsetManager;
 class CRPCManager;
+class CChatManager;
 class CEngine : public base::utils::CSingleton<CEngine> {
 public:
 	virtual ~CEngine();
@@ -82,6 +83,7 @@ public:
 	BUILD_GET_SET_ENGINE_MANAGER(GUIManager);
 	BUILD_GET_SET_ENGINE_MANAGER(AnimationsetManager);
 	BUILD_GET_SET_ENGINE_MANAGER(RPCManager);
+	BUILD_GET_SET_ENGINE_MANAGER(ChatManager);
 
 protected:
 	CEngine();

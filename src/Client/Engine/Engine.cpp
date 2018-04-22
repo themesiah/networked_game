@@ -8,6 +8,7 @@
 #include "GUIManager.h"
 #include "AnimationsetManager.h"
 #include "Common\RPCManager.h"
+#include "ChatManager.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -38,6 +39,7 @@ CEngine::~CEngine()
 	delete m_Movement;
 	delete m_RPCManager;
 	delete m_AnimationsetManager;
+	delete m_ChatManager;
 
 	for (std::unordered_set<GameObject*>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); ++it)
 	{
@@ -82,7 +84,7 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 
 	CRPCManager* lRPCManager = new CRPCManager();
 	SetRPCManager(lRPCManager);
-	BindRPCFunctions<CEngine>(lRPCManager);
+	BindRPCFunctions<CChatManager>(lRPCManager);
 
 	CReplicationManager* lReplicationManager = new CReplicationManager();
 	lReplicationManager->SetRPCManager(lRPCManager);
@@ -99,6 +101,9 @@ void CEngine::Init(sf::RenderWindow* aWindow)
 	CCameraController* lCameraController = new CCameraController();
 	lCameraController->Init(aWindow);
 	SetCameraController(lCameraController);
+
+	CChatManager* lChatManager = new CChatManager();
+	SetChatManager(lChatManager);
 }
 
 void CEngine::ProcessInputs()
@@ -128,6 +133,10 @@ void CEngine::Update(float aDeltaTime)
 	for (GameObject* go : m_GameObjects)
 	{
 		go->Update(aDeltaTime);
+	}
+	if (m_NetworkManagerClient->GetState() == CNetworkManagerClient::ClientState::PLAYING)
+	{
+		m_ChatManager->Draw();
 	}
 
 	m_CameraController->Update(aDeltaTime);
